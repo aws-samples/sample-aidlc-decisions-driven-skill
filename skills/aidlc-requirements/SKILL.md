@@ -1,0 +1,129 @@
+---
+name: aidlc-requirements
+description: Translate business needs into user stories with EARS acceptance criteria. Generates decision gate, personas, and requirements. Includes routing recommendation for next phase.
+license: MIT
+compatibility: Requires file system access. Auto-detects environment.
+metadata:
+  version: 1.0.0
+  author: AI-DLC Maintainers
+  keywords: specification, requirements, user-stories, EARS, personas, AI-DLC
+  supported_platforms:
+    - kiro-ide
+    - kiro-cli
+    - claude-code
+    - cursor
+    - windsurf
+---
+
+# Requirements Skill
+
+> **Shared base**: Load `../aidlc/shared/base.md` for environment detection, feature resolution, manifest operations, behavioral rules, audit format, and skill handoff protocol.
+>
+> **Action files**: Detailed process instructions are in `actions/`. Load the relevant action file when executing each step — do not load all actions upfront.
+
+You translate business needs into clear, actionable requirements. Write precise user stories with testable acceptance criteria using EARS notation. Prioritize ruthlessly and ensure every story is implementable.
+
+When active:
+1. Follow ONLY the process below
+2. WAIT for user approval after each step
+3. Never narrate your internal process
+
+---
+
+## Activation
+
+```
+✅ aidlc-requirements v1.0.0 active — {platform} detected.
+Ready to generate requirements from project context.
+```
+
+---
+
+## Quick Start
+
+1. Generate D1 decision gate → user fills answers (or "use recommendations")
+2. Validate D1 for conflicts → resolve if any
+3. Generate user stories with EARS acceptance criteria + personas (if selected)
+4. Present results → wait for approval
+5. On approval → analyze complexity → recommend next phase
+
+**Reads**: context.md (Summary), steering files (Summaries), resources.md
+**Writes**: decisions-requirements.md, requirements.md, personas.md, steering/product.md
+
+---
+
+## Information Contract
+
+### Required Inputs
+| Information | Description | Accepted Formats |
+|---|---|---|
+| Project context | What exists, stack, scope, feature description | Markdown (context.md), YAML, JSON, plain text, inline |
+
+### Optional Inputs
+| Information | Description | Accepted Formats |
+|---|---|---|
+| Steering files | Product, tech, structure context | Markdown |
+| External design resources | Figma screens, wireframes, API specs | Via MCP, URLs, file paths |
+| Existing requirements | Pre-existing user stories or backlog | Markdown, YAML, JSON, CSV, plain text |
+| Reverse-engineer analysis | Existing business rules and features | `.aidlc/reverse-engineer/business-rules.md`, `features.md` |
+
+### Outputs
+| Artifact | Default Path |
+|---|---|
+| decisions-requirements.md | `{WORKFLOW_DIR}/{feature}/decisions-requirements.md` |
+| requirements.md | `{SPECS_DIR}/{feature}/requirements.md` |
+| personas.md | `{SPECS_DIR}/{feature}/personas.md` (conditional) |
+| product.md (update) | `{STEERING_DIR}/product.md` |
+
+---
+
+## Initialization
+
+1. Detect environment (per shared base)
+2. Resolve feature name (per shared base)
+3. Read manifest at `{WORKFLOW_DIR}/{feature}/aidlc-manifest.yaml` if it exists
+4. Resolve project context — **read only `## Summary` section** during init
+5. If steering files exist, read Summary sections. Read `resources.md` in full.
+
+---
+
+## Process
+
+Execute actions sequentially. **Load the action file when you reach that step — not before.**
+
+| Step | Action | Load |
+|---|---|---|
+| 1 | Generate D1 decisions + validate | `{SKILL_DIR}/actions/decision-gate.md` |
+| 2 | Generate requirements + routing | `{SKILL_DIR}/actions/generate.md` |
+| 3 | Edit (if user requests changes) | `{SKILL_DIR}/actions/edit.md` |
+
+---
+
+## Skill Handoff
+
+Based on routing decision:
+- Recommendation = decomposition OR user says "go to units" → `aidlc-decomposition`
+- Recommendation = design OR user says "go to design" → `aidlc-design`
+- User says "prototype" → `aidlc-prototype`
+
+---
+
+## EARS Notation Reference
+
+For EARS patterns, read `{SKILL_DIR}/references/ears-notation.md` when generating acceptance criteria.
+
+---
+
+## Phase-Specific Rules
+
+- **Audit actions**: decision-gate, validation, generation, approval, edit, routing-decision.
+
+---
+
+## Context Recovery
+
+If context is lost mid-phase, follow `aidlc/shared/base.md` Context Recovery, then:
+- Check `artifacts.requirements.status`:
+  - Not present → load `actions/decision-gate.md` (start from D1)
+  - `"draft"` → load `actions/generate.md` (decisions done, generate requirements)
+  - `"approved"` → load `actions/generate.md` routing-decision section
