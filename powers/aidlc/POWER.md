@@ -1,8 +1,8 @@
 ---
 name: "aidlc"
 displayName: "AI-DLC: Decision-Driven Development"
-description: "AI-Driven Development Life Cycle with decision gates. Orchestrates specification workflow from context assessment through implementation with structured decision points at each phase."
-keywords: ["aidlc", "specification", "workflow", "decision-gate", "requirements", "design", "decomposition"]
+description: "AI-Driven Development Life Cycle with decision gates. Orchestrates specification workflow from context assessment through implementation, build verification, and deployment with structured decision points at each phase."
+keywords: ["aidlc", "specification", "workflow", "decision-gate", "requirements", "design", "decomposition", "build", "deploy", "CI/CD"]
 author: "AI-DLC Maintainers"
 ---
 
@@ -10,11 +10,11 @@ author: "AI-DLC Maintainers"
 
 ## Overview
 
-AI-DLC (AI-Driven Development Life Cycle) is a structured specification workflow that guides you from initial context assessment through implementation. Each phase produces artifacts with explicit decision gates — you make the choices, the AI executes.
+AI-DLC (AI-Driven Development Life Cycle) is a structured specification workflow that guides you from initial context assessment through implementation, build verification, and deployment. Each phase produces artifacts with explicit decision gates — you make the choices, the AI executes.
 
 The workflow adapts to project complexity:
-- **Simple projects**: Context → Requirements → Design → Tasks → Implement
-- **Complex projects**: Context → Requirements → Decomposition → Foundation → per-unit Design → Tasks → Implement
+- **Simple projects**: Context → Requirements → Design → Tasks → Implement → Build → Deploy
+- **Complex projects**: Context → Requirements → Decomposition → Foundation → per-unit Design → Tasks → Implement → Build → Deploy
 - **Quick mode**: Single-pass spec for small brownfield features
 
 ## How It Works
@@ -37,7 +37,7 @@ AI-DLC is implemented as a set of **skills** that get installed into your worksp
 | `prototype` | Build a throwaway spike to validate requirements |
 | `review` | Run solutions review or code review |
 | `reverse-engineer` | Deep codebase analysis (13 report documents) |
-| Phase names | Jump to any phase: `context`, `requirements`, `design`, `tasks`, etc. |
+| Phase names | Jump to any phase: `context`, `requirements`, `design`, `tasks`, `implement`, `build`, `deploy`, etc. |
 
 ### Phases
 
@@ -48,8 +48,10 @@ AI-DLC is implemented as a set of **skills** that get installed into your worksp
 5. **Design** — Technology decisions and architecture + decision gate
 6. **Tasks** — Sequenced implementation tasks with execution waves + decision gate
 7. **Implement** — Code generation from task specs
+8. **Build** — Final integration build, test suites, quality gates
+9. **Deploy** — CI/CD pipeline generation + decision gate
 
-Each phase (except Context) has a **decision gate** — a set of questions you answer to guide the AI's output. You can fill answers manually or say "use recommendations" to auto-fill.
+Each phase (except Context and Build) has a **decision gate** — a set of questions you answer to guide the AI's output. You can fill answers manually or say "use recommendations" to auto-fill.
 
 ## Installation
 
@@ -81,6 +83,8 @@ After copying, your project should have:
 ├── aidlc-foundation/
 ├── aidlc-tasks/
 ├── aidlc-implement/
+├── aidlc-build/
+├── aidlc-deploy/
 ├── aidlc-prototype/
 ├── aidlc-reverse-engineer/
 ├── aidlc-code-review/
@@ -118,7 +122,9 @@ Say "reverse-engineer" to run deep codebase analysis. Produces 13 comprehensive 
 ├── workflow/{feature}/        ← workflow state
 │   ├── aidlc-manifest.yaml
 │   ├── audit.md
-│   └── decisions-*.md
+│   ├── decisions-*.md
+│   ├── build-report.md
+│   └── deploy-summary.md
 └── reverse-engineer/          ← codebase analysis (if run)
     ├── README.md
     ├── overview.md

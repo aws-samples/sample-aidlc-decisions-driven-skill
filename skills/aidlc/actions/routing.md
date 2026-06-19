@@ -4,7 +4,7 @@
 
 Read `aidlc-manifest.yaml` and extract:
 
-- `state.sharedPhases` → which shared phases are complete (context, requirements, decomposition, foundation)
+- `state.sharedPhases` → which shared phases are complete (context, requirements, decomposition, foundation, design, tasks, implement, build, deploy)
 - `state.mode` → `null` (undecided), `incremental`, or `comprehensive`
 - `state.foundationSkipped` → `true` if brownfield incremental skipped foundation
 - `artifacts` → shared phase artifacts and their status (`draft` / `approved` / `outdated`)
@@ -33,8 +33,10 @@ Based on manifest state, determine the next skill to dispatch:
 | `foundation` in `sharedPhases`, mode=`incremental` | Unit dashboard (see Incremental Mode Unit Routing) |
 | Comprehensive: `design` in `sharedPhases` | `aidlc-tasks` |
 | Comprehensive: `tasks` in `sharedPhases` | `aidlc-implement` |
-| Comprehensive: `implement` in `sharedPhases` | Present completion message |
-| Incremental: all units `completed` | Present completion message |
+| Comprehensive: `implement` in `sharedPhases`, no `build` | `aidlc-build` |
+| Incremental: all units `completed`, no `build` in `sharedPhases` | `aidlc-build` |
+| `build` in `sharedPhases`, no `deploy` | `aidlc-deploy` |
+| `deploy` in `sharedPhases` | Present completion message |
 
 When the next skill is determined, dispatch it (see Skill Dispatch in SKILL.md).
 

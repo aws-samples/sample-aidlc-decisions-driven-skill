@@ -69,7 +69,7 @@ Then proceed to initialization.
    - Check for: `aidlc-context`, `aidlc-requirements`, `aidlc-design`, `aidlc-tasks`, `aidlc-implement` (minimum required)
    - For each, check `{PLATFORM_DIR}/skills/{skill}/SKILL.md` exists
    - If any missing → report: "⚠️ Missing skill files: {list}. Install them or run `doctor` for a full health check."
-   - Continue even if optional skills are missing (decomposition, foundation, prototype, solutions-review, code-review)
+   - Continue even if optional skills are missing (decomposition, foundation, prototype, solutions-review, code-review, build, deploy)
 3. Scan for manifests at `{WORKFLOW_DIR}/*/aidlc-manifest.yaml`
    - If exactly one manifest → use it, then **validate manifest structure** (see below)
    - If multiple manifests → ask user which feature to work on
@@ -110,7 +110,7 @@ The user can say any of these. Match loosely — "what's next", "show status", "
 | `doctor` | Verify installation health | `{SKILL_DIR}/actions/doctor.md` |
 | Phase names | Dispatch named skill directly | — |
 
-Phase name commands: `context`, `requirements`, `units`/`decomposition`, `foundation`, `design`, `tasks`, `implement`, `prototype`, `review`, `reverse-engineer`.
+Phase name commands: `context`, `requirements`, `units`/`decomposition`, `foundation`, `design`, `tasks`, `implement`, `build`, `deploy`, `prototype`, `review`, `reverse-engineer`.
 
 ---
 

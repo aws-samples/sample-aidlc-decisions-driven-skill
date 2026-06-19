@@ -54,7 +54,7 @@ state.sharedPhases: [...existing, "{phase}"]  # for shared phases only
 ### Marking Downstream Outdated
 When a phase artifact is edited after approval, mark all downstream phase artifacts as `status: "outdated"`.
 
-Phase order: context → requirements → decomposition → foundation → design → tasks → implement
+Phase order: context → requirements → decomposition → foundation → design → tasks → implement → build → deploy
 
 ### Unit-Scoped Operations (Incremental Mode)
 - Unit artifacts: `{SPECS_DIR}/{feature}/units/{unit}/`

@@ -87,38 +87,61 @@ Once the `aidlc` skill is active, you can say:
 | `prototype` | Build a throwaway spike to validate requirements |
 | `review` | Run solutions review or code review |
 | `reverse-engineer` | Deep codebase analysis (13 reports) |
-| Phase names | Jump directly: `context`, `requirements`, `design`, `tasks`, `implement` |
+| Phase names | Jump directly: `context`, `requirements`, `design`, `tasks`, `implement`, `build`, `deploy` |
 
 > **Note**: `units` and `decomposition` refer to the same phase — both commands work interchangeably.
+
+## Phases
+
+AI-DLC organizes the development lifecycle into three phases:
+
+| Phase | Covers | Skills |
+|---|---|---|
+| **Inception** | Understanding the problem space — context assessment, requirements gathering, and decomposition into deliverable units | aidlc-context, aidlc-requirements, aidlc-decomposition, aidlc-foundation |
+| **Construction** | Solving the problem — technology decisions, detailed design, task planning, and code implementation | aidlc-design, aidlc-tasks, aidlc-implement |
+| **Operation** | Shipping and running — final integration verification, CI/CD pipeline generation, and deployment | aidlc-build, aidlc-deploy |
 
 ## Workflow Overview
 
 ```mermaid
 flowchart TD
-    A[Context] --> B[Requirements]
-    B --> C{Complex?}
-    C -->|Simple| D[Design]
-    C -->|Complex| E[Decomposition]
-    E --> F[Foundation]
-    F --> Units
-
-    subgraph Units ["For Each Unit"]
-        direction TB
-        UD[Design] --> UT[Tasks] --> UI[Implement]
+    subgraph Inception
+        A[Context] --> B[Requirements]
+        B --> C{Complex?}
+        C -->|Complex| E[Decomposition]
+        E --> F[Foundation]
     end
 
-    Units --> SR[Solutions Review]
-    SR --> CR[Code Review]
-    D --> T[Tasks]
-    T --> I[Implement]
-    I --> CR
+    subgraph Construction
+        C -->|Simple| D[Design]
+        D --> T[Tasks]
+        T --> I[Implement]
+        F --> Units
+        subgraph Units ["For Each Unit"]
+            direction TB
+            UD[Design] --> UT[Tasks] --> UI[Implement]
+        end
+    end
+
+    subgraph Operation
+        BT[Build and Test]
+        DEP[Deploy]
+        BT --> DEP
+    end
+
+    Units --> BT
+    I --> BT
     B -.->|optional| P[Prototype]
     P -.->|refine| B
 ```
 
-**Simple projects** skip decomposition and foundation — go straight from requirements to design.
+**Simple projects** skip decomposition and foundation — go straight from requirements to design, then implement, build and test, and deploy.
 
-**Complex projects** (5+ stories, 2+ domains) decompose into units, define a shared foundation, then design and implement each unit independently.
+**Complex projects** (5+ stories, 2+ domains) decompose into units, define a shared foundation, then design and implement each unit independently before building, testing, and deploying.
+
+**Build and Test** verifies the implemented code compiles, passes tests, and meets quality gates. Note that unit tests and local builds typically happen within implementation tasks — this stage represents the final integration verification that everything works together across units and environments.
+
+**Deploy** pushes the verified build to the target environment. This is the release gate — infrastructure provisioning, environment promotion, or artifact publishing.
 
 **Prototypes** are standalone side-quests — throwaway code to validate ideas before committing to a full design cycle.
 
@@ -126,15 +149,17 @@ flowchart TD
 
 ### Core Workflow (in order)
 
-| Skill | Phase | What It Does |
-|---|---|---|
-| `aidlc-context` | 1 | Scans workspace, detects stack and architecture (brownfield) or captures intent (greenfield). Produces `context.md` and steering files. Creates the manifest. |
-| `aidlc-requirements` | 2 | Translates context into user stories with EARS acceptance criteria. Generates personas (optional). Routes to decomposition, design, or prototype based on complexity. |
-| `aidlc-decomposition` | 3 | Breaks requirements into independently deliverable units using DDD concepts. Defines boundaries, dependencies, and development sequence. Presents incremental vs. comprehensive mode choice. |
-| `aidlc-foundation` | 3b | Defines shared conventions for incremental mode — repo structure, auth, error handling, communication patterns, database strategy. Adds infrastructure units. |
-| `aidlc-design` | 4 | Makes technology decisions via D3 decision gate. Generates component design, data model, API spec, integration patterns, and implementation plan. Supports compact (≤10 stories) and modular (11+) formats. |
-| `aidlc-tasks` | 5 | Breaks design into sequenced, estimable tasks. Generates execution waves with file ownership for parallel dispatch. |
-| `aidlc-implement` | 6 | Executes tasks in standard (one-at-a-time), parallel (wave-based sub-agents), or autonomous (all waves, no stops) mode. |
+| Skill | AIDLC Phase | Stage | What It Does |
+|---|---|---|---|
+| `aidlc-context` | Inception | 1 | Scans workspace, detects stack and architecture (brownfield) or captures intent (greenfield). Produces `context.md` and steering files. Creates the manifest. |
+| `aidlc-requirements` | Inception | 2 | Translates context into user stories with EARS acceptance criteria. Generates personas (optional). Routes to decomposition, design, or prototype based on complexity. |
+| `aidlc-decomposition` | Inception | 3 | Breaks requirements into independently deliverable units using DDD concepts. Defines boundaries, dependencies, and development sequence. Presents incremental vs. comprehensive mode choice. |
+| `aidlc-foundation` | Inception | 3b | Defines shared conventions for incremental mode — repo structure, auth, error handling, communication patterns, database strategy. Adds infrastructure units. |
+| `aidlc-design` | Construction | 4 | Makes technology decisions via D3 decision gate. Generates component design, data model, API spec, integration patterns, and implementation plan. Supports compact (≤10 stories) and modular (11+) formats. |
+| `aidlc-tasks` | Construction | 5 | Breaks design into sequenced, estimable tasks. Generates execution waves with file ownership for parallel dispatch. |
+| `aidlc-implement` | Construction | 6 | Executes tasks in standard (one-at-a-time), parallel (wave-based sub-agents), or autonomous (all waves, no stops) mode. |
+| `aidlc-build` | Operation | 7 | Detects build tooling, runs final integration build, executes full test suites, validates quality gates (lint, type-check, security, coverage). Produces build report. |
+| `aidlc-deploy` | Operation | 8 | Generates CI/CD pipeline configs via D5 decision gate. Handles environment promotion, secrets management, rollback strategy, and deployment scripts. |
 
 ### Supporting Skills
 
@@ -157,6 +182,7 @@ Each phase has a decision gate that generates targeted questions, validates answ
 | DF | Foundation | Team structure, repo strategy, API architecture, auth, error handling, inter-unit communication, database strategy |
 | D3 | Design | Technology stack, frameworks, data layer, testing strategy, infrastructure, code organization |
 | D4 | Tasks | Breakdown strategy, implementation approach (TDD/test-after), component priority, integration strategy, task granularity |
+| D5 | Deploy | CI/CD platform, deployment target, deployment strategy, environments, promotion, secrets management, rollback, monitoring |
 
 ### How Decision Gates Work
 
@@ -199,6 +225,8 @@ AI-DLC produces artifacts at conventional paths. All paths are platform-aware.
 | `decisions-{phase}.md` | Decision gate answers (one per phase that has a gate) |
 | `architecture-review.md` | Solutions review findings |
 | `code-review.md` | Code review findings |
+| `build-report.md` | Build results, test results, quality gate status |
+| `deploy-summary.md` | Deployment configuration summary |
 
 Decision gate files are produced implicitly by each phase — they're not tracked in the manifest.
 
@@ -347,7 +375,7 @@ artifacts:
     status: approved
     timestamp: "2026-04-15T11:15:00Z"
     files: [foundation.md]
-  # Comprehensive mode also has: design, tasks (same structure)
+  # Comprehensive mode also has: design, tasks, build, deploy (same structure)
 
 context-summary:
   type: Greenfield
@@ -363,7 +391,7 @@ decisions:
   requirements: { scope: "Full product", user-types: 3, integrations: 2 }
   decomposition: { strategy: "domain-driven", units: 3 }
   foundation: { auth: "JWT", comms: "REST", db: "shared-separate-schemas" }
-  # Comprehensive mode also has: design, tasks (same structure)
+  # Comprehensive mode also has: design, tasks, deploy (same structure)
 
 steering:
   updatedBy:

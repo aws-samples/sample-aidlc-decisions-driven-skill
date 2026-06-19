@@ -29,8 +29,8 @@ Execute the complete test suite one final time. Report results.
 ## 3. Update manifest
 
 On user approval:
-- **Incremental mode**: Set `units[{unit}].phase` to `"completed"`, add `"implement"` to `units[{unit}].completedPhases`, set `units[{unit}].status` to `"completed"`, clear `currentTask` and `currentWave`. Check if ALL units completed — if yes, set `state.status` to `"completed"`, present: "👉 All units complete. Recommended: run **aidlc-code-review**." If not all complete, present: "👉 Return to unit selection for next unit." Then dispatch unit selection (foundation or decomposition skill depending on `state.foundationSkipped`).
-- **Comprehensive mode**: Add `"implement"` to `state.sharedPhases`. Set `state.status` to `"completed"`.
+- **Incremental mode**: Set `units[{unit}].phase` to `"completed"`, add `"implement"` to `units[{unit}].completedPhases`, set `units[{unit}].status` to `"completed"`, clear `currentTask` and `currentWave`. Check if ALL units completed — if yes, add `"implement"` to `state.sharedPhases`, present: "👉 All units complete. Proceeding to build verification." Then hand off to `aidlc-build`. If not all complete, present: "👉 Return to unit selection for next unit." Then dispatch unit selection (foundation or decomposition skill depending on `state.foundationSkipped`).
+- **Comprehensive mode**: Add `"implement"` to `state.sharedPhases`. Hand off to `aidlc-build`.
 
 ## 4. Append final audit entry
 
@@ -44,3 +44,7 @@ On user approval:
 ```
 
 For incremental mode: full entry to unit audit, one-line summary to feature audit.
+
+## 5. Skill Handoff
+
+**Next skill**: `aidlc-build` — read `{PLATFORM_DIR}/skills/aidlc-build/SKILL.md` and follow its instructions.
