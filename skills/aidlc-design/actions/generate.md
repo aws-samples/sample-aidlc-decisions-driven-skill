@@ -128,7 +128,7 @@ Artifacts at `{SPECS_DIR}/{feature}/design.md` (+ `design/` folder if complex).
 🔲 **Your turn**:
 - ✅ "proceed" — move to next phase
 - ✏️ "change [what]" — request edits
-- ← "back to [requirements/decomposition/foundation]" — return to a previous phase
+- ← "back to [requirements/decomposition]" — return to a previous phase
 ```
 
 **STOP and wait for approval.**

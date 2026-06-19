@@ -12,6 +12,7 @@ Read `{PLATFORM_DIR}/skills/aidlc/shared/decision-gate.md` for the output struct
   - Decomposition need
   - Architecture pattern: Modular Monolith / Microservices / Distributed / Single Unit
   - Decomposition strategy: Domain-Driven / Layer-Based / User Journey-Based / Hybrid
+  - Shared infrastructure: Whether a foundation unit is needed (repo structure, auth, error handling, communication patterns, database setup)
   - Unit proposals with story assignments
   - Dependencies: How units interact (data, API, events)
   - Development sequence

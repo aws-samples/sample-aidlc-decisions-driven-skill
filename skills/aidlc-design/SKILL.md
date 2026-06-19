@@ -56,7 +56,7 @@ Ready to generate technology decisions and architecture design.
 4. Update steering/tech.md and steering/structure.md
 5. Present results → wait for approval → hand off to tasks
 
-**Reads**: context.md (Summary), requirements.md, units.md (if exists), foundation.md (if exists), steering files, resources.md
+**Reads**: context.md (Summary), requirements.md, units.md (if exists), foundation unit design (if exists), steering files, resources.md
 **Writes**: decisions-design.md, design.md, design/*, steering/tech.md, steering/structure.md
 
 ---
@@ -73,7 +73,7 @@ Ready to generate technology decisions and architecture design.
 | Information | Description | Accepted Formats |
 |---|---|---|
 | Units/boundaries | Decomposition units if complex project | Markdown (units.md) |
-| Foundation conventions | Cross-unit patterns and conventions | Markdown (foundation.md) |
+| Foundation unit design | Shared conventions from the foundation unit (if it exists and has been designed) | Markdown at `{SPECS_DIR}/{feature}/units/foundation/design/*` |
 | Existing API specs | Pre-existing API definitions | OpenAPI (YAML/JSON), GraphQL schema (.graphql/.gql) |
 | Existing data models | Pre-existing data schemas | Prisma (.prisma), SQL DDL (.sql), JSON Schema (.json) |
 | Design system/component inventory | UI component library or design tokens | Via MCP, URLs, file paths |
@@ -112,7 +112,7 @@ Ready to generate technology decisions and architecture design.
    - Project context — **read only `## Summary` section**
    - Requirements — **read only `## Summary` section** during init; full content during generation
    - Units (if exists) — **read only `## Summary` section**
-   - Foundation (if exists) — **read only `## Summary` section**
+   - Foundation unit design (if exists) — read `{SPECS_DIR}/{feature}/units/foundation/design/` Summary sections for shared conventions
 5. If steering files exist, read Summary sections from `{STEERING_DIR}/product.md`, `tech.md`, `structure.md`. Read `resources.md` in full.
 6. **Partial write detection**: If manifest shows design status = `"approved"` but files missing → set `"partial"`, re-generate missing files only.
 7. **Incremental mode**: Scope to unit's stories. Create unit output folders. Write to `units/{unit}/` paths.

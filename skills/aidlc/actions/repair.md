@@ -9,7 +9,6 @@ When user says "repair", "fix manifest", or "rebuild manifest":
    - `{SPECS_DIR}/{feature}/context.md` → context phase
    - `{SPECS_DIR}/{feature}/requirements.md` → requirements phase
    - `{SPECS_DIR}/{feature}/units.md` → decomposition phase
-   - `{SPECS_DIR}/{feature}/foundation.md` → foundation phase
    - `{SPECS_DIR}/{feature}/design.md` + `design/` → design phase
    - `{SPECS_DIR}/{feature}/tasks.md` → tasks phase
    - `{SPECS_DIR}/{feature}/units/*/` → unit-scoped artifacts (incremental mode)

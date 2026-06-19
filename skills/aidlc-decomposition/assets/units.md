@@ -22,6 +22,32 @@ Feature decomposed into [X] units for [parallel development/phased delivery/clea
 
 ---
 
+## Unit 0: Foundation (Infrastructure — conditional)
+
+> Include this unit ONLY if D2 answer indicates shared scaffolding is needed (greenfield, microservices, modular monolith with shared conventions). Omit for brownfield projects with established patterns.
+
+**Purpose**: Shared infrastructure and conventions that all domain units depend on
+**Priority**: High
+**Complexity**: [Low/Medium/High]
+**Stories**: None — infrastructure only
+**Type**: Infrastructure
+
+### Responsibilities
+- Repository structure and project scaffolding
+- Shared libraries (error handling, logging, validation)
+- Authentication/authorization setup
+- Communication contracts (API patterns, event schemas)
+- Database setup and migration framework
+- CI/CD base configuration
+- Development environment (Docker Compose, dev scripts)
+
+### Dependencies
+| Depends On | Type | Description |
+|------------|------|-------------|
+| (none) | — | Foundation has no upstream dependencies |
+
+---
+
 ## Unit 1: [Name]
 
 **Purpose**: [What this unit does — 1-2 sentences]

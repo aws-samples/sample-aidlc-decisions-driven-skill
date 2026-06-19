@@ -18,7 +18,6 @@ Verify required skill directories and SKILL.md files exist:
 | `aidlc-tasks` | Yes |
 | `aidlc-implement` | Yes |
 | `aidlc-decomposition` | No |
-| `aidlc-foundation` | No |
 | `aidlc-prototype` | No |
 | `aidlc-reverse-engineer` | No |
 | `aidlc-solutions-review` | No |
@@ -84,7 +83,6 @@ Skills directory: {PLATFORM_DIR}/skills/
 
 ## Optional Skills
   ✅ aidlc-decomposition
-  ✅ aidlc-foundation
   ✅ aidlc-prototype
   ✅ aidlc-reverse-engineer
   ✅ aidlc-solutions-review

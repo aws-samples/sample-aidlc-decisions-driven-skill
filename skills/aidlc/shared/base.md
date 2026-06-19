@@ -54,7 +54,7 @@ state.sharedPhases: [...existing, "{phase}"]  # for shared phases only
 ### Marking Downstream Outdated
 When a phase artifact is edited after approval, mark all downstream phase artifacts as `status: "outdated"`.
 
-Phase order: context → requirements → decomposition → foundation → design → tasks → implement → build → deploy
+Phase order: context → requirements → decomposition → design → tasks → implement → build → deploy
 
 ### Unit-Scoped Operations (Incremental Mode)
 - Unit artifacts: `{SPECS_DIR}/{feature}/units/{unit}/`
@@ -69,6 +69,30 @@ Phase order: context → requirements → decomposition → foundation → desig
 - Content language: match user's language (ISO 639-1 detected from first message)
 - Technical terms: always English (paths, code, variable names, phase names)
 - Silent operations: never narrate platform detection, manifest reads/writes, file scanning, path resolution, template loading, audit entries
+
+### Status Header
+Include a status line at the top of every user-facing response (decision gates, generation results, approval prompts, phase transitions). Derive from manifest state:
+
+```
+📍 {AIDLC Phase} | {Current Stage} | ✅ {Completed Stages}
+```
+
+**AIDLC Phase** derivation:
+- `Inception` — if current work is context, requirements, or decomposition
+- `Construction` — if current work is design, tasks, or implement (including per-unit)
+- `Operation` — if current work is build or deploy
+
+**Current Stage**: the active skill/action (e.g., "Design — D3 Decision Gate", "Implement — Task 3.2", "Build — Quality Gates")
+
+**Completed Stages**: compact list from `state.sharedPhases` + unit progress. Use short names: `ctx`, `req`, `decomp`, `design`, `tasks`, `impl`, `build`, `deploy`. For incremental mode, append unit context: `auth(impl)`, `payments(design)`.
+
+Examples:
+- `📍 Inception | Requirements — D1 Decision Gate | ✅ ctx`
+- `📍 Construction | Design — Generation | ✅ ctx, req, decomp`
+- `📍 Construction | Implement — Task 2.1 [auth] | ✅ ctx, req, decomp, auth(design, tasks)`
+- `📍 Operation | Build — Quality Gates | ✅ ctx, req, decomp, auth(impl), payments(impl)`
+
+Skip this header only for error messages and help/status commands (which have their own format).
 
 ### Tool Preferences by Platform
 - **Kiro**: `fsWrite`, `readMultipleFiles`, `readCode`
@@ -150,7 +174,7 @@ For design and tasks skills operating in incremental mode:
 - **Comprehensive mode** (or no units): write to `{SPECS_DIR}/{feature}/`
 - **Incremental mode** (specific unit): write to `{SPECS_DIR}/{feature}/units/{unit}/`
 
-**NEVER write unit-scoped artifacts to the shared `{SPECS_DIR}/{feature}/` directory.** Shared directory is reserved for project-wide artifacts (context.md, requirements.md, units.md, foundation.md).
+**NEVER write unit-scoped artifacts to the shared `{SPECS_DIR}/{feature}/` directory.** Shared directory is reserved for project-wide artifacts (context.md, requirements.md, units.md).
 
 ---
 

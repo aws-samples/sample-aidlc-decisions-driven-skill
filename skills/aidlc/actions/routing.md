@@ -4,9 +4,8 @@
 
 Read `aidlc-manifest.yaml` and extract:
 
-- `state.sharedPhases` → which shared phases are complete (context, requirements, decomposition, foundation, design, tasks, implement, build, deploy)
+- `state.sharedPhases` → which shared phases are complete (context, requirements, decomposition, design, tasks, implement, build, deploy)
 - `state.mode` → `null` (undecided), `incremental`, or `comprehensive`
-- `state.foundationSkipped` → `true` if brownfield incremental skipped foundation
 - `artifacts` → shared phase artifacts and their status (`draft` / `approved` / `outdated`)
 - `units[]` → per-unit state (incremental mode):
   - `status` → `not-started` / `in-progress` / `completed`
@@ -29,8 +28,7 @@ Based on manifest state, determine the next skill to dispatch:
 | `context` in `sharedPhases`, no requirements | `aidlc-requirements` |
 | `requirements` in `sharedPhases`, needs routing | Analyze complexity (see below) |
 | `decomposition` in `sharedPhases`, mode=`comprehensive` | `aidlc-design` |
-| `decomposition` in `sharedPhases`, mode=`incremental` | Check `state.foundationSkipped`: if `true` → unit dashboard; if `false` → `aidlc-foundation` |
-| `foundation` in `sharedPhases`, mode=`incremental` | Unit dashboard (see Incremental Mode Unit Routing) |
+| `decomposition` in `sharedPhases`, mode=`incremental` | Unit dashboard (see Incremental Mode Unit Routing) |
 | Comprehensive: `design` in `sharedPhases` | `aidlc-tasks` |
 | Comprehensive: `tasks` in `sharedPhases` | `aidlc-implement` |
 | Comprehensive: `implement` in `sharedPhases`, no `build` | `aidlc-build` |

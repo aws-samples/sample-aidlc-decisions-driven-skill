@@ -2,12 +2,12 @@
 
 Generate the D3 decisions file at `{WORKFLOW_DIR}/{feature}/decisions-design.md` (or `{WORKFLOW_DIR}/{feature}/units/{unit}/decisions-design.md` in incremental mode).
 
-Analyze the **FULL SYSTEM** before generating questions — read requirements, units (if exists), context, foundation (if exists).
+Analyze the **FULL SYSTEM** before generating questions — read requirements, units (if exists), context. If designing a non-foundation unit in incremental mode, also read the foundation unit's design (if it exists) at `{SPECS_DIR}/{feature}/units/foundation/design/` for shared conventions.
 
 **Rules**:
 - Always generate with blank `Answer:` fields — never pre-fill
 - If user said "use recommendations" on a previous gate, that does NOT carry forward — each gate starts fresh
-- **Skip questions** that foundation already answers (repo strategy, API architecture, auth approach, error format, inter-unit comms, DB strategy, shared types) — those decisions are settled. Do NOT include them in the decisions file.
+- **Skip questions** that the foundation unit's design already answers (repo strategy, API architecture, auth approach, error format, inter-unit comms, DB strategy, shared types) — those decisions are settled. Do NOT include them in the decisions file. Only applies when a foundation unit exists and has completed its design phase.
 
 Read `{REFERENCES_DIR}/technology-questions-catalog.md` (the **index file** — it lists which sub-catalogs to load), then load ONLY the relevant sub-catalogs based on context:
 
@@ -72,7 +72,7 @@ After D3 answers are filled, validate for conflicts.
 6. If clean or all resolved → write decision summary to manifest `decisions.design` (compact key-value pairs from Decisions Summary section) → proceed to generation
 
 **Load validation rules from `{REFERENCES_DIR}/validation-rules-d3.md`** — read only the relevant sections based on D3 answer categories:
-- **Foundation Consistency** → if `state.mode` = `incremental` AND `foundation` in `state.sharedPhases`
+- **Foundation Consistency** → if `state.mode` = `incremental` AND a foundation unit exists with completed design (check `units[name=foundation].completedPhases` contains `design`)
 - **Technology Compatibility** → if D3 includes technology stack choices
 - **Architecture & Performance** → if D3 includes architecture patterns or performance targets
 - **Security** → if D3 includes security choices, PII/compliance, or frontend+backend combinations

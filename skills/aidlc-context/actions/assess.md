@@ -151,9 +151,8 @@ Artifact at `{SPECS_DIR}/{feature}/context.md`.
 **Generate workflow diagram** based on recommendations. Use top-down ASCII art. Show ONLY the recommended path for this project.
 
 Diagram templates:
-- **Simple** (Units=No): Context → Requirements → Design → Tasks → Implement → Code Review
-- **Complex greenfield** (Units=Yes): Context → Requirements → Decomposition → Foundation → [Unit cycles] → Solutions Review → Code Review
-- **Complex brownfield** (Units=Yes): Context → Requirements → Decomposition → [Unit cycles] → Solutions Review → Code Review (skip Foundation)
+- **Simple** (Units=No): Context → Requirements → Design → Tasks → Implement → Build and Test → Deploy
+- **Complex** (Units=Yes): Context → Requirements → Decomposition → [Unit cycles: Design → Tasks → Implement] → Build and Test → Deploy
 - **With prototype**: Context → Requirements ↔ Prototype → then continue normal path
 
 **STOP and wait for user approval.**

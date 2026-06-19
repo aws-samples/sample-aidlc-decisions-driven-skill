@@ -39,12 +39,12 @@ Ready to review designs across units for cross-cutting conflicts.
 
 ## Quick Start
 
-1. Read 2+ unit design documents + foundation conventions
+1. Read 2+ unit design documents + foundation unit design (if exists)
 2. Compare across units: architecture, technology, integration, duplication, foundation compliance
 3. Classify findings by severity (🔴 Critical, 🟡 Major, 🟢 Minor)
 4. Generate report with recommendations → present Go/No-Go assessment
 
-**Reads**: 2+ unit design docs, foundation.md, context.md, units.md
+**Reads**: 2+ unit design docs, foundation unit design (if exists), context.md, units.md
 **Writes**: architecture-review.md
 
 ---
@@ -59,7 +59,7 @@ Ready to review designs across units for cross-cutting conflicts.
 ### Optional Inputs
 | Information | Description | Accepted Formats |
 |---|---|---|
-| Foundation conventions | Shared patterns and contracts to check against | Markdown (foundation.md), YAML, JSON |
+| Foundation unit design | Shared patterns and contracts to check against (the foundation unit's design docs) | Markdown at `{SPECS_DIR}/{feature}/units/foundation/design/*` |
 | Project context | Stack, architecture, scope | Markdown (context.md), YAML, JSON, plain text |
 | Requirements | User stories for traceability | Markdown (requirements.md), YAML, JSON |
 | Units | Unit boundaries and dependencies | Markdown (units.md), YAML, JSON |
@@ -81,7 +81,7 @@ Ready to review designs across units for cross-cutting conflicts.
    - **From user**: user can specify paths directly — "review designs in folder-a/ and folder-b/"
    - **From conventional paths**: scan `{SPECS_DIR}/{feature}/units/*/design.md` for unit design folders
    - If fewer than 2 design documents found: report "Need at least 2 unit designs to compare. Only found [X]." and stop.
-5. Resolve optional inputs: foundation.md, context.md, requirements.md, units.md from manifest or conventional paths
+5. Resolve optional inputs: foundation unit design (at `{SPECS_DIR}/{feature}/units/foundation/design/`), context.md, requirements.md, units.md from manifest or conventional paths
 
 ---
 
@@ -103,7 +103,7 @@ Also read:
 - `context.md` — for project-wide context
 - `requirements.md` — for traceability
 - `units.md` — for boundary definitions and dependency contracts
-- `foundation.md` — for shared conventions baseline (if exists)
+- `foundation unit design` — for shared conventions baseline (if foundation unit exists and has been designed)
 
 Extract from each unit: key decisions, technologies, API patterns, data models, error handling, auth approach, integration points.
 
@@ -136,7 +136,7 @@ Compare across all units in these categories:
 - Redundant implementations (same utility code in multiple units)
 - Duplicate data models (same entity maintained in two places)
 
-**Foundation Compliance** (if foundation.md exists):
+**Foundation Compliance** (if foundation unit design exists):
 - Deviations from agreed conventions (naming, error format, auth approach)
 - Missing shared patterns (unit doesn't use the agreed error handling)
 - Inconsistent with repo structure conventions
@@ -256,7 +256,7 @@ Report at `{WORKFLOW_DIR}/{feature}/architecture-review.md`.
 ### Action: handle-response
 
 - **"fix [issue]"**: Identify which unit's design needs to change. Recommend activating `aidlc-design` for that unit with the specific edit. Auto-continue: read `{PLATFORM_DIR}/skills/aidlc-design/SKILL.md` and begin the design-edit action for the affected unit.
-- **"proceed"**: Update manifest — add `artifacts.solutions-review` entry with `status: "approved"`, `timestamp`, `files: [architecture-review.md]`. Recommend next step based on manifest state (typically: activate `aidlc-tasks` for the next unit, or select next unit via `aidlc-foundation`).
+- **"proceed"**: Update manifest — add `artifacts.solutions-review` entry with `status: "approved"`, `timestamp`, `files: [architecture-review.md]`. Recommend next step based on manifest state (typically: activate `aidlc-tasks` for the next unit, or select next unit from decomposition).
 - **"re-review"**: Re-run the review from Step 1 with updated design documents.
 
 ---
@@ -285,7 +285,7 @@ No manifest needed. No feature name needed. Just point it at 2+ design document 
 - Be specific — provide concrete examples of conflicts, not vague warnings
 - Be constructive — focus on solutions, not just problems
 - Be pragmatic — consider trade-offs, not every inconsistency is a blocker
-- Cross-reference foundation.md conventions when evaluating consistency
+- Cross-reference foundation unit design conventions when evaluating consistency
 - Cite specific files and sections when describing issues
 
 ### Error Recovery

@@ -14,7 +14,7 @@ AI-DLC (AI-Driven Development Life Cycle) is a structured specification workflow
 
 The workflow adapts to project complexity:
 - **Simple projects**: Context → Requirements → Design → Tasks → Implement → Build → Deploy
-- **Complex projects**: Context → Requirements → Decomposition → Foundation → per-unit Design → Tasks → Implement → Build → Deploy
+- **Complex projects**: Context → Requirements → Decomposition → per-unit Design → Tasks → Implement → Build → Deploy
 - **Quick mode**: Single-pass spec for small brownfield features
 
 ## How It Works
@@ -44,12 +44,11 @@ AI-DLC is implemented as a set of **skills** that get installed into your worksp
 1. **Context** — Scan workspace, detect stack, assess project landscape
 2. **Requirements** — User stories with EARS acceptance criteria + decision gate
 3. **Decomposition** — Break into units of work (complex projects) + decision gate
-4. **Foundation** — Shared conventions for multi-unit projects + decision gate
-5. **Design** — Technology decisions and architecture + decision gate
-6. **Tasks** — Sequenced implementation tasks with execution waves + decision gate
-7. **Implement** — Code generation from task specs
-8. **Build** — Final integration build, test suites, quality gates
-9. **Deploy** — CI/CD pipeline generation + decision gate
+4. **Design** — Technology decisions and architecture + decision gate
+5. **Tasks** — Sequenced implementation tasks with execution waves + decision gate
+6. **Implement** — Code generation from task specs
+7. **Build** — Final integration build, test suites, quality gates
+8. **Deploy** — CI/CD pipeline generation + decision gate
 
 Each phase (except Context and Build) has a **decision gate** — a set of questions you answer to guide the AI's output. You can fill answers manually or say "use recommendations" to auto-fill.
 
@@ -80,7 +79,6 @@ After copying, your project should have:
 ├── aidlc-requirements/
 ├── aidlc-decomposition/
 ├── aidlc-design/
-├── aidlc-foundation/
 ├── aidlc-tasks/
 ├── aidlc-implement/
 ├── aidlc-build/
@@ -116,7 +114,6 @@ Say "reverse-engineer" to run deep codebase analysis. Produces 13 comprehensive 
 │   ├── context.md
 │   ├── requirements.md
 │   ├── units.md
-│   ├── foundation.md
 │   ├── design/
 │   └── tasks.md
 ├── workflow/{feature}/        ← workflow state

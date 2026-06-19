@@ -6,15 +6,16 @@ Generate `{SPECS_DIR}/{feature}/units.md` using `{ASSETS_DIR}/units.md` template
 - Assign every story to exactly one unit
 - Define interfaces and dependencies using DDD concepts
 - Define Context Map relationships
+- **Foundation unit**: For greenfield projects or when architecture requires shared scaffolding (microservices, modular monolith with shared conventions), propose a `foundation` unit as the first unit in the development sequence. This unit covers: repo structure, shared libraries, auth scaffolding, error handling patterns, communication contracts, database setup, and CI/CD base config. It does NOT get user stories assigned — it's infrastructure-only.
 
 **Write** the generated units to `{SPECS_DIR}/{feature}/units.md`.
 
 **Validate**:
-- ✅ All stories assigned to exactly one unit
+- ✅ All stories assigned to exactly one domain unit
 - ✅ Clear boundaries and interfaces
 - ✅ Dependencies identified with types (Data/API/Event)
 - ✅ No circular dependencies
-- ✅ Infrastructure units with `Source: foundation` preserved from previous runs
+- ✅ Foundation unit (if proposed) is first in development sequence and has no upstream dependencies
 
 **Update Manifest**: Add `decomposition` phase entry: `status: "draft"`, `timestamp`, `files: [units.md]`.
 
@@ -24,29 +25,24 @@ Generate `{SPECS_DIR}/{feature}/units.md` using `{ASSETS_DIR}/units.md` template
 
 # Mode Selection (After Units Approved)
 
-On approval: update manifest, populate `units[]` array for each unit.
-
-## Determine Recommendation
-
-- **Brownfield**: recommend skipping foundation (conventions already exist)
-- **Greenfield**: recommend foundation (important for alignment)
+On approval: update manifest, populate `units[]` array for each unit (including foundation if proposed).
 
 ## Present Mode Choice
 
 | Mode | Best For |
 |------|----------|
 | incremental | Teams, greenfield, 3+ units |
-| incremental (skip foundation) | Brownfield with established patterns |
 | comprehensive | Solo dev, tightly coupled units, ≤3 units |
 
 **STOP and wait.**
 
-- **Incremental** → `state.mode: "incremental"` → auto-continue to `aidlc-foundation`
-- **Skip foundation** → `state.mode: "incremental"`, `state.foundationSkipped: true` → unit selection below
+- **Incremental** → `state.mode: "incremental"` → present unit dashboard for selection
 - **Comprehensive** → `state.mode: "comprehensive"` → auto-continue to `aidlc-design`
 
-## Unit Selection (Skip Foundation only)
+## Unit Selection (Incremental Mode)
 
-Present domain units for selection. On selection:
+Present units in development sequence order. The foundation unit (if it exists) should be selected first since other units depend on it.
+
+On selection:
 1. `units[{unit}].status` → `"in-progress"`, `.phase` → `"design"`
 2. Auto-continue to `aidlc-design`

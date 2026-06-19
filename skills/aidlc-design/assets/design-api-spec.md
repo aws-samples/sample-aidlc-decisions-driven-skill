@@ -23,5 +23,5 @@ sections:
 ## Rules
 - One endpoint per user story action (CRUD + custom operations)
 - Include request/response JSON examples with realistic field values
-- Error responses use format from foundation.md or D3 error handling choice
+- Error responses use format from foundation unit design or D3 error handling choice
 - Source traceability: link each endpoint to its requirement or decision

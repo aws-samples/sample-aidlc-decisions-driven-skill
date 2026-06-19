@@ -12,7 +12,6 @@ Shared Phases    Status     Artifact
 Context          ✅ Done    context.md
 Requirements     ✅ Done    requirements.md (X stories)
 Decomposition    ✅ Done    units.md (Y units)
-Foundation       ✅ Done    foundation.md
 
 Mode: {Incremental / Comprehensive / Not yet decided}
 

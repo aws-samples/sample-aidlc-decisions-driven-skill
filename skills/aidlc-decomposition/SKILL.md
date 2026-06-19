@@ -47,7 +47,7 @@ Ready to decompose requirements into units of work.
 2. Validate D2 for conflicts → resolve if any
 3. Generate units with boundaries, dependencies, and story assignments
 4. Present results → wait for approval
-5. On approval → choose delivery mode (incremental / skip foundation / comprehensive)
+5. On approval → choose delivery mode (incremental / comprehensive)
 
 **Reads**: context.md (Summary), requirements.md, personas.md
 **Writes**: decisions-units.md, units.md
@@ -107,8 +107,7 @@ For decomposition strategies, DDD concepts, sizing guidance, read `{SKILL_DIR}/r
 ## Skill Handoff
 
 Based on delivery mode choice:
-- **Incremental** → `aidlc-foundation`
-- **Incremental (skip foundation)** → unit selection, then `aidlc-design`
+- **Incremental** → unit dashboard, then `aidlc-design` for selected unit
 - **Comprehensive** → `aidlc-design`
 
 ---

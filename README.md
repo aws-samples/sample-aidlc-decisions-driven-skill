@@ -97,7 +97,7 @@ AI-DLC organizes the development lifecycle into three phases:
 
 | Phase | Covers | Skills |
 |---|---|---|
-| **Inception** | Understanding the problem space — context assessment, requirements gathering, and decomposition into deliverable units | aidlc-context, aidlc-requirements, aidlc-decomposition, aidlc-foundation |
+| **Inception** | Understanding the problem space — context assessment, requirements gathering, and decomposition into deliverable units | aidlc-context, aidlc-requirements, aidlc-decomposition |
 | **Construction** | Solving the problem — technology decisions, detailed design, task planning, and code implementation | aidlc-design, aidlc-tasks, aidlc-implement |
 | **Operation** | Shipping and running — final integration verification, CI/CD pipeline generation, and deployment | aidlc-build, aidlc-deploy |
 
@@ -109,14 +109,13 @@ flowchart TD
         A[Context] --> B[Requirements]
         B --> C{Complex?}
         C -->|Complex| E[Decomposition]
-        E --> F[Foundation]
     end
 
     subgraph Construction
         C -->|Simple| D[Design]
         D --> T[Tasks]
         T --> I[Implement]
-        F --> Units
+        E --> Units
         subgraph Units ["For Each Unit"]
             direction TB
             UD[Design] --> UT[Tasks] --> UI[Implement]
@@ -135,9 +134,9 @@ flowchart TD
     P -.->|refine| B
 ```
 
-**Simple projects** skip decomposition and foundation — go straight from requirements to design, then implement, build and test, and deploy.
+**Simple projects** skip decomposition — go straight from requirements to design, then implement, build and test, and deploy.
 
-**Complex projects** (5+ stories, 2+ domains) decompose into units, define a shared foundation, then design and implement each unit independently before building, testing, and deploying.
+**Complex projects** (5+ stories, 2+ domains) decompose into units (including a foundation unit for shared scaffolding when needed), then design and implement each unit independently before building, testing, and deploying.
 
 **Build and Test** verifies the implemented code compiles, passes tests, and meets quality gates. Note that unit tests and local builds typically happen within implementation tasks — this stage represents the final integration verification that everything works together across units and environments.
 
@@ -153,8 +152,7 @@ flowchart TD
 |---|---|---|---|
 | `aidlc-context` | Inception | 1 | Scans workspace, detects stack and architecture (brownfield) or captures intent (greenfield). Produces `context.md` and steering files. Creates the manifest. |
 | `aidlc-requirements` | Inception | 2 | Translates context into user stories with EARS acceptance criteria. Generates personas (optional). Routes to decomposition, design, or prototype based on complexity. |
-| `aidlc-decomposition` | Inception | 3 | Breaks requirements into independently deliverable units using DDD concepts. Defines boundaries, dependencies, and development sequence. Presents incremental vs. comprehensive mode choice. |
-| `aidlc-foundation` | Inception | 3b | Defines shared conventions for incremental mode — repo structure, auth, error handling, communication patterns, database strategy. Adds infrastructure units. |
+| `aidlc-decomposition` | Inception | 3 | Breaks requirements into independently deliverable units using DDD concepts. Defines boundaries, dependencies, and development sequence. Proposes a foundation unit for shared scaffolding when needed. Presents incremental vs. comprehensive mode choice. |
 | `aidlc-design` | Construction | 4 | Makes technology decisions via D3 decision gate. Generates component design, data model, API spec, integration patterns, and implementation plan. Supports compact (≤10 stories) and modular (11+) formats. |
 | `aidlc-tasks` | Construction | 5 | Breaks design into sequenced, estimable tasks. Generates execution waves with file ownership for parallel dispatch. |
 | `aidlc-implement` | Construction | 6 | Executes tasks in standard (one-at-a-time), parallel (wave-based sub-agents), or autonomous (all waves, no stops) mode. |
@@ -179,7 +177,6 @@ Each phase has a decision gate that generates targeted questions, validates answ
 |---|---|---|
 | D1 | Requirements | Feature scope, user types, core functionality, data entities, integrations, business rules, constraints |
 | D2 | Decomposition | Architecture pattern, decomposition strategy, unit proposals, dependencies, development sequence |
-| DF | Foundation | Team structure, repo strategy, API architecture, auth, error handling, inter-unit communication, database strategy |
 | D3 | Design | Technology stack, frameworks, data layer, testing strategy, infrastructure, code organization |
 | D4 | Tasks | Breakdown strategy, implementation approach (TDD/test-after), component priority, integration strategy, task granularity |
 | D5 | Deploy | CI/CD platform, deployment target, deployment strategy, environments, promotion, secrets management, rollback, monitoring |
@@ -204,7 +201,6 @@ AI-DLC produces artifacts at conventional paths. All paths are platform-aware.
 | `requirements.md` | aidlc-requirements | User stories with EARS acceptance criteria |
 | `personas.md` | aidlc-requirements | User personas (conditional) |
 | `units.md` | aidlc-decomposition | Unit boundaries, dependencies, development sequence |
-| `foundation.md` | aidlc-foundation | Shared conventions and infrastructure |
 | `design.md` | aidlc-design | Architecture overview and design summary |
 | `design/components.md` | aidlc-design | Component breakdown |
 | `design/data-model.md` | aidlc-design | Entity definitions, schemas, relationships |
@@ -274,8 +270,8 @@ After decomposition, you choose a delivery mode:
 **Comprehensive** — A single design covering all units. Best for tightly coupled units or small projects. Workflow: design → tasks → implement (all at once).
 
 **Incremental** — Design, task, and implement one unit at a time. Recommended for 2+ units.
-- *Greenfield*: foundation → (select unit → design → tasks → implement) × N
-- *Brownfield* (skip foundation): (select unit → design → tasks → implement) × N — uses existing codebase conventions instead of generating a foundation spec
+- The decomposition skill proposes a foundation unit (first in sequence) when shared scaffolding is needed
+- Workflow: (select unit → design → tasks → implement) × N
 
 In incremental mode, each unit gets its own scoped directory (`{SPECS_DIR}/{feature}/units/{unit}/`) with its own design docs and tasks.
 
@@ -344,10 +340,9 @@ created: "2026-04-15T10:00:00Z"
 updated: "2026-04-15T11:30:00Z"
 
 state:
-  sharedPhases: [context, requirements, decomposition, foundation]
+  sharedPhases: [context, requirements, decomposition]
   mode: incremental              # null | incremental | comprehensive
   status: active                 # active | completed
-  foundationSkipped: false
   implementationMode: null       # null | standard | parallel | autonomous (comprehensive mode only)
   quickPath: false               # true if created via quick mode
 
@@ -371,10 +366,6 @@ artifacts:
     status: approved
     timestamp: "2026-04-15T11:00:00Z"
     files: [units.md]
-  foundation:
-    status: approved
-    timestamp: "2026-04-15T11:15:00Z"
-    files: [foundation.md]
   # Comprehensive mode also has: design, tasks, build, deploy (same structure)
 
 context-summary:
@@ -390,14 +381,13 @@ context-summary:
 decisions:
   requirements: { scope: "Full product", user-types: 3, integrations: 2 }
   decomposition: { strategy: "domain-driven", units: 3 }
-  foundation: { auth: "JWT", comms: "REST", db: "shared-separate-schemas" }
   # Comprehensive mode also has: design, tasks, deploy (same structure)
 
 steering:
   updatedBy:
     product: [context, requirements]
-    tech: [context, foundation, design]
-    structure: [context, foundation, design]
+    tech: [context, design]
+    structure: [context, design]
 
 units:
   - name: auth
@@ -439,7 +429,7 @@ Conventions:
 - File paths in `files` are relative to `{SPECS_DIR}/{feature}/` (shared) or `{SPECS_DIR}/{feature}/units/{unit}/` (per-unit)
 - Decision gate files (`decisions-{phase}.md`) are implicit — not tracked in artifacts
 - Steering paths are implicit (`{STEERING_DIR}/{name}.md`) — only `updatedBy` is tracked
-- `context-summary` stores key fields from context.md for downstream skills. `teamSize` is captured in D1 and used by D2/D3/DF validation rules.
+- `context-summary` stores key fields from context.md for downstream skills. `teamSize` is captured in D1 and used by D2/D3 validation rules.
 - `decisions` stores compact summaries — shared decisions at top level, unit-scoped in `units[].decisions`
 
 ## License

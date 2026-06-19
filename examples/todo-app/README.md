@@ -21,7 +21,7 @@ In a real project, these files would live at `.aidlc/specs/todo-app/`.
 - **Design format**: Compact (single file, since ≤10 stories)
 - **Workflow path**: Context → Requirements → Design → Tasks → Implement → Build and Test → Deploy
 
-This example follows the simple project path — no decomposition, no foundation, no units. The Build and Test and Deploy stages are not shown in this example as they depend on the target deployment environment. For complex project examples with multiple units and incremental delivery, see the AI-DLC documentation.
+This example follows the simple project path — no decomposition, no units. The Build and Test and Deploy stages are not shown in this example as they depend on the target deployment environment. For complex project examples with multiple units and incremental delivery, see the AI-DLC documentation.
 
 ## How These Were Generated
 

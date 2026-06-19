@@ -30,7 +30,6 @@ This project uses AI-DLC skills for structured software specification and implem
 | aidlc-context | 1 | Workspace scan, context assessment |
 | aidlc-requirements | 2 | User stories with EARS criteria |
 | aidlc-decomposition | 3 | Unit breakdown with DDD boundaries and dependencies |
-| aidlc-foundation | 3b | Shared conventions for incremental multi-unit projects |
 | aidlc-design | 4 | Technology decisions and architecture |
 | aidlc-tasks | 5 | Implementation task planning |
 | aidlc-implement | 6 | Code generation |

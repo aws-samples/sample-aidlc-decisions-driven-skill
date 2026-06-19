@@ -15,18 +15,18 @@ Skills use a three-layer structure for token efficiency:
                     │ (optional)  │
                     └──────┬──────┘
                            │ dispatches
-     ┌──────────┬──────────┼──────────┬──────────┬──────────┬──────────┬─────────┐
-     ▼          ▼          ▼          ▼          ▼          ▼          ▼         ▼
-┌─────────┐ ┌──────┐ ┌────────┐ ┌──────────┐ ┌──────┐ ┌───────┐ ┌─────────┐ ┌─────┐
-│ context │ │ req  │ │ decomp │ │foundation│ │design│ │ tasks │ │implement│ │build│→deploy
-│ Phase 1 │ │Phs 2 │ │ Phs 3  │ │  Phs 3b  │ │Phs 4│ │ Phs 5 │ │ Phase 6 │ │Phs 7│  Phs 8
-└────┬────┘ └──┬───┘ └───┬────┘ └────┬─────┘ └──┬───┘ └──┬────┘ └────┬────┘ └─────┘
-     │         │         │           │           │        │            │
-     └────→────┘    ┌────┘           └─────→─────┘        └────→───────┘──→ build → deploy
-              │     │ (incremental)        │
-              │     └──→ foundation ──→ design
+     ┌──────────┬──────────┼──────────┬──────────┬──────────┬─────────┐
+     ▼          ▼          ▼          ▼          ▼          ▼         ▼
+┌─────────┐ ┌──────┐ ┌────────┐ ┌──────┐ ┌───────┐ ┌─────────┐ ┌─────┐
+│ context │ │ req  │ │ decomp │ │design│ │ tasks │ │implement│ │build│→deploy
+│ Phase 1 │ │Phs 2 │ │ Phs 3  │ │Phs 4│ │ Phs 5 │ │ Phase 6 │ │Phs 7│  Phs 8
+└────┬────┘ └──┬───┘ └───┬────┘ └──┬───┘ └──┬────┘ └────┬────┘ └─────┘
+     │         │         │         │        │            │
+     └────→────┘    ┌────┘         │        └────→───────┘──→ build → deploy
+              │     │ (incremental)│
+              │     └──→ design (per unit)
               │
-              └──→ design (comprehensive, skip 3/3b)
+              └──→ design (comprehensive, skip 3)
               │
               └──→ prototype (standalone side-quest)
 ```
@@ -66,7 +66,7 @@ The orchestrator handles: dispatching phase skills, status display, resume detec
 | `prototype` | Build a throwaway spike to validate requirements |
 | `review` | Run solutions review (cross-unit) or code review (post-implementation) |
 | `reverse-engineer` | Deep brownfield codebase analysis (13 reports) |
-| Phase names | Jump directly to any phase: `context`, `requirements`, `decomposition`, `foundation`, `design`, `tasks`, `implement`, `build`, `deploy` |
+| Phase names | Jump directly to any phase: `context`, `requirements`, `decomposition`, `design`, `tasks`, `implement`, `build`, `deploy` |
 
 Commands match loosely — "what's next", "show status", "go back to design" all work.
 
@@ -100,8 +100,7 @@ Skills find what they need via the input resolution algorithm:
 |---|---|---|
 | `aidlc-context` | 1 | Scans workspace, gathers project context, creates manifest and steering files |
 | `aidlc-requirements` | 2 | Translates context into user stories with EARS acceptance criteria. Includes routing recommendation (decompose vs design vs prototype) |
-| `aidlc-decomposition` | 3 | Breaks complex projects into implementation units with boundaries and dependencies. Presents incremental vs comprehensive mode choice |
-| `aidlc-foundation` | 3b | Defines shared conventions, contracts, and infrastructure for incremental multi-unit projects. Manages infrastructure units and coordinates unit selection |
+| `aidlc-decomposition` | 3 | Breaks complex projects into implementation units with boundaries and dependencies. Proposes a foundation unit for shared scaffolding when needed. Presents incremental vs comprehensive mode choice |
 | `aidlc-design` | 4 | Creates technical design — components, data model, API spec, integration patterns, implementation plan. Supports compact (simple) and full (complex) formats |
 | `aidlc-tasks` | 5 | Breaks design into sequenced implementation tasks with execution waves and file ownership |
 | `aidlc-implement` | 6 | Executes tasks — standard (sequential), parallel (wave-based), or autonomous mode |
@@ -121,15 +120,14 @@ Skills find what they need via the input resolution algorithm:
 | `aidlc-context` | Workspace files (source, configs, README) |
 | `aidlc-requirements` | context.md (Summary), steering files (Summaries), resources.md (full), design resources |
 | `aidlc-decomposition` | context.md (Summary), requirements.md, personas.md |
-| `aidlc-foundation` | context.md (Summary), requirements.md, units.md |
-| `aidlc-design` | context.md (Summary), requirements.md, units.md (if exists), foundation.md (if exists), steering files (Summaries), resources.md, design resources |
+| `aidlc-design` | context.md (Summary), requirements.md, units.md (if exists), steering files (Summaries), resources.md, design resources |
 | `aidlc-tasks` | context.md (Summary), design.md + design/*, steering files (Summaries) |
 | `aidlc-implement` | tasks.md, design.md + design/*, steering files (Summaries), design resources |
 | `aidlc-build` | Source code, build configs (package.json, Makefile, etc.), design/testing-strategy.md, steering files |
 | `aidlc-deploy` | build-report.md, design/implementation.md, context.md, existing CI configs, steering files |
 | `aidlc-prototype` | requirements.md (or inline stories), design resources |
-| `aidlc-solutions-review` | 2+ unit design docs (design.md + design/*), foundation.md, units.md, context.md |
-| `aidlc-code-review` | Source code, optionally: design docs, foundation.md, tasks.md, git diff |
+| `aidlc-solutions-review` | 2+ unit design docs (design.md + design/*), units.md, context.md |
+| `aidlc-code-review` | Source code, optionally: design docs, tasks.md, git diff |
 | `aidlc` (orchestrator) | aidlc-manifest.yaml, audit.md, context.md (diagram), artifact files (for counts) |
 
 ### What Each Skill Writes
@@ -139,7 +137,6 @@ Skills find what they need via the input resolution algorithm:
 | `aidlc-context` | context.md, steering/*, manifest (creates), audit.md (creates), `.claude/CLAUDE.md` (Claude Code only) |
 | `aidlc-requirements` | decisions-requirements.md, requirements.md, personas.md, steering/product.md (update) |
 | `aidlc-decomposition` | decisions-units.md, units.md |
-| `aidlc-foundation` | decisions-foundation.md, foundation.md, units.md (infra units added), steering/tech.md (update) |
 | `aidlc-design` | decisions-design.md, design.md, design/*, steering/tech.md + structure.md (update) |
 | `aidlc-tasks` | decisions-tasks.md, tasks.md |
 | `aidlc-implement` | Source code, test files, tasks.md (checkbox updates) |
@@ -166,10 +163,10 @@ Where `SPECS_DIR` is always `.aidlc/specs`, `STEERING_DIR` is platform-dependent
 The manifest (`aidlc-manifest.yaml`) is the single source of truth for workflow state. It lives at `{WORKFLOW_DIR}/{feature}/aidlc-manifest.yaml`.
 
 **Key sections:**
-- `state` — shared phases, mode (incremental/comprehensive), foundationSkipped
-- `artifacts` — shared phase artifacts (context, requirements, decomposition, foundation) with `status`, `timestamp`, `files`
+- `state` — shared phases, mode (incremental/comprehensive)
+- `artifacts` — shared phase artifacts (context, requirements, decomposition) with `status`, `timestamp`, `files`
 - `context-summary` — key fields from context.md for downstream skills
-- `decisions` — shared decision summaries (requirements, decomposition, foundation, deploy). Unit-scoped decisions in `units[].decisions`
+- `decisions` — shared decision summaries (requirements, decomposition, deploy). Unit-scoped decisions in `units[].decisions`
 - `steering` — `updatedBy` map tracking which phases updated each steering file
 - `units[]` — per-unit state for incremental mode: `status`, `phase`, `completedPhases`, `implementationMode`, `implementation` (task counters), `artifacts`, `decisions`. Multiple units can be `in-progress` simultaneously.
 
@@ -198,17 +195,12 @@ Decomposition is recommended for complex projects (5+ stories, 2+ domains) but c
 ### Incremental (Complex Projects)
 
 ```
-context → requirements → decomposition → foundation
-  → for each unit: design → tasks → implement
-  → build → deploy
-```
-
-**Brownfield variant** (skip foundation — conventions already exist):
-```
 context → requirements → decomposition
   → for each unit: design → tasks → implement
   → build → deploy
 ```
+
+The decomposition skill proposes a foundation unit (first in sequence) when shared scaffolding is needed. Brownfield projects that already have established conventions simply won't have a foundation unit proposed.
 
 Units are processed sequentially. Architecture review is recommended after 2+ unit designs are complete. Build and deploy run once after all units are implemented.
 
@@ -223,7 +215,7 @@ The prototype is standalone — it doesn't advance the workflow phase. It produc
 ### With Reviews
 
 ```
-context → requirements → [decomposition → foundation]
+context → requirements → [decomposition]
   → design → [solutions review] → tasks → implement → [code review] → build → deploy
 ```
 

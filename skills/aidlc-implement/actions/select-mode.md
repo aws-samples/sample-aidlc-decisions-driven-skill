@@ -12,23 +12,30 @@ Read tasks.md (or unit-scoped tasks.md in incremental mode):
 
 ## Step 2: Present Mode Choice
 
+Determine recommendation based on context:
+- **Solo dev OR ≤10 tasks OR learning the codebase** → recommend standard
+- **2+ execution waves AND Kiro/Claude Code AND trust the spec** → recommend autonomous
+- **2+ execution waves AND Kiro/Claude Code AND want review checkpoints** → recommend parallel
+
 ```
 📍 Tasks Complete — Choose Implementation Mode
 
 Your project has [X tasks] across [Y phases] in [Z execution waves].
 
-Available modes:
-- 🔹 **standard** — tasks one at a time, review and test after each. Best for learning the codebase or when you want tight control.
-- 🔹 **parallel** — tasks in dependency waves via sub-agents, review per wave. Faster but harder to debug if something breaks.
-- 🔹 **autonomous** — all tasks without stopping, single review at the end. Best when you trust the spec fully.
+| Mode | How It Works | Best For |
+|------|-------------|----------|
+| **standard** | One task at a time, review after each | Learning the codebase, tight control |
+| **parallel** | Dependency waves via sub-agents, review per wave | Speed with review checkpoints |
+| **autonomous** | All waves without stopping, single review at end | High confidence in the spec |
 
-[If Cursor/Windsurf: "⚠️ Parallel and autonomous modes are not available on {platform}. Standard mode recommended."]
+[If Cursor/Windsurf: "⚠️ Parallel and autonomous modes are not available on {platform}."]
+
+👉 **Recommended: {mode}** — {one-line rationale}
 
 ---
 🔲 **Your turn**:
-- 🔹 "standard"
-- 🔹 "parallel"
-- 🔹 "autonomous"
+- ✅ "go" — use recommended mode
+- Or pick: "standard" / "parallel" / "autonomous"
 ```
 
 **STOP and wait for user response.** Do not auto-select a mode.

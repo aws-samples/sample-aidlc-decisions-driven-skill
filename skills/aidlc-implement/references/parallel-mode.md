@@ -56,7 +56,7 @@ Read these files for implementation guidance:
 - `{designDir}/design/data-model.md` — entities and schemas
 - `{designDir}/design/api-spec.md` — endpoints (if applicable)
 - `{designDir}/design/components.md` — components (if applicable)
-{If incremental: "- `{SPECS_DIR}/{feature}/foundation.md` — shared conventions (auth, error handling, comms, DB strategy)"}
+{If incremental: "- Foundation unit design docs at `{SPECS_DIR}/{feature}/units/foundation/design/` — shared conventions (auth, error handling, comms, DB strategy)"}
 
 Where {designDir} = `{SPECS_DIR}/{feature}` (comprehensive) or `{SPECS_DIR}/{feature}/units/{unit}` (incremental).
 

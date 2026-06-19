@@ -42,12 +42,12 @@ Ready to review code against design specs and best practices.
 ## Quick Start
 
 1. Determine scope: full / scoped / diff / task-specific
-2. Read source code + optional design docs, foundation, tasks
+2. Read source code + optional design docs, foundation unit design, tasks
 3. Check: design compliance, correctness, security, error handling, performance, test quality, code quality
 4. Classify findings (🔴 Critical, 🟡 Major, 🟢 Minor, 💡 Suggestion)
 5. Generate report → offer to apply fixes
 
-**Reads**: Source code, optionally: design docs, foundation.md, tasks.md, git diff
+**Reads**: Source code, optionally: design docs, foundation unit design, tasks.md, git diff
 **Writes**: code-review.md
 
 ---
@@ -64,7 +64,7 @@ Ready to review code against design specs and best practices.
 |---|---|---|
 | Design documents | Architecture and implementation specs | Markdown (design.md + design/*), OpenAPI |
 | Tasks | Task list to verify coverage | Markdown (tasks.md) |
-| Foundation conventions | Shared coding standards | Markdown (foundation.md) |
+| Foundation unit design | Shared coding standards | Markdown at `{SPECS_DIR}/{feature}/units/foundation/design/*` |
 | Git diff | Changes to review | Git diff output, PR diff |
 
 ### Outputs

@@ -4,7 +4,7 @@
 
 Read available context:
 - **Design documents** (if available): architecture, components, data model, API contracts, conventions
-- **Foundation conventions** (if available): coding standards, naming, error handling, shared types
+- **Foundation unit design** (if available): coding standards, naming, error handling, shared types
 - **Tasks** (if available): what was supposed to be implemented, completeness check
 - **Tech stack** from `{STEERING_DIR}/tech.md` (if available): expected frameworks, libraries, patterns
 
@@ -43,7 +43,7 @@ Check each category. Skip categories that don't apply.
 
 **Code Quality**: Naming clarity, function size, duplication, dead code, consistent patterns, documentation, type safety
 
-**Convention Compliance** (if foundation.md available): Naming, error format, logging format, file organization, shared types usage
+**Convention Compliance** (if foundation unit design available): Naming, error format, logging format, file organization, shared types usage
 
 **Accessibility** (if frontend framework in stack): Semantic HTML, ARIA, keyboard nav, color contrast, focus management, form labels, alt text, skip nav
 

@@ -90,10 +90,9 @@ Generate `{SPECS_DIR}/{feature}/context.md` with this structure.
 [ASCII art workflow diagram tailored to this project's complexity and type.
 Show the recommended path based on the recommendations above.
 Use box-drawing characters (┌ ─ ┐ │ └ ┘ ├ ┤ ▼ ▲ →) for boxes and arrows.
-Simple projects: Context → Requirements → Design → Tasks → Implement → Code Review.
-Complex greenfield: add Decomposition, Foundation, per-unit cycles, Solutions Review.
-Complex brownfield: add Decomposition, per-unit cycles, Solutions Review — skip Foundation (conventions already exist).
-See SKILL.md Step 10 for diagram templates.]
+Simple projects: Context → Requirements → Design → Tasks → Implement → Build and Test → Deploy.
+Complex projects: add Decomposition, per-unit cycles (Design → Tasks → Implement), then Build and Test → Deploy.
+See assess.md for diagram templates.]
 
 ## External References
 [If external resources were used — otherwise omit]

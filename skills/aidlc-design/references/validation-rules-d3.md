@@ -4,14 +4,14 @@ Load relevant sections based on D3 answer categories.
 
 ## Foundation Consistency (Incremental Mode)
 
-> Load when `state.mode` = `incremental` AND `foundation` in `state.sharedPhases`. Read foundation decisions from manifest `decisions.foundation`.
+> Load when `state.mode` = `incremental` AND a foundation unit exists with completed design. Read foundation design decisions from `units[name=foundation].decisions.design` in the manifest.
 
 | Rule | Detection | Severity | Questions | Options |
 |---|---|---|---|---|
-| Auth Mismatch | Foundation auth ≠ D3 auth (e.g., Foundation="JWT", D3="Session") | 🔴 High | D3 auth choice conflicts with foundation convention. Which should this unit use? | 1. Use foundation convention ({foundation auth}) 2. Override for this unit (justify deviation) 3. Update foundation to match D3 |
-| API Style Mismatch | Foundation comms ≠ D3 api-style (e.g., Foundation="REST", D3="GraphQL") | 🔴 High | D3 API style conflicts with foundation inter-unit communication pattern. | 1. Use foundation convention ({foundation comms}) 2. Override for this unit (justify — e.g., public API vs internal) 3. Update foundation |
-| Database Mismatch | Foundation db ≠ D3 database (e.g., Foundation="PostgreSQL shared schemas", D3="MongoDB") | 🟡 Medium | D3 database choice differs from foundation strategy. Intentional? | 1. Use foundation database strategy 2. Override for this unit (polyglot persistence — justify) 3. Update foundation |
-| Error Format Mismatch | Foundation error-format ≠ D3 error-format | 🟡 Medium | D3 error format differs from foundation convention. | 1. Use foundation convention 2. Override for this unit (justify) 3. Update foundation |
+| Auth Mismatch | Foundation unit auth ≠ D3 auth (e.g., Foundation="JWT", D3="Session") | 🔴 High | D3 auth choice conflicts with foundation convention. Which should this unit use? | 1. Use foundation convention ({foundation auth}) 2. Override for this unit (justify deviation) 3. Update foundation design |
+| API Style Mismatch | Foundation unit comms ≠ D3 api-style (e.g., Foundation="REST", D3="GraphQL") | 🔴 High | D3 API style conflicts with foundation inter-unit communication pattern. | 1. Use foundation convention ({foundation comms}) 2. Override for this unit (justify — e.g., public API vs internal) 3. Update foundation design |
+| Database Mismatch | Foundation unit db ≠ D3 database (e.g., Foundation="PostgreSQL shared schemas", D3="MongoDB") | 🟡 Medium | D3 database choice differs from foundation strategy. Intentional? | 1. Use foundation database strategy 2. Override for this unit (polyglot persistence — justify) 3. Update foundation design |
+| Error Format Mismatch | Foundation unit error-format ≠ D3 error-format | 🟡 Medium | D3 error format differs from foundation convention. | 1. Use foundation convention 2. Override for this unit (justify) 3. Update foundation design |
 
 **Context-Based Severity Adjustments**:
 - If the unit is an infrastructure unit → mismatches are always 🔴 High (infra sets the standard)
