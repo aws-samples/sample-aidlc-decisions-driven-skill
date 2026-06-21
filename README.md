@@ -68,6 +68,12 @@ Or point it to an existing requirements document:
 /aidlc build the application described in docs/requirements.md
 ```
 
+Try one of the [example requirements](examples/requirements/) included in this repo:
+
+```
+/aidlc build the application described in examples/requirements/requirements-th-art-toys.md
+```
+
 The workflow kicks off automatically — scanning your workspace, generating specs, and guiding you through each phase with decision gates.
 
 ### Available Commands
