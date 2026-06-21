@@ -208,9 +208,10 @@ Dispatch the named skill directly. No confirmation needed — the user explicitl
 ## Behavioral Rules
 
 ### Language
-- Detect from user's first message or read from manifest.
-- ALL narrative content in user's language.
-- Keep in English: file paths, skill names, tech terms.
+- Detect from user's first message or read from manifest `language` field.
+- ALL narrative content, descriptions, prompts, and explanations in user's language. This includes translating template text from action files.
+- Keep in English ONLY: file paths, skill names, command names, tech terms, YAML keys, code.
+- NEVER mix languages in a single response. If user speaks Thai, the entire response is in Thai (except English-only items above).
 
 ### Silent Operations
 - NEVER mention to user: manifest reads, file scanning, path resolution, platform detection.

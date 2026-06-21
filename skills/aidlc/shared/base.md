@@ -66,8 +66,29 @@ Phase order: context → requirements → decomposition → design → tasks →
 ## Behavioral Rules
 
 ### Language & Presentation
-- Content language: match user's language (ISO 639-1 detected from first message)
-- Technical terms: always English (paths, code, variable names, phase names)
+
+**Language detection**: Detect the user's language from their first message. Store in manifest as `language` field (ISO 639-1 code). Once detected, ALL subsequent responses MUST use that language.
+
+**What MUST be in the user's language**:
+- All explanations, descriptions, instructions, and narrative text
+- Section headers and labels in responses (e.g., "Your turn" → translated equivalent)
+- Decision gate questions and descriptions
+- Status messages and progress updates
+- Error messages and suggestions
+- Approval prompts and option descriptions
+
+**What MUST stay in English**:
+- File paths and directory names (`{SPECS_DIR}/{feature}/design.md`)
+- Skill names and phase names (`aidlc-design`, `D3`)
+- Technical terms that have no standard translation (REST, API, JWT, CI/CD)
+- Code snippets, variable names, YAML keys
+- Manifest field names and values
+- Command names (`start`, `resume`, `status`, `rollback`)
+
+**Template translation rule**: Action files contain English template strings (e.g., "📍 Tasks Complete — Choose Implementation Mode"). These are structural guides, NOT literal output. Translate all human-readable text in templates to the user's language before presenting. Only keep the structural markers (📍, 🔲, ✅, ✏️, etc.) and English-only items listed above.
+
+**Consistency rule**: Do NOT mix languages within a single response. If the response is in Thai, ALL narrative text must be in Thai. A response that switches between Thai and English mid-sentence or mid-paragraph is a bug.
+
 - Silent operations: never narrate platform detection, manifest reads/writes, file scanning, path resolution, template loading, audit entries
 
 ### Status Header
