@@ -96,7 +96,13 @@ The full phase order applies to `new` and `feature` scopes. Other scopes skip ph
 
 **Template translation rule**: Action files contain English template strings (e.g., "📍 Tasks Complete — Choose Implementation Mode"). These are structural guides, NOT literal output. Translate all human-readable text in templates to the user's language before presenting. Only keep the structural markers (📍, 🔲, ✅, ✏️, etc.) and English-only items listed above.
 
-**Consistency rule**: Do NOT mix languages within a single response. If the response is in Thai, ALL narrative text must be in Thai. A response that switches between Thai and English mid-sentence or mid-paragraph is a bug.
+**⛔ Artifact language rule**: Generated artifact files (context.md, requirements.md, personas.md, decisions-*.md, design.md, design/*.md, units.md, tasks.md, build-report.md, deploy-summary.md) MUST have their narrative content written in the user's language. Asset templates are English-language structural guides — translate all human-readable content when writing the actual artifact file. Only these stay in English inside artifact files:
+- YAML keys, IDs (US-NNN), file paths, code snippets
+- Technical terms (REST, API, JWT, CI/CD)
+- Section heading markers that are referenced by other skills (e.g., `## Summary`, `## Decisions Summary`)
+- Steering files (`product.md`, `tech.md`, `structure.md`, `aidlc-workflow.md`) — these are machine-read by skills and stay English
+
+**Consistency rule**: Do NOT mix languages within a single response OR within a single artifact file. If the user's language is Thai, ALL narrative text in both chat and files must be in Thai.
 
 ### ⛔ Silent Operations — HARD RULE
 
