@@ -87,6 +87,25 @@ Load ONLY the guides that apply from `{REFERENCES_DIR}/`. Do NOT read guides tha
 - ✅ Cross-references between design files are correct
 - ✅ Testing strategy covers all D3 testing choices (if testing-strategy.md generated)
 - ✅ Test directory structure in testing-strategy.md is consistent with implementation.md
+- ✅ **Traceability complete** (see Traceability Gap Detection below)
+
+## Traceability Gap Detection
+
+After generating all design files, run this check BEFORE presenting results to the user:
+
+1. **Extract all requirement IDs**: Read `requirements.md` (or unit-scoped requirements), collect every `US-*` ID
+2. **Scan design output**: Check the Traceability section in `design.md` for each US-* ID
+3. **Classify coverage**:
+   - **Covered**: US-* appears in traceability table with at least one component mapped
+   - **Gap**: US-* does not appear, or appears with no component/endpoint/entity mapped
+4. **If gaps exist**: Mark them as `⚠️ Gap` in the traceability table with a brief reason (deferred to another unit, out of scope for this design, handled by shared infrastructure, etc.)
+5. **Reverse check**: For each component in `design/components.md`, verify it traces to at least one US-*. Components without a requirement must be justified (infrastructure, shared utilities, framework scaffolding)
+
+**Fail condition**: If any US-* has no design coverage AND no documented justification, do NOT present results. Instead, fix the gap by either:
+- Adding the missing component/endpoint/entity to the design
+- Documenting why the gap is intentional (deferred, covered elsewhere)
+
+Then proceed to present results.
 
 ## Update Steering
 

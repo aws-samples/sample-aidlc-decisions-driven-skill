@@ -27,11 +27,15 @@ sections:
     - run_commands: per test type + full suite
   nfr: # if D3 NFR answered — performance, security, scalability targets
   correctness: # if D3 PBT = Yes — property table (name, description, validates)
-  traceability: requirement → component → API → data
+  traceability: # MANDATORY — every US-* must appear
+    - table: requirement | component(s) | endpoint(s) | entity | status
+    - coverage_summary: X/Total covered, list gaps with reason
+    - components_without_requirement: list with justification (infra, shared, etc.)
   external_references: # if resources used — source, type, used_in
 ```
 
 ## Rules
 - All D3 choices must be reflected
 - Every story maps to at least one component + endpoint + entity
+- Traceability table must list ALL US-* from requirements.md — mark gaps as "⚠️ Gap" with reason
 - Keep concise — single file, not a design folder

@@ -83,6 +83,33 @@ Group phases into waves based on inter-phase dependencies:
 - ✅ If load testing selected in D3, load test task(s) exist
 - ✅ If TDD selected in D4, test tasks precede implementation tasks in ordering
 - ✅ Testing tasks derive from D3 testing choices — no test frameworks assumed without D3 backing
+- ✅ **Traceability complete** (see Traceability Gap Detection below)
+
+## Traceability Gap Detection
+
+After generating tasks.md, run this check BEFORE presenting results:
+
+### Requirements → Tasks (forward trace)
+1. Read `requirements.md` — collect every `US-*` ID
+2. Check the `requirements_coverage` section in tasks.md — every US-* must appear with at least one implementing task
+3. If a US-* has no task → **fail** — add the missing task or document why it's excluded
+
+### Design → Tasks (forward trace)
+1. Read design `Traceability` section — collect all components, endpoints, and entities
+2. Check the `design_coverage` section in tasks.md — every design element must map to at least one task
+3. If a component/endpoint/entity has no task → **fail** — add the missing task
+
+### Reverse trace (tasks → upstream)
+1. For every task phase in tasks.md, verify it references a design file and section via `**Ref**:`
+2. Tasks without a `**Ref**` to a design element are unanchored — flag as `⚠️ No design reference`
+
+### Gap report
+If gaps are found, fix them before presenting. If intentional (deferred to another unit, infrastructure-only), document in the coverage section:
+```
+| US-X | — | ⚠️ Deferred to unit: payments |
+```
+
+**Fail condition**: Do NOT present results if any US-* or design component has zero task coverage without documented justification.
 
 ## File Ownership Overlap Validation
 

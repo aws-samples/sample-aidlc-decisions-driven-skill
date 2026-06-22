@@ -50,6 +50,18 @@ Write to `{WORKFLOW_DIR}/{feature}/build-report.md`:
 ## Summary
 
 {One-paragraph summary: what was verified, what passed, what was accepted with known issues}
+
+## Implementation Traceability
+
+| Requirement | Mapped Tasks | Completed | Status |
+|---|---|---|---|
+| [US-X] | [task IDs] | [X/Y] | ✅ Covered / ⚠️ Partial / ❌ Not implemented |
+
+### Coverage
+- **Requirements fully covered**: [X] / [Total]
+- **Partial**: [Y] (list)
+- **Not implemented**: [Z] (list)
+- **Tasks completed**: [A] / [B] total
 ```
 
 ---

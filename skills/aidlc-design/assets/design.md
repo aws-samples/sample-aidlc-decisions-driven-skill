@@ -39,9 +39,18 @@
 
 ## Traceability
 
-| Requirement | Component(s) | API Endpoint(s) | Data Entity | Design File |
-|---|---|---|---|---|
-| [US-X] | [Component] | [METHOD /path] | [Entity] | [design/file.md] |
+<!-- COVERAGE RULE: Every US-* from requirements.md MUST appear in this table.
+     If a requirement has no corresponding design element, mark Status as "⚠️ Gap"
+     and add a note explaining why (deferred, out of scope, covered by another US). -->
+
+| Requirement | Component(s) | API Endpoint(s) | Data Entity | Design File | Status |
+|---|---|---|---|---|---|
+| [US-X] | [Component] | [METHOD /path] | [Entity] | [design/file.md] | ✅ Covered |
+
+### Coverage Summary
+- **Requirements covered**: [X] / [Total] from requirements.md
+- **Gaps**: [list any US-* not addressed, with reason]
+- **Components without requirement**: [list any component not traced to a US-*, with justification]
 
 ## Open Questions & Risks
 

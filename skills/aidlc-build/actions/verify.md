@@ -81,7 +81,56 @@ Re-run affected tests after fix. If fix requires significant refactoring, recomm
 
 ---
 
-## 3. Run quality gates
+## 3. Implementation traceability check
+
+After tests pass (or user accepts failures), verify that all tasks were actually implemented:
+
+### Tasks → Code (forward trace)
+1. Read `tasks.md` — collect all task IDs (`N.M` patterns) from checkboxes
+2. For each task marked `[x]` (complete):
+   - Verify at least one source file exists that corresponds to the task's purpose
+   - Cross-reference against the `**Ref**` design section — the component/endpoint/entity from design should have a corresponding file
+3. For each task still marked `[ ]` (incomplete):
+   - Flag as `⚠️ Not implemented`
+
+### Requirements → Code (end-to-end trace)
+1. Read `requirements.md` — collect all `US-*` IDs
+2. Read `tasks.md` `requirements_coverage` section — get the task IDs mapped to each US-*
+3. For each US-*: check whether its mapped tasks are all `[x]` complete
+4. Produce a coverage matrix:
+
+```
+| Requirement | Tasks | Completed | Status |
+|---|---|---|---|
+| US-01 | 1.1, 1.2, 2.1 | 3/3 | ✅ Covered |
+| US-02 | 3.1, 3.2 | 1/2 | ⚠️ Partial |
+| US-03 | 4.1 | 0/1 | ❌ Not implemented |
+```
+
+### Present traceability results
+
+```
+📍 Implementation Traceability
+
+- **Tasks completed**: [X] / [Total]
+- **Requirements fully covered**: [Y] / [Total US-*]
+- **Partial coverage**: [Z] requirements (some tasks incomplete)
+- **Not implemented**: [W] requirements (no tasks complete)
+
+{If gaps exist:}
+⚠️ Coverage gaps detected:
+- US-{N}: {task IDs incomplete} — {component/feature affected}
+
+🔲 **Your turn**:
+- ⏭️ "proceed" — accept current coverage and continue to quality gates
+- ↩️ "back to implement" — return to complete missing tasks
+```
+
+**STOP if gaps exist and wait.** If all requirements are fully covered, proceed silently to quality gates.
+
+---
+
+## 4. Run quality gates
 
 Execute each configured gate. Report results:
 
@@ -133,7 +182,7 @@ Quality gate failures are advisory — the user decides whether to fix or procee
 
 ---
 
-## 4. Audit entry
+## 5. Audit entry
 
 After all steps complete (or user decides to proceed):
 
