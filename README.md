@@ -142,6 +142,13 @@ flowchart TD
 | [Todo App](examples/todo-app/) | Complete workflow output — all artifacts from a simple project |
 | [Example Requirements](examples/requirements/) | Business requirements in English and Thai for testing |
 
+## Resources
+
+| Resource | Description |
+|---|---|
+| [AI-DLC Whitepaper](https://prod.d13rzhkk8cj2z0.amplifyapp.com/) | Methodology overview and design principles |
+| [AI-DLC Workflows](https://github.com/awslabs/aidlc-workflows) | Official AIDLC workflow definitions |
+
 ## License
 
 This project is licensed under the MIT-0 (MIT No Attribution) License. See [LICENSE.md](LICENSE.md) for details.
