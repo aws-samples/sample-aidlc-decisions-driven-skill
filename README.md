@@ -71,6 +71,7 @@ Try one of the [example requirements](examples/requirements/) included in this r
 | `repair` | Rebuild manifest from disk artifacts |
 | `quick` | Single-pass spec for simple brownfield features |
 | `doctor` | Verify installation health |
+| `scope [name]` | Change workflow scope (new/feature/bugfix/refactor) |
 | `prototype` | Build a throwaway spike to validate requirements |
 | `review` | Run solutions review or code review |
 | `reverse-engineer` | Deep codebase analysis (13 reports) |
@@ -87,6 +88,17 @@ AI-DLC organizes the development lifecycle into three phases:
 | **Inception** | Context assessment, requirements, decomposition into units | aidlc-context, aidlc-requirements, aidlc-decomposition |
 | **Construction** | Technology decisions, design, task planning, implementation | aidlc-design, aidlc-tasks, aidlc-implement |
 | **Operation** | Build verification, CI/CD pipeline generation, deployment | aidlc-build, aidlc-deploy |
+
+### Scope-Adaptive Workflow
+
+The workflow adapts to your task. Scope is auto-detected from your request and workspace, or you can set it manually with `scope [name]`.
+
+| Scope | Phases | Best For |
+|---|---|---|
+| `new` | All phases | New projects, rewrites |
+| `feature` | All phases | Adding capability to existing code |
+| `bugfix` | Context → Requirements → Design → Tasks → Implement → Build | Fixing specific bugs (skips decomposition, deploy) |
+| `refactor` | Context → Design → Tasks → Implement → Build | Restructuring code (skips requirements, decomposition, deploy) |
 
 ```mermaid
 flowchart TD

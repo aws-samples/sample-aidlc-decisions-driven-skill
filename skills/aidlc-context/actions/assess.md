@@ -35,12 +35,41 @@ Document:
 
 Assess: Affected areas, Files likely to change, Dependencies.
 
-## Step 5: Generate Context
+## Step 5: Scope Detection
+
+Determine the workflow scope from the user's request and workspace analysis. The scope controls which phases are relevant.
+
+> **Source of truth**: Read `{PLATFORM_DIR}/skills/aidlc/shared/scopes.md` for full detection rules, phase mappings, and diagram templates.
+
+### Detection Rules
+
+Analyze the user's feature description and workspace context. Refer to scopes.md Detection Rules table for keyword signals per scope.
+
+| Scope | Detect When |
+|---|---|
+| `new` | No existing source code, OR building from scratch, OR rewriting |
+| `bugfix` | Fixing a specific bug or error |
+| `refactor` | Restructuring without changing behavior |
+| `feature` | Everything else — adding new capability to existing code |
+
+**Ambiguity rule**: If detection is ambiguous, default to `feature` and let the user override.
+
+**Rewrite detection**: If the user says "rewrite" or "rebuild" and an existing codebase exists (brownfield workspace), set scope to `new` and recommend running `reverse-engineer` first to capture existing behavior before requirements. Present:
+```
+📍 Detected: application rewrite (scope: new)
+💡 Recommend running "reverse-engineer" first to capture existing business rules, integrations, and patterns before starting requirements.
+```
+
+### Scope Confirmation
+
+After detecting scope, present it to the user in the results (Step 11). The user can override by saying "change scope to [X]".
+
+## Step 6: Generate Context
 
 Read `{ASSETS_DIR}/context.md` for output structure.
 Generate `{SPECS_DIR}/{feature}/context.md`.
 
-## Step 6: Generate Steering Files
+## Step 7: Generate Steering Files
 
 Read each asset template and generate the corresponding steering file:
 
@@ -63,7 +92,7 @@ Read each asset template and generate the corresponding steering file:
   - **`aidlc-workflow.md`** — always overwrite (session-specific).
   - **`resources.md`** — merge: keep existing, add new.
 
-## Step 7: Create Manifest
+## Step 8: Create Manifest
 
 Create `{WORKFLOW_DIR}/{feature}/aidlc-manifest.yaml`:
 
@@ -76,6 +105,7 @@ created: "{ISO timestamp}"
 updated: "{ISO timestamp}"
 state:
   status: "active"
+  scope: "{feature/bugfix/refactor/new}"
   sharedPhases: []
   mode: null
   foundationSkipped: false
@@ -93,6 +123,7 @@ implementation:
   currentWave: null
 context-summary:
   type: "{Greenfield/Brownfield}"
+  scope: "{feature/bugfix/refactor/new}"
   stack: "{Primary language + framework}"
   architecture: "{Pattern}"
   feature: "{1-sentence description}"
@@ -109,13 +140,14 @@ steering:
 units: []
 ```
 
-## Step 8: Create Audit Trail
+## Step 9: Create Audit Trail
 
 Create `{WORKFLOW_DIR}/{feature}/audit.md` with header: `# Audit Trail — {feature}`
 
-## Step 9: Validate
+## Step 10: Validate
 
 - ✅ Project type identified (greenfield/brownfield)
+- ✅ Scope detected and stored in manifest
 - ✅ Technology stack documented (if brownfield)
 - ✅ Architecture pattern identified (if brownfield)
 - ✅ Feature impact assessment complete
@@ -123,7 +155,7 @@ Create `{WORKFLOW_DIR}/{feature}/audit.md` with header: `# Audit Trail — {feat
 - ✅ All steering files generated
 - ✅ Manifest created
 
-## Step 10: Present Results
+## Step 11: Present Results
 
 ```
 📍 Context Assessment
@@ -131,6 +163,7 @@ Create `{WORKFLOW_DIR}/{feature}/audit.md` with header: `# Audit Trail — {feat
 [Summary of findings]
 
 - **Project Type**: [Greenfield/Brownfield]
+- **Scope**: [new/feature/bugfix/refactor]
 - **Stack**: [Detected or N/A]
 - **Architecture**: [Detected or N/A]
 - **Impact**: [New standalone / Extends existing / Cross-cutting]
@@ -138,7 +171,7 @@ Create `{WORKFLOW_DIR}/{feature}/audit.md` with header: `# Audit Trail — {feat
 
 ## Recommended Workflow
 
-[ASCII workflow diagram — tailored to project complexity]
+[ASCII workflow diagram — tailored to scope and project complexity]
 
 Artifact at `{SPECS_DIR}/{feature}/context.md`.
 
@@ -146,14 +179,12 @@ Artifact at `{SPECS_DIR}/{feature}/context.md`.
 🔲 **Your turn**:
 - ✅ "proceed" — move to requirements
 - ✏️ "change [what]" — request edits
+- 🔀 "change scope to [bugfix/refactor/feature/new]" — override detected scope
 ```
 
-**Generate workflow diagram** based on recommendations. Use top-down ASCII art. Show ONLY the recommended path for this project.
+**Generate workflow diagram** based on scope and recommendations. Use top-down ASCII art. Show ONLY the recommended path for this project.
 
-Diagram templates:
-- **Simple** (Units=No): Context → Requirements → Design → Tasks → Implement → Build and Test → Deploy
-- **Complex** (Units=Yes): Context → Requirements → Decomposition → [Unit cycles: Design → Tasks → Implement] → Build and Test → Deploy
-- **With prototype**: Context → Requirements ↔ Prototype → then continue normal path
+Diagram templates by scope — see `{PLATFORM_DIR}/skills/aidlc/shared/scopes.md` § Workflow Diagram Templates for the full list.
 
 **STOP and wait for user approval.**
 

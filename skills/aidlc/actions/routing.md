@@ -4,6 +4,7 @@
 
 Read `aidlc-manifest.yaml` and extract:
 
+- `state.scope` → workflow scope (`new` / `feature` / `bugfix` / `refactor`)
 - `state.sharedPhases` → which shared phases are complete (context, requirements, decomposition, design, tasks, implement, build, deploy)
 - `state.mode` → `null` (undecided), `incremental`, or `comprehensive`
 - `artifacts` → shared phase artifacts and their status (`draft` / `approved` / `outdated`)
@@ -22,18 +23,35 @@ Read `aidlc-manifest.yaml` and extract:
 
 Based on manifest state, determine the next skill to dispatch:
 
+### Scope-Aware Phase Skipping
+
+> **Source of truth**: `{PLATFORM_DIR}/skills/aidlc/shared/scopes.md` — read for full scope definitions and phase mappings.
+
+Read `state.scope` from manifest. Apply skip rules before routing:
+
+| Scope | Phases to Skip |
+|---|---|
+| `new` | — (full workflow) |
+| `feature` | — (full workflow) |
+| `bugfix` | decomposition, deploy |
+| `refactor` | decomposition, requirements (skip D1 gate — go straight to design), deploy |
+
+When a phase is skipped, treat it as if it were already completed for routing purposes. Do NOT add skipped phases to `state.sharedPhases` — they simply don't exist in the workflow for this scope.
+
+### Standard Routing Table
+
 | Current State | Next Skill |
 |---|---|
 | No manifest, no artifacts | `aidlc-context` |
-| `context` in `sharedPhases`, no requirements | `aidlc-requirements` |
-| `requirements` in `sharedPhases`, needs routing | Analyze complexity (see below) |
+| `context` in `sharedPhases`, no requirements | **Scope check**: if `refactor` → skip to `aidlc-design`. Otherwise → `aidlc-requirements` |
+| `requirements` in `sharedPhases`, needs routing | **Scope check**: if `bugfix` → skip decomposition analysis, go straight to `aidlc-design`. Otherwise → Analyze complexity (see below) |
 | `decomposition` in `sharedPhases`, mode=`comprehensive` | `aidlc-design` |
 | `decomposition` in `sharedPhases`, mode=`incremental` | Unit dashboard (see Incremental Mode Unit Routing) |
 | Comprehensive: `design` in `sharedPhases` | `aidlc-tasks` |
 | Comprehensive: `tasks` in `sharedPhases` | `aidlc-implement` |
 | Comprehensive: `implement` in `sharedPhases`, no `build` | `aidlc-build` |
 | Incremental: all units `completed`, no `build` in `sharedPhases` | `aidlc-build` |
-| `build` in `sharedPhases`, no `deploy` | `aidlc-deploy` |
+| `build` in `sharedPhases`, no `deploy` | **Scope check**: if `bugfix` or `refactor` → present completion message (deploy skipped). Otherwise → `aidlc-deploy` |
 | `deploy` in `sharedPhases` | Present completion message |
 
 When the next skill is determined, dispatch it (see Skill Dispatch in SKILL.md).
@@ -44,7 +62,9 @@ When the next skill is determined, dispatch it (see Skill Dispatch in SKILL.md).
 
 When requirements are complete but no decomposition or design exists, analyze complexity:
 
-Read requirements and count:
+**Scope shortcut**: If scope is `bugfix`, skip complexity analysis entirely — go straight to `aidlc-design`. Bugfixes don't decompose.
+
+For `feature` and `new` scopes, read requirements and count:
 - Total user stories
 - Distinct functional domains/areas
 - Distinct user types/personas

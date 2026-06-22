@@ -56,6 +56,12 @@ When a phase artifact is edited after approval, mark all downstream phase artifa
 
 Phase order: context → requirements → decomposition → design → tasks → implement → build → deploy
 
+### Scope-Aware Phase Order
+
+> **Source of truth**: Load `{PLATFORM_DIR}/skills/aidlc/shared/scopes.md` for the full scope definitions, phase mappings, and decision gate behavior per scope. The table below is a summary — if in doubt, read scopes.md.
+
+The full phase order applies to `new` and `feature` scopes. Other scopes skip phases — see `shared/scopes.md` for the authoritative mapping. Skipped phases do not appear in `state.sharedPhases` — they are absent from the workflow entirely. Downstream outdated marking only applies to phases that are active for the current scope.
+
 ### Unit-Scoped Operations (Incremental Mode)
 - Unit artifacts: `{SPECS_DIR}/{feature}/units/{unit}/`
 - Unit workflow: `{WORKFLOW_DIR}/{feature}/units/{unit}/`

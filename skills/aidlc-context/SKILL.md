@@ -127,5 +127,5 @@ Execute actions sequentially. **Load the action file when you reach that step �
 ## Context Recovery
 
 If context is lost mid-phase, follow `aidlc/shared/base.md` Context Recovery, then:
-- Check `artifacts.context.status` — if `"draft"`, resume from Step 10 (present results)
+- Check `artifacts.context.status` — if `"draft"`, resume from Step 11 (present results)
 - If no context artifact in manifest — restart from Step 1 (workspace scan)

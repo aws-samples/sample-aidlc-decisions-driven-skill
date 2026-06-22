@@ -14,6 +14,7 @@ updated: "2026-04-15T11:30:00Z"
 
 state:
   sharedPhases: [context, requirements, decomposition]
+  scope: feature                 # feature | bugfix | refactor | new — detected in context phase
   mode: incremental              # null | incremental | comprehensive
   status: active                 # active | completed
   implementationMode: null       # null | standard | parallel | autonomous (comprehensive mode only)
@@ -43,6 +44,7 @@ artifacts:
 
 context-summary:
   type: Greenfield
+  scope: feature                 # feature | bugfix | refactor | new
   stack: "TypeScript / NestJS / PostgreSQL"
   architecture: "Modular Monolith"
   feature: "E-commerce platform"

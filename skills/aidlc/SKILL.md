@@ -108,6 +108,7 @@ The user can say any of these. Match loosely — "what's next", "show status", "
 | `repair` | Rebuild manifest from disk artifacts | `{SKILL_DIR}/actions/repair.md` |
 | `quick` | Single-pass mode for simple features | `{SKILL_DIR}/actions/quick-path.md` |
 | `doctor` | Verify installation health | `{SKILL_DIR}/actions/doctor.md` |
+| `scope [name]` | Change workflow scope | — |
 | Phase names | Dispatch named skill directly | — |
 
 Phase name commands: `context`, `requirements`, `units`/`decomposition`, `design`, `tasks`, `implement`, `build`, `deploy`, `prototype`, `review`, `reverse-engineer`.
@@ -156,7 +157,7 @@ Then dispatch `aidlc-context` — read `{PLATFORM_DIR}/skills/aidlc-context/SKIL
 4. Present compact status:
 
 ```
-📍 Resuming "{feature}"
+📍 Resuming "{feature}" (scope: {scope})
 
 Shared: {sharedPhases as inline list}
 {If incremental: list active units with their phases}
@@ -179,13 +180,14 @@ Same as `resume` step 2 + 6, but skip the status presentation — go straight to
 
 Read manifest, present:
 ```
-📍 You're working on "{feature}" — currently at {phase}.
+📍 You're working on "{feature}" (scope: {scope}) — currently at {phase}.
 
 Available commands:
 - "next" or "continue" — proceed to {next phase}
 - "status" — see full progress dashboard
 - "rollback to [phase]" — undo and redo from a previous phase
 - "[phase name]" — jump to a specific phase (e.g., "design", "tasks")
+- "scope [name]" — change scope (new/feature/bugfix/refactor)
 - "prototype" — build a throwaway spike
 - "review" — run design review or code review
 
@@ -202,6 +204,34 @@ Dispatch `aidlc-solutions-review` or `aidlc-code-review` based on context:
 ### Phase commands (`context`, `requirements`, `design`, etc.)
 
 Dispatch the named skill directly. No confirmation needed — the user explicitly asked for it.
+
+**Scope guard**: If the user requests a phase that is skipped for the current scope (e.g., "deploy" in a `bugfix` scope), inform them:
+```
+⚠️ The "deploy" phase is skipped for scope "{scope}". 
+👉 Change scope with "scope feature" if you need this phase, or say "next" to continue.
+```
+
+### `scope [name]`
+
+Change the workflow scope mid-workflow. Valid scopes: `new`, `feature`, `bugfix`, `refactor`. See `{PLATFORM_DIR}/skills/aidlc/shared/scopes.md` for full scope definitions.
+
+1. Validate the requested scope name
+2. Update manifest: `state.scope` and `context-summary.scope`
+3. If changing to a narrower scope (e.g., feature → bugfix): warn that some completed phases may become irrelevant but are preserved
+4. If changing to a wider scope (e.g., bugfix → feature): inform that additional phases are now active
+5. Present the change:
+
+```
+📍 Scope changed: {old} → {new}
+
+Active phases: {list active phases for new scope}
+{If phases were skipped that now exist: "ℹ️ Phases now active: {list}"}
+{If phases existed that are now skipped: "ℹ️ Phases skipped: {list} (artifacts preserved)"}
+
+👉 Next: {recommendation based on new routing}
+```
+
+6. Append audit entry. **STOP and wait.**
 
 ---
 

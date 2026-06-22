@@ -11,6 +11,7 @@ Generate `{SPECS_DIR}/{feature}/context.md` with this structure.
 ## Summary
 <!-- 10-line max. Downstream phases read ONLY this section. -->
 - **Type**: [Greenfield/Brownfield]
+- **Scope**: [new/feature/bugfix/refactor]
 - **Stack**: [Primary language + framework, e.g. "TypeScript / Next.js / PostgreSQL"]
 - **Architecture**: [Pattern, e.g. "Modular Monolith", "Layered MVC"]
 - **Feature**: [1-sentence description]
@@ -84,6 +85,12 @@ Generate `{SPECS_DIR}/{feature}/context.md` with this structure.
 - **Personas**: [Yes/No] — [Reason]
 - **Units**: [Yes/No] — [Reason]
 - **NFR**: [Yes/No] — [Reason]
+
+## Scope
+
+- **Detected scope**: [new/feature/bugfix/refactor]
+- **Rationale**: [Why this scope was detected — keywords, workspace state, request nature]
+- **Phases skipped**: [List phases that will be skipped for this scope, or "None — full workflow"]
 
 ## Recommended Workflow
 
