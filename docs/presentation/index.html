@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-DLC — AI-Driven Development Life Cycle</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0f172a; color: #e2e8f0; line-height: 1.6; }
+        
+        /* Slide container */
+        .slides { scroll-snap-type: y mandatory; overflow-y: scroll; height: 100vh; }
+        .slide { scroll-snap-align: start; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 2rem 2rem; position: relative; }
+        
+        /* Navigation */
+        .nav { position: fixed; right: 2rem; top: 50%; transform: translateY(-50%); z-index: 100; display: flex; flex-direction: column; gap: 0.5rem; }
+        .nav a { width: 10px; height: 10px; border-radius: 50%; background: #475569; display: block; transition: all 0.3s; }
+        .nav a:hover, .nav a.active { background: #38bdf8; transform: scale(1.4); }
+        
+        /* Typography */
+        h1 { font-size: 3.5rem; font-weight: 700; margin-bottom: 1rem; background: linear-gradient(135deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        h2 { font-size: 2.5rem; font-weight: 600; margin-bottom: 1.5rem; color: #f1f5f9; }
+        h3 { font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem; color: #94a3b8; }
+        p { font-size: 1.2rem; color: #94a3b8; max-width: 700px; text-align: center; }
+        
+        /* Cards */
+        .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; max-width: 1000px; width: 100%; margin-top: 2rem; }
+        .card { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 1.5rem; transition: all 0.3s; }
+        .card:hover { border-color: #38bdf8; transform: translateY(-2px); }
+        .card h4 { font-size: 1.1rem; color: #f1f5f9; margin-bottom: 0.5rem; }
+        .card p { font-size: 0.95rem; text-align: left; color: #94a3b8; }
+        
+        /* Phase indicators */
+        .phase-tag { display: inline-block; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.8rem; font-weight: 600; margin-bottom: 0.75rem; }
+        .phase-inception { background: #1e3a5f; color: #7dd3fc; }
+        .phase-construction { background: #1e3b2e; color: #6ee7b7; }
+        .phase-operation { background: #3b1e3b; color: #f0abfc; }
+        
+        /* Flow diagram */
+        .flow { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; justify-content: center; margin: 2rem 0; }
+        .flow-step { background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 0.75rem 1.25rem; font-size: 0.9rem; font-weight: 500; position: relative; }
+        .flow-step.decision { border-color: #f59e0b; background: #1c1917; }
+        .flow-step.decision::before { content: "🔶"; position: absolute; top: -8px; right: -8px; font-size: 0.7rem; }
+        .flow-step.review { border-color: #38bdf8; background: #0c1929; }
+        .flow-step.review::before { content: "👁"; position: absolute; top: -8px; right: -8px; font-size: 0.7rem; }
+        .flow-arrow { color: #475569; font-size: 1.2rem; }
+        
+        /* Comparison table */
+        .comparison { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; max-width: 1100px; width: 100%; margin-top: 2rem; }
+        .comparison-col { background: #1e293b; border-radius: 12px; padding: 1.25rem; border: 1px solid #334155; }
+        .comparison-col h3 { color: #f1f5f9; margin-bottom: 0.75rem; }
+        .comparison-col ul { list-style: none; }
+        .comparison-col li { padding: 0.35rem 0; border-bottom: 1px solid #334155; font-size: 0.85rem; color: #cbd5e1; }
+        .comparison-col li:last-child { border-bottom: none; }
+        .comparison-col li::before { content: "→ "; color: #38bdf8; }
+        .comparison-col li code { color: #7dd3fc; font-size: 0.85rem; }
+        
+        /* Artifact table */
+        .artifact-table { max-width: 900px; width: 100%; margin-top: 1.5rem; border-collapse: collapse; }
+        .artifact-table th, .artifact-table td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid #334155; font-size: 0.9rem; }
+        .artifact-table th { color: #94a3b8; font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        .artifact-table td { color: #e2e8f0; }
+        .artifact-table tr:hover { background: #1e293b; }
+        
+        /* Badges */
+        .badge { display: inline-block; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600; margin-left: 0.5rem; }
+        .badge-decision { background: #451a03; color: #fbbf24; }
+        .badge-review { background: #0c2d48; color: #38bdf8; }
+        .badge-auto { background: #1a2e1a; color: #6ee7b7; }
+        
+        /* Subtitle */
+        .subtitle { font-size: 1.4rem; color: #64748b; margin-top: 0.5rem; }
+        
+        /* Legend */
+        .legend { display: flex; gap: 1.5rem; margin-top: 1.5rem; flex-wrap: wrap; justify-content: center; }
+        .legend-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: #94a3b8; }
+        .legend-dot { width: 12px; height: 12px; border-radius: 3px; }
+        .legend-dot.decision { background: #f59e0b; }
+        .legend-dot.review { background: #38bdf8; }
+        .legend-dot.auto { background: #6ee7b7; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            h2 { font-size: 1.8rem; }
+            .comparison { grid-template-columns: 1fr; }
+            .cards { grid-template-columns: 1fr; }
+            .slide { padding: 2rem 1rem; }
+            .nav { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="nav" aria-label="Slide navigation">
+    <a href="#title" title="Title" aria-label="Title"></a>
+    <a href="#problem" title="Problem" aria-label="Problem"></a>
+    <a href="#phases" title="Phases" aria-label="Phases"></a>
+    <a href="#workflow" title="Workflow Paths" aria-label="Workflow Paths"></a>
+    <a href="#decisions" title="Decision Gates" aria-label="Decision Gates"></a>
+    <a href="#skills" title="Skills" aria-label="Skills"></a>
+    <a href="#artifacts" title="Artifacts" aria-label="Artifacts"></a>
+    <a href="#summary" title="Summary" aria-label="Summary"></a>
+</nav>
+
+<div class="slides">
+
+    <!-- Slide 1: Title -->
+    <section class="slide" id="title">
+        <h1>AI-DLC</h1>
+        <p class="subtitle">AI-Driven Development Life Cycle</p>
+        <p style="margin-top: 1.5rem;">An adaptive, decision-driven workflow that scales with project complexity — keeping AI focused and humans in control.</p>
+        <div class="cards" style="margin-top: 3rem;">
+            <div class="card">
+                <h4>🔄 Adaptive Workflow</h4>
+                <p>Automatically scales from simple straight-line paths to multi-unit incremental delivery based on complexity.</p>
+            </div>
+            <div class="card">
+                <h4>🎯 Decision Gates</h4>
+                <p>Every phase asks the right questions before generating artifacts. You decide, AI executes.</p>
+            </div>
+            <div class="card">
+                <h4>📋 Manifest Tracking</h4>
+                <p>Pause, resume, and roll back across sessions. Never lose progress.</p>
+            </div>
+            <div class="card">
+                <h4>🚀 Full Lifecycle</h4>
+                <p>From context assessment through deployment — one workflow covers inception, construction, and operation.</p>
+            </div>
+            <div class="card">
+                <h4>⚡ Parallel Execution</h4>
+                <p>Tasks dispatched in dependency waves via sub-agents with isolated file ownership for safe concurrency.</p>
+            </div>
+            <div class="card">
+                <h4>🌐 Multi-Platform</h4>
+                <p>Works on Kiro (IDE and CLI) and Claude Code. Same skills, same workflow, any environment.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 2: Problem vs Solution -->
+    <section class="slide" id="problem">
+        <h2>The Problem with AI Coding Assistants</h2>
+        <p>Powerful but undirected. Without structure, the results are unpredictable.</p>
+        <div class="comparison" style="margin-top: 2rem;">
+            <div class="comparison-col" style="border-color: #ef4444;">
+                <h3 style="color: #fca5a5;">Without AI-DLC</h3>
+                <ul>
+                    <li>Inconsistent architecture across sessions</li>
+                    <li>Technology choices that don't align with your project</li>
+                    <li>Skipped edge cases and missing validation</li>
+                    <li>No way to pause, resume, or roll back</li>
+                    <li>Lost context after long conversations</li>
+                    <li>No audit trail — can't trace why decisions were made</li>
+                </ul>
+            </div>
+            <div class="comparison-col" style="border-color: #22c55e;">
+                <h3 style="color: #86efac;">With AI-DLC</h3>
+                <ul>
+                    <li>Structured decisions validated for conflicts</li>
+                    <li>You choose the stack — AI executes your choices</li>
+                    <li>EARS acceptance criteria catch edge cases early</li>
+                    <li>Manifest tracks state — resume anytime</li>
+                    <li>Context recovery from steering files</li>
+                    <li>Full audit trail — every decision logged</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 3: Three Phases -->
+    <section class="slide" id="phases">
+        <h2>Three Phases</h2>
+        <p>Every project flows through Inception, Construction, and Operation.</p>
+        <div class="cards" style="margin-top: 2rem;">
+            <div class="card">
+                <span class="phase-tag phase-inception">Inception</span>
+                <h4>Understand the Problem</h4>
+                <p>Context assessment, requirements gathering, decomposition into deliverable units.</p>
+            </div>
+            <div class="card">
+                <span class="phase-tag phase-construction">Construction</span>
+                <h4>Solve the Problem</h4>
+                <p>Technology decisions, detailed design, task planning, code implementation.</p>
+            </div>
+            <div class="card">
+                <span class="phase-tag phase-operation">Operation</span>
+                <h4>Ship and Run</h4>
+                <p>Final build verification, CI/CD pipeline generation, deployment configuration.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 3: Workflow Paths -->
+    <section class="slide" id="workflow">
+        <h2>Workflow Paths</h2>
+        <p>The workflow adapts based on project complexity.</p>
+        <div class="comparison" style="margin-top: 2rem;">
+            <div class="comparison-col">
+                <h3>Simple Project</h3>
+                <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 1rem;">≤ 5 stories, 1 domain, 1 user type</p>
+                <ul>
+                    <li>Context</li>
+                    <li>Requirements <span class="badge badge-decision">D1</span></li>
+                    <li>Design <span class="badge badge-decision">D3</span></li>
+                    <li>Tasks <span class="badge badge-decision">D4</span></li>
+                    <li>Implement</li>
+                    <li>Build & Test</li>
+                    <li>Deploy <span class="badge badge-decision">D5</span></li>
+                </ul>
+            </div>
+            <div class="comparison-col">
+                <h3>Complex Project</h3>
+                <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 1rem;">5+ stories, 2+ domains, multiple user types</p>
+                <ul>
+                    <li>Context</li>
+                    <li>Requirements <span class="badge badge-decision">D1</span></li>
+                    <li>Decomposition <span class="badge badge-decision">D2</span></li>
+                    <li style="color: #64748b; border-bottom: none; padding-bottom: 0;">↳ For each unit:</li>
+                    <li style="padding-left: 1rem;">Design <span class="badge badge-decision">D3</span></li>
+                    <li style="padding-left: 1rem;">Tasks <span class="badge badge-decision">D4</span></li>
+                    <li style="padding-left: 1rem;">Implement ⟳</li>
+                    <li>Build & Test</li>
+                    <li>Deploy <span class="badge badge-decision">D5</span></li>
+                </ul>
+            </div>
+        </div>
+        <div class="legend" style="margin-top: 1.5rem;">
+            <div class="legend-item"><span class="badge badge-decision">D1–D5</span> Decision gate — you answer questions before AI generates</div>
+        </div>
+    </section>
+
+    <!-- Slide 4: Decision Gates -->
+    <section class="slide" id="decisions">
+        <h2>Decision Gates</h2>
+        <p>At each phase, the AI generates questions with multiple options. You choose. It validates for conflicts.</p>
+        <table class="artifact-table" style="margin-top: 2rem;">
+            <thead>
+                <tr><th>Gate</th><th>Phase</th><th>What You Decide</th></tr>
+            </thead>
+            <tbody>
+                <tr><td><strong>D1</strong></td><td>Requirements</td><td>Scope, user types, entities, integrations, business rules</td></tr>
+                <tr><td><strong>D2</strong></td><td>Decomposition</td><td>Architecture pattern, unit boundaries, dependencies, sequence</td></tr>
+                <tr><td><strong>D3</strong></td><td>Design</td><td>Tech stack, frameworks, database, testing, code organization</td></tr>
+                <tr><td><strong>D4</strong></td><td>Tasks</td><td>Breakdown strategy, TDD vs test-after, granularity</td></tr>
+                <tr><td><strong>D5</strong></td><td>Deploy</td><td>CI/CD platform, environments, deployment strategy, rollback</td></tr>
+            </tbody>
+        </table>
+        <div class="cards" style="margin-top: 2rem; max-width: 900px;">
+            <div class="card">
+                <h4>Conflict Detection</h4>
+                <p>🔴 Critical: "Microservices with solo developer"<br>🟡 Major: "Prisma + MongoDB limited support"<br>🟢 Minor: "Enterprise observability for MVP"</p>
+            </div>
+            <div class="card">
+                <h4>Skip Option</h4>
+                <p>Say "use recommendations" to auto-fill, or "skip validation" to proceed without conflict checks.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 6: Skills Structure -->
+    <section class="slide" id="skills">
+        <h2>Skills Structure</h2>
+        <p>Core skills drive the workflow. Support skills are invoked on demand.</p>
+        <div class="comparison" style="margin-top: 2rem;">
+            <div class="comparison-col">
+                <h3>Core Skills (workflow phases)</h3>
+                <ul>
+                    <li><code>aidlc</code> — orchestrator (routes, status, rollback)</li>
+                    <li><code>aidlc-context</code> — scans workspace, produces context</li>
+                    <li><code>aidlc-requirements</code> — user stories with EARS criteria</li>
+                    <li><code>aidlc-decomposition</code> — breaks into units (DDD)</li>
+                    <li><code>aidlc-design</code> — architecture, components, API spec</li>
+                    <li><code>aidlc-tasks</code> — sequenced tasks with execution waves</li>
+                    <li><code>aidlc-implement</code> — writes code from task specs</li>
+                    <li><code>aidlc-build</code> — runs build, tests, quality gates</li>
+                    <li><code>aidlc-deploy</code> — generates CI/CD pipeline configs</li>
+                </ul>
+            </div>
+            <div class="comparison-col">
+                <h3>Support Skills (on demand)</h3>
+                <ul>
+                    <li><code>aidlc-prototype</code> — throwaway spike to validate ideas</li>
+                    <li><code>aidlc-reverse-engineer</code> — deep codebase analysis (13 reports)</li>
+                    <li><code>aidlc-solutions-review</code> — cross-unit design review</li>
+                    <li><code>aidlc-code-review</code> — code quality review</li>
+                </ul>
+                <h3 style="margin-top: 1.5rem;">Each skill contains</h3>
+                <ul>
+                    <li><code>SKILL.md</code> — compact index loaded on dispatch</li>
+                    <li><code>actions/</code> — step-by-step instructions</li>
+                    <li><code>assets/</code> — output templates</li>
+                    <li><code>references/</code> — catalogs & guides</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 6: Artifacts -->
+    <section class="slide" id="artifacts">
+        <h2>Generated Folder Structure</h2>
+        <p>Everything AI-DLC produces — organized by purpose.</p>
+        <div class="comparison" style="margin-top: 2rem; grid-template-columns: 1fr 1fr 1fr;">
+            <div class="comparison-col">
+                <h3 style="font-size: 1.1rem;">📁 .aidlc/specs/{feature}/</h3>
+                <ul>
+                    <li><code>context.md</code> <span class="badge badge-review">Review</span></li>
+                    <li><code>requirements.md</code> <span class="badge badge-review">Review</span></li>
+                    <li><code>personas.md</code> <span class="badge badge-review">Review</span></li>
+                    <li><code>units.md</code> <span class="badge badge-review">Review</span></li>
+                    <li><code>design.md</code> <span class="badge badge-review">Review</span></li>
+                    <li><code>design/components.md</code> <span class="badge badge-review">Review</span></li>
+                    <li><code>design/data-model.md</code> <span class="badge badge-review">Review</span></li>
+                    <li><code>design/api-spec.md</code> <span class="badge badge-review">Review</span></li>
+                    <li><code>design/implementation.md</code> <span class="badge badge-review">Review</span></li>
+                    <li><code>tasks.md</code> <span class="badge badge-review">Review</span></li>
+                </ul>
+            </div>
+            <div class="comparison-col">
+                <h3 style="font-size: 1.1rem;">📁 .aidlc/workflow/{feature}/</h3>
+                <ul>
+                    <li><code>aidlc-manifest.yaml</code></li>
+                    <li><code>audit.md</code></li>
+                    <li><code>decisions-requirements.md</code> <span class="badge badge-decision">Decide</span></li>
+                    <li><code>decisions-design.md</code> <span class="badge badge-decision">Decide</span></li>
+                    <li><code>decisions-tasks.md</code> <span class="badge badge-decision">Decide</span></li>
+                    <li><code>decisions-deploy.md</code> <span class="badge badge-decision">Decide</span></li>
+                    <li><code>build-report.md</code> <span class="badge badge-review">Review</span></li>
+                    <li><code>deploy-summary.md</code> <span class="badge badge-review">Review</span></li>
+                </ul>
+            </div>
+            <div class="comparison-col">
+                <h3 style="font-size: 1.1rem;">📁 .kiro/steering/</h3>
+                <ul>
+                    <li><code>product.md</code> <span class="badge badge-review">Review</span></li>
+                    <li><code>tech.md</code> <span class="badge badge-review">Review</span></li>
+                    <li><code>structure.md</code> <span class="badge badge-review">Review</span></li>
+                    <li><code>aidlc-workflow.md</code></li>
+                    <li><code>resources.md</code></li>
+                </ul>
+                <h3 style="font-size: 1.1rem; margin-top: 1.5rem;">📁 Project root</h3>
+                <ul>
+                    <li><code>src/**</code> <span class="badge badge-review">Review</span></li>
+                    <li><code>tests/**</code> <span class="badge badge-review">Review</span></li>
+                </ul>
+            </div>
+        </div>
+        <div class="legend" style="margin-top: 1.5rem;">
+            <div class="legend-item"><span class="badge badge-decision">Decide</span> You answer questions / fill choices</div>
+            <div class="legend-item"><span class="badge badge-review">Review</span> AI generates — you approve or request changes</div>
+        </div>
+        <p style="margin-top: 1rem; font-size: 0.9rem; color: #94a3b8; background: #1e293b; padding: 0.75rem 1.25rem; border-radius: 8px; border-left: 3px solid #38bdf8;">
+            💡 For Claude Code, replace <code style="color: #e2e8f0;">.kiro/</code> with <code style="color: #e2e8f0;">.claude/</code>
+        </p>
+    </section>
+
+    <!-- Slide 7: Summary -->
+    <section class="slide" id="summary">
+        <h2>Get Started</h2>
+        <p style="margin-bottom: 2rem;">Copy skills into your project and start building.</p>
+        <div class="card" style="max-width: 600px; text-align: left;">
+            <h4 style="margin-bottom: 1rem;">Installation</h4>
+            <p style="font-family: monospace; font-size: 0.9rem; color: #e2e8f0; background: #0f172a; padding: 1rem; border-radius: 8px; margin-bottom: 0.5rem;">
+                cp -r skills/aidlc* your-project/.kiro/skills/
+            </p>
+            <p style="font-size: 0.8rem; color: #94a3b8; margin-bottom: 1rem;">For Claude Code: use <code style="color: #38bdf8;">.claude/skills/</code></p>
+            <h4 style="margin-bottom: 1rem;">First Command</h4>
+            <p style="font-family: monospace; font-size: 0.9rem; color: #e2e8f0; background: #0f172a; padding: 1rem; border-radius: 8px;">
+                /aidlc build a todo app with authentication and notifications
+            </p>
+        </div>
+        <div class="cards" style="margin-top: 2rem; max-width: 700px;">
+            <div class="card">
+                <h4>📂 Examples</h4>
+                <p>See <code>examples/todo-app/</code> for complete workflow output with all artifacts.</p>
+            </div>
+            <div class="card">
+                <h4>📖 Documentation</h4>
+                <p>See <code>docs/</code> for skills reference, decision gates, manifest schema, and more.</p>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+<script>
+    // Highlight active nav dot based on scroll position
+    const slides = document.querySelectorAll('.slide');
+    const navLinks = document.querySelectorAll('.nav a');
+    const slidesContainer = document.querySelector('.slides');
+    let currentSlide = 0;
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                navLinks.forEach(link => link.classList.remove('active'));
+                const activeLink = document.querySelector(`.nav a[href="#${entry.target.id}"]`);
+                if (activeLink) activeLink.classList.add('active');
+                currentSlide = Array.from(slides).indexOf(entry.target);
+            }
+        });
+    }, { threshold: 0.5 });
+    
+    slides.forEach(slide => observer.observe(slide));
+
+    // Arrow key navigation
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+            e.preventDefault();
+            if (currentSlide < slides.length - 1) {
+                slides[currentSlide + 1].scrollIntoView({ behavior: 'smooth' });
+            }
+        } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+            e.preventDefault();
+            if (currentSlide > 0) {
+                slides[currentSlide - 1].scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    });
+</script>
+
+</body>
+</html>
