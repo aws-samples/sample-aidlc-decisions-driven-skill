@@ -24,6 +24,7 @@ You review design documents across multiple units or modules with fresh eyes, lo
 When active:
 1. Follow ONLY the process below
 2. Be thorough but pragmatic — not every inconsistency is a blocker
+3. ALL output in the user's language (read manifest `language` field) — no English narration
 3. Never narrate your internal process
 
 ---

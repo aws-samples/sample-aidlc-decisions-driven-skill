@@ -62,7 +62,7 @@ Analyze the user's feature description and workspace context. Refer to scopes.md
 
 ### Scope Confirmation
 
-After detecting scope, present it to the user in the results (Step 11). The user can override by saying "change scope to [X]".
+After detecting scope, present it to the user in the results (Step 10). The user can override by saying "change scope to [X]".
 
 ## Step 6: Generate Context
 
@@ -92,35 +92,20 @@ Read each asset template and generate the corresponding steering file:
   - **`aidlc-workflow.md`** — always overwrite (session-specific).
   - **`resources.md`** — merge: keep existing, add new.
 
-## Step 8: Create Manifest
+## Step 8: Update Manifest
 
-Create `{WORKFLOW_DIR}/{feature}/aidlc-manifest.yaml`:
+Update the skeleton manifest at `{WORKFLOW_DIR}/{feature}/aidlc-manifest.yaml` with full context from the assessment:
 
 ```yaml
-version: "2.2"
-feature: "{feature}"
-language: "{language}"
-platform: "{platform}"
-created: "{ISO timestamp}"
+# Update these fields (skeleton already has version, feature, language, platform, created, state.status):
 updated: "{ISO timestamp}"
 state:
-  status: "active"
-  scope: "{feature/bugfix/refactor/new}"
-  sharedPhases: []
-  mode: null
-  foundationSkipped: false
-  implementationMode: null
-  quickPath: false
+  scope: "{detected scope from Step 5}"
 artifacts:
   context:
     status: "draft"
     timestamp: "{ISO timestamp}"
     files: [context.md]
-implementation:
-  totalTasks: 0
-  completedTasks: 0
-  currentTask: null
-  currentWave: null
 context-summary:
   type: "{Greenfield/Brownfield}"
   scope: "{feature/bugfix/refactor/new}"
@@ -131,20 +116,14 @@ context-summary:
   complexity: "{Low/Medium/High}"
   teamSize: null
   recommendations: { personas: false, units: false, nfr: false }
-decisions: {}
 steering:
   updatedBy:
     product: [context]
     tech: [context]
     structure: [context]
-units: []
 ```
 
-## Step 9: Create Audit Trail
-
-Create `{WORKFLOW_DIR}/{feature}/audit.md` with header: `# Audit Trail — {feature}`
-
-## Step 10: Validate
+## Step 9: Validate
 
 - ✅ Project type identified (greenfield/brownfield)
 - ✅ Scope detected and stored in manifest
@@ -153,9 +132,9 @@ Create `{WORKFLOW_DIR}/{feature}/audit.md` with header: `# Audit Trail — {feat
 - ✅ Feature impact assessment complete
 - ✅ Recommendations provided (Personas, Units, NFR)
 - ✅ All steering files generated
-- ✅ Manifest created
+- ✅ Manifest updated with full context-summary
 
-## Step 11: Present Results
+## Step 10: Present Results
 
 ```
 📍 Context Assessment

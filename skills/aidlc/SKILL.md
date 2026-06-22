@@ -27,17 +27,17 @@ When active:
 1. Follow ONLY the process below
 2. Execute phases by loading and following skill SKILL.md files — not by re-implementing phase logic
 3. Never narrate your internal process
+4. ALL output in the user's language (read manifest `language` field) — no English narration
 
 ---
 
 ## Activation
 
 ```
-✅ aidlc v1.0.0 active — {platform} detected.
-I'll manage your AI-DLC workflow. Say "start" for a new feature, "resume" to pick up where you left off, "status" to see progress, or "doctor" to verify your installation.
+✅ aidlc v1.0.0 — {platform}
 ```
 
-Then proceed to initialization.
+Then immediately detect language from the user's message. ALL subsequent output must be in that language. Do NOT produce further English text after this one-line activation confirmation.
 
 ---
 

@@ -27,6 +27,7 @@ When active:
 1. Follow ONLY the process below
 2. WAIT for user confirmation after each pass (iterative mode)
 3. Never narrate your internal process
+4. ALL output in the user's language (read manifest `language` field) — no English narration
 4. Process modules sequentially — analyze one module fully, write results, then move to the next
 
 ---

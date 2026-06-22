@@ -27,6 +27,7 @@ When active:
 1. Follow ONLY the process below
 2. WAIT for user approval after each step
 3. Never narrate your internal process
+4. ALL output in the user's language (read manifest `language` field) — no English narration
 4. Do NOT make technology stack decisions — that's the design phase's job
 5. For upstream artifacts, read ONLY `## Summary` first
 

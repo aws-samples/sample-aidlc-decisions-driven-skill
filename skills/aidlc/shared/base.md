@@ -71,12 +71,15 @@ The full phase order applies to `new` and `feature` scopes. Other scopes skip ph
 
 ## Behavioral Rules
 
-### Language & Presentation
+### ⛔ Language — HARD RULE
 
 **Language detection**: Detect the user's language from their first message. Store in manifest as `language` field (ISO 639-1 code). Once detected, ALL subsequent responses MUST use that language.
 
+**⛔ ZERO TOLERANCE**: Every piece of text you produce — including progress messages, acknowledgments, and intermediate output between tool calls — MUST be in the user's language. If you catch yourself writing English narrative text in a non-English session, STOP and rewrite it. There are NO exceptions for "thinking aloud" or "explaining what you're doing next."
+
 **What MUST be in the user's language**:
 - All explanations, descriptions, instructions, and narrative text
+- Progress messages between tool calls (if you produce any at all)
 - Section headers and labels in responses (e.g., "Your turn" → translated equivalent)
 - Decision gate questions and descriptions
 - Status messages and progress updates
@@ -95,7 +98,17 @@ The full phase order applies to `new` and `feature` scopes. Other scopes skip ph
 
 **Consistency rule**: Do NOT mix languages within a single response. If the response is in Thai, ALL narrative text must be in Thai. A response that switches between Thai and English mid-sentence or mid-paragraph is a bug.
 
-- Silent operations: never narrate platform detection, manifest reads/writes, file scanning, path resolution, template loading, audit entries
+### ⛔ Silent Operations — HARD RULE
+
+Do NOT produce text between tool calls unless it is a user-facing result. The following are NEVER narrated to the user:
+- Platform detection, environment setup
+- File reads (manifest, steering, templates, assets, references, scopes)
+- Path resolution, directory creation
+- Manifest writes, audit entries
+- Template loading, guide loading
+- Scope detection logic
+
+If you MUST produce intermediate text (e.g., the platform requires acknowledgment), it MUST be in the user's detected language — NEVER in English.
 
 ### Status Header
 Include a status line at the top of every user-facing response (decision gates, generation results, approval prompts, phase transitions). Derive from manifest state:

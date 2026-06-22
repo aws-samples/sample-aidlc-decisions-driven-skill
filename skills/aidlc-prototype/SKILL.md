@@ -27,6 +27,7 @@ When active:
 1. Follow ONLY the process below
 2. WAIT for user confirmation at each checkpoint
 3. Never narrate your internal process
+4. ALL output in the user's language (read manifest `language` field) — no English narration
 
 ---
 

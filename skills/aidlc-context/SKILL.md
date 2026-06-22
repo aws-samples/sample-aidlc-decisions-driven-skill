@@ -27,6 +27,7 @@ When active:
 1. Follow ONLY the process below
 2. WAIT for user approval before considering the phase complete
 3. Never narrate your internal process — present only results, questions, and choices
+4. ALL output in the user's language (read manifest `language` field) — no English narration
 
 ---
 
@@ -97,6 +98,36 @@ If `.aidlc/reverse-engineer/` exists, read `overview.md` and `conventions.md` Su
    - Found → resume scenario. Read manifest, present what exists, ask user.
    - Not found → fresh start.
 5. Create folders: `{SPECS_DIR}/{feature}/`, `{WORKFLOW_DIR}/{feature}/`
+6. **Create skeleton manifest** (fresh start only — captures language early for all subsequent steps):
+
+```yaml
+version: "2.2"
+feature: "{feature}"
+language: "{language}"
+platform: "{platform}"
+created: "{ISO timestamp}"
+updated: "{ISO timestamp}"
+state:
+  status: "active"
+  scope: null
+  sharedPhases: []
+  mode: null
+  foundationSkipped: false
+  implementationMode: null
+  quickPath: false
+artifacts: {}
+implementation:
+  totalTasks: 0
+  completedTasks: 0
+  currentTask: null
+  currentWave: null
+context-summary: {}
+decisions: {}
+steering: {}
+units: []
+```
+
+7. **Create audit trail**: `{WORKFLOW_DIR}/{feature}/audit.md` with header `# Audit Trail — {feature}`
 
 ---
 
@@ -127,5 +158,5 @@ Execute actions sequentially. **Load the action file when you reach that step �
 ## Context Recovery
 
 If context is lost mid-phase, follow `aidlc/shared/base.md` Context Recovery, then:
-- Check `artifacts.context.status` — if `"draft"`, resume from Step 11 (present results)
+- Check `artifacts.context.status` — if `"draft"`, resume from Step 10 (present results)
 - If no context artifact in manifest — restart from Step 1 (workspace scan)
