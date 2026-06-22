@@ -2,6 +2,8 @@
 
 After tasks are approved, present the implementation mode choice.
 
+**⛔ HARD RULE — Per-Unit Independence**: In incremental mode, ALWAYS present the mode choice for each unit independently. Do NOT carry over a previous unit's mode selection. Even if the user chose "autonomous" for Unit 1, you MUST still ask for Unit 2. Each unit starts fresh — read `units[{current-unit}].implementationMode` from the manifest: if it is `null`, present the choice. Do NOT infer from other units or from conversation history.
+
 ## Step 1: Analyze Project
 
 Read tasks.md (or unit-scoped tasks.md in incremental mode):
