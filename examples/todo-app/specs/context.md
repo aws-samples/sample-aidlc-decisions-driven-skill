@@ -65,9 +65,13 @@
        │ Implement │
        └─────┬─────┘
              ▼
-       ┌─────────────┐
-       │ Code Review │
-       └─────────────┘
+     ┌───────────────┐
+     │ Build & Test  │
+     └───────┬───────┘
+             ▼
+       ┌──────────┐
+       │  Deploy  │
+       └──────────┘
 ```
 
-Simple project — straight path, no decomposition or foundation needed.
+Simple project — straight path, no decomposition needed.

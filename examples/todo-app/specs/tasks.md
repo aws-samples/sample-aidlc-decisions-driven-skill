@@ -115,7 +115,6 @@ Tasks organized by layer-by-layer strategy — infrastructure first, then data l
 
 - [ ] Code written and follows standards
 - [ ] Tests written and passing
-- [ ] Code review completed
 - [ ] Documentation updated
 - [ ] Acceptance criteria met
 

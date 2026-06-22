@@ -1,0 +1,69 @@
+version: "2.2"
+feature: "todo-app"
+language: "en"
+platform: "kiro"
+created: "2026-04-26T10:00:00Z"
+updated: "2026-04-26T12:45:00Z"
+
+state:
+  sharedPhases: [context, requirements, design, tasks, implement, build, deploy]
+  mode: null
+  status: completed
+  implementationMode: standard
+  quickPath: false
+
+implementation:
+  totalTasks: 8
+  completedTasks: 8
+  currentTask: null
+  currentWave: null
+
+artifacts:
+  context:
+    status: approved
+    timestamp: "2026-04-26T10:00:00Z"
+    files: [context.md]
+  requirements:
+    status: approved
+    timestamp: "2026-04-26T10:15:00Z"
+    files: [requirements.md]
+  design:
+    status: approved
+    timestamp: "2026-04-26T10:45:00Z"
+    files: [design.md]
+  tasks:
+    status: approved
+    timestamp: "2026-04-26T11:00:00Z"
+    files: [tasks.md]
+  build:
+    status: approved
+    timestamp: "2026-04-26T12:30:00Z"
+    files: [build-report.md]
+  deploy:
+    status: approved
+    timestamp: "2026-04-26T12:45:00Z"
+    files: [deploy-summary.md]
+
+context-summary:
+  type: Greenfield
+  stack: "TypeScript / Express / PostgreSQL"
+  architecture: "Layered"
+  feature: "RESTful Todo application with CRUD operations and status filtering"
+  impact: "New standalone"
+  complexity: Low
+  teamSize: solo
+  recommendations: { personas: false, units: false, nfr: false }
+
+decisions:
+  requirements: { scope: "Single feature", user-types: 1, integrations: 0 }
+  design: { api-style: "REST", database: "PostgreSQL", orm: "Prisma", testing: "Jest" }
+  tasks: { breakdown: "layer-by-layer", testing: "test-after" }
+  deploy: { ci-platform: "GitHub Actions", target: "Docker/Cloud Run", strategy: "recreate", environments: "dev + production" }
+
+steering:
+  updatedBy:
+    product: [context, requirements]
+    tech: [context, design]
+    structure: [context, design]
+
+units: []
