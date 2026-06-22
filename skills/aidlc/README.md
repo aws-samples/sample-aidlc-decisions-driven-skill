@@ -156,7 +156,7 @@ Skills find what they need via the input resolution algorithm:
 .aidlc/prototype/{feature}/         # Throwaway prototype code
 ```
 
-Where `SPECS_DIR` is always `.aidlc/specs`, `STEERING_DIR` is platform-dependent (`.kiro/steering`, `.claude/steering`, etc.), and `WORKFLOW_DIR` is always `.aidlc/workflow`.
+Where `SPECS_DIR` is always `.aidlc/specs`, `STEERING_DIR` is platform-dependent (`.kiro/steering`, `.claude/rules`, `.cursor/rules`, `.windsurf/rules`), and `WORKFLOW_DIR` is always `.aidlc/workflow`.
 
 ## Manifest Overview
 

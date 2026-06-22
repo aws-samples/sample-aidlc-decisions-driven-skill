@@ -21,7 +21,7 @@ This project uses AI-DLC skills for structured software specification and implem
 1. **Read manifest**: `.aidlc/workflow/{feature}/aidlc-manifest.yaml` for current state
 2. **Activate skill**: Use the skill for the current phase (see Available Skills below)
 3. **Decision gates**: WAIT for user approval after each phase
-4. **Steering files**: Read `.claude/steering/*.md` for persistent project context
+4. **Rules files**: Read `.claude/rules/*.md` for persistent project context
 
 ## Available Skills
 
@@ -43,13 +43,13 @@ This project uses AI-DLC skills for structured software specification and implem
 - **Specs**: `.aidlc/specs/{feature}/`
 - **Workflow**: `.aidlc/workflow/{feature}/`
 - **Manifest**: `.aidlc/workflow/{feature}/aidlc-manifest.yaml`
-- **Steering**: `.claude/steering/`
+- **Rules**: `.claude/rules/`
 
 ## After Context Compaction
 
 1. Read `.claude/CLAUDE.md` (this file) for current state
 2. Read `.aidlc/workflow/{feature}/aidlc-manifest.yaml` for detailed state and artifact paths
-3. Read steering files: `.claude/steering/product.md`, `tech.md`, `structure.md`
+3. Read rules files: `.claude/rules/product.md`, `tech.md`, `structure.md`
 4. Activate the skill for the current phase
 5. Resume from manifest state
 

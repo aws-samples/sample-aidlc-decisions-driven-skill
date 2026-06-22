@@ -11,9 +11,9 @@ Detect platform and set path variables:
 | Check | Platform | STEERING_DIR | SKILL_DIR base |
 |---|---|---|---|
 | `.kiro/` exists | Kiro | `.kiro/steering` | `.kiro/skills/` |
-| `.claude/` exists | Claude Code | `.claude/steering` | `.claude/skills/` |
-| `.cursor/` exists | Cursor | `.cursor/steering` | `.cursor/skills/` |
-| `.windsurf/` exists | Windsurf | `.windsurf/steering` | `.windsurf/skills/` |
+| `.claude/` exists | Claude Code | `.claude/rules` | `.claude/skills/` |
+| `.cursor/` exists | Cursor | `.cursor/rules` | `.cursor/skills/` |
+| `.windsurf/` exists | Windsurf | `.windsurf/rules` | `.windsurf/skills/` |
 
 Derived paths (always):
 - `SPECS_DIR` = `.aidlc/specs`
@@ -214,5 +214,13 @@ Standard pattern for all phase artifact edits (design-edit, requirements-edit, f
 3. **Re-validate**: Run the phase's validation checks (defined per-skill)
 4. **Cascade**: If change affects related files, update ALL affected artifacts (e.g., renaming an entity cascades to data-model, api-spec, components)
 5. **Mark outdated**: Set all downstream phase artifacts to `status: "outdated"` in manifest
-6. **Present**: Show what changed with `🔲 **Your turn**` block
-7. **STOP** — wait for approval
+6. **Learning loop**: If the user's correction represents a **general rule** (not just a one-off fix for this feature), ask:
+   ```
+   💡 Should I remember this for future workflows?
+   (e.g., "always use X", "never do Y", "prefer Z pattern")
+   - ✅ "yes" — I'll add it to project corrections
+   - ⏭️ "no" — one-time change only
+   ```
+   If "yes": append the rule to `{STEERING_DIR}/corrections.md` (create if doesn't exist). Use the format defined in the corrections template. **Kiro only**: ensure `inclusion: always` front-matter exists.
+7. **Present**: Show what changed with `🔲 **Your turn**` block
+8. **STOP** — wait for approval

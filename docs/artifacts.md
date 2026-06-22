@@ -50,7 +50,7 @@ Decision gate files are produced implicitly by each phase — they're not tracke
 | Variable | Kiro | Claude Code |
 |---|---|---|
 | `SPECS_DIR` | `.aidlc/specs` | `.aidlc/specs` |
-| `STEERING_DIR` | `.kiro/steering` | `.claude/steering` |
+| `STEERING_DIR` | `.kiro/steering` | `.claude/rules` |
 | `WORKFLOW_DIR` | `.aidlc/workflow` | `.aidlc/workflow` |
 
 ## Incremental Mode Paths
