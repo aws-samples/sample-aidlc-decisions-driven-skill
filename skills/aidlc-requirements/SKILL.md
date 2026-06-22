@@ -91,6 +91,18 @@ Ready to generate requirements from project context.
 
 Execute actions sequentially. **Load the action file when you reach that step — not before.**
 
+### Scope-Aware Behavior
+
+Read `state.scope` from manifest. Adjust process based on scope:
+
+| Scope | Requirements Behavior |
+|---|---|
+| `new` / `feature` | Full process — D1 gate, personas, full requirements |
+| `bugfix` | Lightweight — skip D1 gate, produce focused bug-fix requirements (1–3 stories max, focused on the fix and verification) |
+| `refactor` | **Should not reach this skill** — routing skips requirements for refactor scope |
+
+**If scope is `bugfix`**: Skip Step 1 (D1 decision gate). Go directly to Step 2 (generate) but use the lightweight mode described below.
+
 | Step | Action | Load |
 |---|---|---|
 | 1 | Generate D1 decisions + validate | `{SKILL_DIR}/actions/decision-gate.md` |

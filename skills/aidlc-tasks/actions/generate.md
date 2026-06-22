@@ -1,5 +1,35 @@
 # Action: tasks-generation
 
+## Scope Check
+
+Read `state.scope` from manifest. Adjust task generation behavior based on scope:
+
+| Scope | Task Generation Behavior |
+|---|---|
+| `new` / `feature` | Full task generation — all derivation rules, execution waves, parallel support |
+| `bugfix` | Streamlined — fewer tasks, standard mode only recommended, include mandatory regression test task |
+| `refactor` | Focused — include mandatory "verify no behavior change" task, emphasize test-before-change pattern |
+
+### Bugfix Scope Adjustments
+
+When scope is `bugfix`:
+- **Recommend standard mode only** in select-mode (parallel/autonomous overkill for 3–8 tasks)
+- **Add mandatory task**: "Verify regression — confirm existing tests pass before AND after fix"
+- **Simplify execution waves**: likely single wave (no parallelism needed)
+- **Skip** testing strategy derivation from D3 (bugfix uses existing test infrastructure)
+- **Focus** tasks on: reproduce → fix → verify → regression check
+
+### Refactor Scope Adjustments
+
+When scope is `refactor`:
+- **Add mandatory first task**: "Capture baseline — run full test suite, record passing state"
+- **Add mandatory last task**: "Verify no behavior change — same tests pass, same API contracts hold"
+- **Recommend standard mode** (changes are interconnected, parallel risks conflicts)
+- **Skip** new test framework setup tasks (use existing infrastructure)
+- **Focus** tasks on: baseline → restructure → verify → cleanup
+
+---
+
 ## Step 0: Resolve Output Paths
 
 ```

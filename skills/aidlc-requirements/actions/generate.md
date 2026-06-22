@@ -1,6 +1,54 @@
 # Action: requirements-generation
 
-## External Resources (Conditional)
+## Scope Check
+
+Read `state.scope` from manifest. If scope is `bugfix`, use **Lightweight Mode** below instead of the full generation process.
+
+### Lightweight Mode (bugfix scope)
+
+For bugfix scope, produce minimal focused requirements:
+
+1. **Skip** D1 decision gate entirely (no decisions-requirements.md generated)
+2. **Skip** personas generation
+3. **Generate** a focused `requirements.md` with:
+   - 1–3 user stories maximum, focused on the fix
+   - Each story describes: what's broken, expected behavior, fix verification
+   - EARS acceptance criteria focused on regression prevention
+   - No functional areas grouping needed — single "Bug Fix" section
+
+**Bugfix requirements structure**:
+```markdown
+# Requirements — Bug Fix
+
+## Summary
+- **Total Stories**: [1-3]
+- **Bug**: [1-sentence description of the bug]
+- **Impact**: [What's affected]
+- **Root Cause** (if known): [Brief description]
+
+## Bug Fix Stories
+
+### US-01: [Fix description]
+- **As a** [affected user type]
+- **I want** [the correct behavior]
+- **So that** [impact of the fix]
+- **Priority**: High
+
+**Acceptance Criteria (EARS)**:
+1. WHEN [trigger condition] THE system SHALL [correct behavior]
+2. WHEN [previously broken scenario] THE system SHALL NOT [broken behavior]
+3. AFTER [fix applied] THE [related feature] SHALL [continue working] (regression check)
+```
+
+4. **Update manifest**: Add requirements artifact with `status: "draft"`
+5. **Present** and wait for approval
+6. **On approval**: Skip routing-decision — go directly to `aidlc-design` (bugfix never decomposes)
+
+---
+
+## Full Mode (new/feature scope)
+
+### External Resources (Conditional)
 
 If `{STEERING_DIR}/resources.md` lists available resources:
 - **Design tool**: Use MCP to read screens, user flows → extract user journeys and acceptance criteria

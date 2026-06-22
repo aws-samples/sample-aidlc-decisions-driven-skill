@@ -13,6 +13,7 @@ Read tasks.md (or unit-scoped tasks.md in incremental mode):
 ## Step 2: Present Mode Choice
 
 Determine recommendation based on context:
+- **Scope is `bugfix` or `refactor`** → recommend standard (narrow scope, interconnected changes)
 - **Solo dev OR ≤10 tasks OR learning the codebase** → recommend standard
 - **2+ execution waves AND Kiro/Claude Code AND trust the spec** → recommend autonomous
 - **2+ execution waves AND Kiro/Claude Code AND want review checkpoints** → recommend parallel
