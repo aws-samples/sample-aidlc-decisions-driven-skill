@@ -17,9 +17,8 @@ Read `{PLATFORM_DIR}/skills/aidlc/shared/decision-gate.md` for the output struct
 - Component priority (which components to build first)
 - Integration strategy (how to handle external dependencies during dev)
 - Testing strategy (which test types to include)
-- Task granularity (how big each task should be)
+- Task granularity (scope per task — atomic vs single-concern vs multi-concern)
 - Parallel work (sequential vs parallel execution)
-- Estimates (sizing format)
 
 For each question: offer 3-4 options with brief rationale, mark one as **(Recommended)**, include "Other". Leave `**Answer**:` blank.
 
@@ -67,7 +66,7 @@ When user says "done" or "use recommendations":
 | Outside-In Without E2E | 🟡 Medium | Testing="Outside-in", no E2E framework | 1. Select E2E framework 2. Integration as outer 3. Keep |
 | E2E Framework Without E2E Tasks | 🟡 Medium | E2E framework in D3, no E2E setup + scenario tasks | 1. Add E2E setup + scenario tasks 2. Defer to QA phase 3. Remove framework |
 | Load Testing Without Load Tasks | 🟡 Medium | Load testing tool in D3, no load test tasks | 1. Add load test tasks 2. Defer to performance phase 3. Remove tool |
-| Task Count vs Timeline | 🔴 High | Tasks≥30, timeline<2wk, team≤3 | 1. Reduce scope 2. Extend timeline 3. Increase parallelism 4. Keep |
+| Task Count vs Capacity | 🔴 High | Tasks≥30, team≤3, no parallel execution | 1. Reduce scope 2. Enable parallel execution 3. Split into units 4. Keep |
 | Cloud Deploy Without Infra Tasks | 🔴 High | Cloud+IaC in D3, no infra tasks | 1. Add infra tasks 2. Pre-existing 3. Defer |
 | DB Without Migration Tasks | 🟡 Medium | DB+ORM in D3, no migration tasks | 1. Add migration tasks 2. Sub-task of data layer 3. Pre-existing |
 | CI/CD Without Pipeline Tasks | 🟡 Medium | CI/CD tool in D3, no pipeline tasks | 1. Add CI/CD tasks 2. Sub-task of setup 3. Defer |

@@ -21,9 +21,10 @@ Build shared components before features.
 **Cons**: Risk of over-engineering, delayed user value
 
 ## Task Sizing Rules
-- Break down tasks so they can be completed in **1-2 days or less**
-- Good sizes: single CRUD operation, one UI component, specific API endpoint, unit tests for a module
+- Break down tasks so each has a **single concern** — one component, one endpoint, one test suite
+- Good sizes: single CRUD operation, one UI component, one API endpoint, unit tests for one module
 - Too large: "Implement entire authentication system", "Build complete user management"
+- Too small: "Add import statement", "Create empty file" (unless it's a distinct config step)
 
 ## Testing Task Patterns
 
@@ -33,7 +34,7 @@ Generate test tasks **before** implementation tasks within the same phase:
 2. `Implement [component]` — write code to make tests pass
 3. `Verify [component] tests pass` — run suite, fix any remaining failures
 
-**Sizing**: Test skeleton tasks are smaller (0.5-1 day). Implementation tasks assume tests exist.
+**Sizing**: Test skeleton tasks are smaller (atomic). Implementation tasks assume tests exist.
 
 ### Test-After Pattern (Default)
 Generate implementation tasks first, testing tasks follow:
@@ -41,7 +42,7 @@ Generate implementation tasks first, testing tasks follow:
 2. `Write unit tests for [component]` — separate task or embedded as sub-bullet
 3. `Integration tests for [feature area]` — typically a dedicated phase/task
 
-**Sizing**: Integration/E2E test tasks are full tasks (1-2 days). Unit tests are often embedded in implementation tasks.
+**Sizing**: Integration/E2E test tasks are full tasks. Unit tests are often embedded in implementation tasks.
 
 ### Outside-In Pattern
 Generate from outer to inner layers:
@@ -54,14 +55,14 @@ Generate from outer to inner layers:
 
 ### Testing Task Sizing Guidance
 
-| Test Type | Typical Size | Notes |
-|-----------|-------------|-------|
-| Unit test for 1 component | 0.5-1 day | Often embedded in implementation task |
-| Integration tests for 1 feature area | 1-2 days | Includes test DB setup, assertions |
-| E2E setup (framework + config) | 0.5-1 day | One-time setup task |
-| E2E scenarios (per critical flow) | 0.5-1 day each | 1 task per user flow |
-| Load test setup + scenarios | 1-2 days | Includes baseline definition |
-| PBT properties (per property) | 0.5-1 day each | Depends on generator complexity |
+| Test Type | Scope | Notes |
+|-----------|-------|-------|
+| Unit test for 1 component | Atomic | Often embedded in implementation task |
+| Integration tests for 1 feature area | Single-concern | Includes test DB setup, assertions |
+| E2E setup (framework + config) | Atomic | One-time setup task |
+| E2E scenarios (per critical flow) | Single-concern | 1 task per user flow |
+| Load test setup + scenarios | Single-concern | Includes baseline definition |
+| PBT properties (per property) | Single-concern | Depends on generator complexity |
 
 ### When to Separate vs Embed Test Tasks
 

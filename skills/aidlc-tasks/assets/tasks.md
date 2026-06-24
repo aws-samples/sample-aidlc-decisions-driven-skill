@@ -45,5 +45,5 @@ sections:
 - If TDD selected in D4, test tasks must precede their implementation tasks within the same phase
 - Dependencies reference task IDs (e.g., "1.1, 2.3") — no circular deps
 - Ref links to specific design file and section
-- Tasks sized for 1-2 days (split if larger)
+- Tasks sized for single-concern scope (split if larger — one component, one endpoint, one test suite per task)
 - File ownership in parallel waves must NOT overlap between phases
