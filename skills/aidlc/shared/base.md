@@ -23,7 +23,7 @@
 - **Output paths**: comprehensive = `{SPECS_DIR}/{feature}/`, incremental = `{SPECS_DIR}/{feature}/units/{unit}/`. Never mix.
 - **Handoff**: read `{PLATFORM_DIR}/skills/aidlc-{next}/SKILL.md` → follow its instructions. Transparent to user.
 - **Tools**: Kiro=`fsWrite`,`readMultipleFiles`,`readCode`. Claude Code=`Write`/`Edit`,parallel `Read`. Cursor/Windsurf=sequential.
-- **Errors**: report clearly, offer rebuild/retry, never lose work silently. Missing optional files=skip silently.
+- **Errors**: ❌ Fatal (stop, report, offer fix) | ⚠️ Degraded (report, continue) | ℹ️ Info (skip silently). Never lose work. Missing optional files=silent.
 
 ---
 
@@ -80,6 +80,29 @@ Top of every user-facing response (decision gates, generation results, approvals
 - Completed: short names from `state.sharedPhases` — `ctx`, `req`, `decomp`, `design`, `tasks`, `impl`, `build`, `deploy`. Incremental: `auth(impl)`, `payments(design)`
 
 Skip for error messages and help/status commands.
+
+### Error Handling
+
+Classify and present errors consistently:
+
+| Level | Icon | Meaning | Action |
+|---|---|---|---|
+| **Fatal** | ❌ | Skill cannot continue — missing required input, corrupt manifest, unrecoverable state | Report what happened + what to do. Offer `repair` or manual fix. Stop. |
+| **Degraded** | ⚠️ | Skill continues with reduced capability — missing optional input, stale artifact, platform limitation | Report briefly, continue. User can fix later. |
+| **Info** | ℹ️ | Non-blocking note — skipped phase, optional file absent, expected condition | Report only if user-relevant. Often skip silently. |
+
+**Error message format** (for Fatal and Degraded):
+```
+{icon} {What happened}
+👉 {What to do next}
+```
+
+**Rules**:
+- Missing optional files → skip silently (Info level, no output)
+- File exists but unreadable → ⚠️ Degraded ("File exists but could not be read: {path}")
+- Required input missing → ❌ Fatal (stop, suggest how to produce the missing input)
+- Manifest corrupt/invalid → ❌ Fatal (suggest `repair`)
+- Never lose work silently — if a write fails, report immediately
 
 ### Context Recovery
 

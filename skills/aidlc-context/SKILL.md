@@ -150,7 +150,7 @@ Execute actions sequentially. **Load the action file when you reach that step �
 
 ## Phase-Specific Rules
 
-- **Errors**: report clearly with what happened and what to do. Offer rebuild/retry.
+- **Errors**: follow error taxonomy from `shared/base.md` (❌ Fatal / ⚠️ Degraded / ℹ️ Info).
 - **Audit actions**: assessment, approval, edit.
 
 ---

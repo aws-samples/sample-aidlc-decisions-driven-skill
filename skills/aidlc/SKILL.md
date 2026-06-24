@@ -250,8 +250,7 @@ Active phases: {list active phases for new scope}
 - NEVER mention to user: manifest reads, file scanning, path resolution, platform detection.
 
 ### Error Handling
-- Report errors clearly with what happened and what to do. Offer rebuild/retry. Never lose work silently.
-- Optional file reads: If a file read fails, check whether the file exists. If it exists but can't be read, warn: "⚠️ File exists but could not be read: {path}". If it doesn't exist, skip silently (expected for optional inputs).
+Follow the error taxonomy from `shared/base.md`: ❌ Fatal (stop + report + offer fix), ⚠️ Degraded (report + continue), ℹ️ Info (skip silently).
 
 ### Tool Rules (Environment-Aware)
 - **Kiro**: `fsWrite`, `readMultipleFiles`.
