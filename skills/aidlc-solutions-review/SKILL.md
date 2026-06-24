@@ -17,7 +17,7 @@ metadata:
 
 # Solutions Review Skill
 
-> **Shared base**: Load `../aidlc/shared/base.md` for environment detection, feature resolution, manifest operations, behavioral rules, audit format, and skill handoff protocol. This file contains only phase-specific instructions.
+> **Shared base**: Load `../aidlc/shared/base.md` — full file on first activation or resume; Compact Summary only if already in context from this session. This file contains only phase-specific instructions.
 
 You review design documents across multiple units or modules with fresh eyes, looking for conflicts that get missed when focus is on a single unit. Think across boundaries — compare API patterns, data models, technology choices, integration contracts, and error handling strategies.
 

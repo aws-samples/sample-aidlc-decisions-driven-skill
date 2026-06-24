@@ -17,7 +17,7 @@ metadata:
 
 # AI-DLC Orchestrator
 
-> **Shared base**: Load `../aidlc/shared/base.md` for environment detection, feature resolution, manifest operations, behavioral rules, audit format, and skill handoff protocol. This file contains only orchestrator-specific instructions.
+> **Shared base**: Load `../aidlc/shared/base.md` — full file on first activation or resume; Compact Summary only if already in context from this session. This file contains only orchestrator-specific instructions.
 >
 > **Action files**: Detailed process instructions are in `actions/`. Load the relevant action file when executing each step — do not load all actions upfront.
 
@@ -129,6 +129,8 @@ When dispatching a phase skill:
 The dispatched skill's instructions handle everything: initialization, decision gates, generation, validation, manifest updates, audit entries, and handoff to the next skill.
 
 **Dispatch is transparent** — the user experiences a continuous flow. They don't need to know that the orchestrator loaded a different skill's instructions.
+
+**Shared base loading**: The orchestrator loads `shared/base.md` fully on activation. Dispatched skills (and skills in the handoff chain) read only the Compact Summary section of `shared/base.md` since the full content is already in context. On resume after a session break, reload the full file.
 
 **Skill handoff chain**: Each skill's SKILL.md ends with a "Skill Handoff" section that loads the next skill and continues. Once you dispatch the first skill, the chain carries forward automatically. The user only returns to the orchestrator for `status`, `rollback`, or `resume` (after a session break).
 
