@@ -149,8 +149,8 @@ Skip this header only for error messages and help/status commands (which have th
 If context is lost mid-phase:
 1. Read `{STEERING_DIR}/aidlc-workflow.md` → get manifest path and current state
 2. Read manifest → get current phase, artifact paths, decisions
-3. Re-read current skill's SKILL.md → reload phase instructions
-4. Resume from the current action based on manifest state
+3. Activate the **aidlc** orchestrator skill (`{PLATFORM_DIR}/skills/aidlc/SKILL.md`) and execute `resume` — this ensures proper routing, scope checks, unit dashboard, and template re-reading
+4. The orchestrator will re-read the current skill's SKILL.md, load the correct action file, and **re-read all templates and references** (`{SKILL_DIR}/assets/*.md`, `{SKILL_DIR}/references/*.md`, `{PLATFORM_DIR}/skills/aidlc/shared/decision-gate.md`) before doing any work. Do NOT generate from memory — always read from disk.
 
 ### Error Handling
 - Report clearly: what happened, what to do next

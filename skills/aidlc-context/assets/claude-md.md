@@ -50,8 +50,8 @@ This project uses AI-DLC skills for structured software specification and implem
 1. Read `.claude/CLAUDE.md` (this file) for current state
 2. Read `.aidlc/workflow/{feature}/aidlc-manifest.yaml` for detailed state and artifact paths
 3. Read rules files: `.claude/rules/product.md`, `tech.md`, `structure.md`
-4. Activate the skill for the current phase
-5. Resume from manifest state
+4. Activate the **aidlc** orchestrator skill (`.claude/skills/aidlc/SKILL.md`) and execute `resume`
+5. The orchestrator will dispatch the correct phase skill based on manifest state
 
 ## Notes
 

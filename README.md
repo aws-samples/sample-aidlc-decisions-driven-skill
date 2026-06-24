@@ -7,9 +7,13 @@ A structured, decision-driven workflow for AI-assisted software development. AI-
 AI coding assistants are powerful but undirected. Without structure, they produce inconsistent architectures, skip edge cases, and make technology choices that don't align with your project. AI-DLC introduces a lightweight lifecycle that keeps the AI focused and the human in control.
 
 - **Decision gates** at each phase surface the right questions and validate answers before moving forward
+- **Traceability** enforced across the full chain — requirements → design → tasks → build verification
 - **Manifest-based state tracking** lets you pause, resume, and roll back across sessions
+- **Scope-adaptive workflow** — auto-detects if you're building a new project, adding a feature, fixing a bug, or refactoring
 - **Incremental delivery** for complex projects — decompose into units, design and implement one at a time
 - **Parallel implementation** via sub-agents with file ownership isolation
+- **Learning loop** — human corrections persist as project rules for future workflows
+- **Multi-language** — all artifacts and responses generated in the user's language
 - **Multi-platform** — works on Kiro (IDE and CLI) and Claude Code
 
 ## Quick Start
@@ -134,6 +138,18 @@ flowchart TD
 **Simple projects** go straight from requirements to design → implement → build → deploy.
 
 **Complex projects** (5+ stories, 2+ domains) decompose into units, then design and implement each independently before building and deploying.
+
+### Key Behaviors
+
+**Traceability**: Every phase must account for upstream items. Design traces to requirements, tasks trace to design components, and the build phase verifies end-to-end coverage. Gaps must be documented with justification.
+
+**Human-in-the-loop (incremental mode)**: After each unit phase (design, tasks, implement), control returns to the Unit Dashboard. The user decides what to work on next — not the workflow. Decision gates (D3, D4) are always fresh per unit.
+
+**Learning loop**: When the user corrects an artifact and the correction represents a general rule, the workflow asks whether to remember it. Accepted corrections are stored in `corrections.md` and loaded in all future sessions.
+
+**Session recovery**: On resume after a session break, the orchestrator re-reads the manifest, re-loads all templates from disk, and dispatches the correct skill. No artifacts are generated from memory.
+
+**Language**: All artifacts and responses are generated in the user's detected language. Only code, file paths, YAML keys, and technical terms stay in English.
 
 ## Documentation
 

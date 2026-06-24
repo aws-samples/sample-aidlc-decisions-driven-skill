@@ -36,8 +36,8 @@ This project uses AI-DLC skills for specification and implementation. Follow the
 
 1. Read `.aidlc/workflow/{feature}/aidlc-manifest.yaml` for current state
 2. Read steering files at `{STEERING_DIR}/` for project context
-3. Activate the skill for the current phase
-4. Resume from where the manifest indicates
+3. Activate the **aidlc** orchestrator skill (`{PLATFORM_DIR}/skills/aidlc/SKILL.md`) and execute `resume` — this ensures proper routing, scope checks, unit dashboard, and template re-reading
+4. The orchestrator will dispatch the correct phase skill based on manifest state
 
 ## Current State
 

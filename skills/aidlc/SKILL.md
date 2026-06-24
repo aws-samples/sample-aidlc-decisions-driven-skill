@@ -124,6 +124,7 @@ When dispatching a phase skill:
 2. Read that file
 3. **Context override**: After loading the SKILL.md, treat its instructions as your sole operating instructions. Disregard any prior phase skill instructions from earlier in this conversation. Your identity is now `aidlc-{skill}` and you follow ONLY the process defined in the loaded SKILL.md.
 4. Follow its instructions — execute the phase as if you were that skill
+5. **Template rule**: When the skill's action requires generating an artifact or decision file, ALWAYS read the relevant template from disk (`{SKILL_DIR}/assets/*.md`, `{SKILL_DIR}/references/*.md`, or `shared/decision-gate.md`) before writing. Do NOT generate from memory — even if you believe you've seen the template earlier in this conversation.
 
 The dispatched skill's instructions handle everything: initialization, decision gates, generation, validation, manifest updates, audit entries, and handoff to the next skill.
 
