@@ -27,16 +27,7 @@ Based on manifest state, determine the next skill to dispatch:
 
 > **Source of truth**: `{PLATFORM_DIR}/skills/aidlc/shared/scopes.md` — read for full scope definitions and phase mappings.
 
-Read `state.scope` from manifest. Apply skip rules before routing:
-
-| Scope | Phases to Skip |
-|---|---|
-| `new` | — (full workflow) |
-| `feature` | — (full workflow) |
-| `bugfix` | decomposition, deploy |
-| `refactor` | decomposition, requirements (skip D1 gate — go straight to design), deploy |
-
-When a phase is skipped, treat it as if it were already completed for routing purposes. Do NOT add skipped phases to `state.sharedPhases` — they simply don't exist in the workflow for this scope.
+Read `state.scope` from manifest. Apply skip rules from `scopes.md` before routing. Key shortcuts: `bugfix` skips decomposition + deploy; `refactor` skips requirements + decomposition + deploy. When a phase is skipped, treat it as already completed for routing. Do NOT add skipped phases to `state.sharedPhases`.
 
 ### Standard Routing Table
 
