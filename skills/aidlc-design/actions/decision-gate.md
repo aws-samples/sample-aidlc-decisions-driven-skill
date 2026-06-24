@@ -2,6 +2,8 @@
 
 Generate the D3 decisions file at `{WORKFLOW_DIR}/{feature}/decisions-design.md` (or `{WORKFLOW_DIR}/{feature}/units/{unit}/decisions-design.md` in incremental mode).
 
+**⛔ Per-Unit Independence**: In incremental mode, ALWAYS generate a fresh D3 for each unit. Do NOT reuse another unit's D3 answers — even if the technology stack is the same. Each unit may have different architectural constraints, integration patterns, or component boundaries. Read the current unit's `decisions.design` from manifest: if null/empty, generate a new D3. Do NOT infer from other units or from conversation history.
+
 Analyze the **FULL SYSTEM** before generating questions — read requirements, units (if exists), context. If designing a non-foundation unit in incremental mode, also read the foundation unit's design (if it exists) at `{SPECS_DIR}/{feature}/units/foundation/design/` for shared conventions.
 
 **Rules**:

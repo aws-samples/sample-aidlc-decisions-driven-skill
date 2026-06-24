@@ -1,6 +1,8 @@
 # Action: tasks-decisions
 
-Generate the D4 decisions file at `{WORKFLOW_DIR}/{feature}/decisions-tasks.md`.
+Generate the D4 decisions file at `{WORKFLOW_DIR}/{feature}/decisions-tasks.md` (or `{WORKFLOW_DIR}/{feature}/units/{unit}/decisions-tasks.md` in incremental mode).
+
+**⛔ Per-Unit Independence**: In incremental mode, ALWAYS generate a fresh D4 for each unit. Do NOT reuse another unit's D4 answers. Each unit may have different task breakdown strategies, testing approaches, or priority orderings. Read the current unit's `decisions.tasks` from manifest: if null/empty, generate a new D4. Do NOT infer from other units or from conversation history.
 
 Read `{PLATFORM_DIR}/skills/aidlc/shared/decision-gate.md` for the output structure.
 

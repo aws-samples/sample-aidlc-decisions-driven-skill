@@ -29,7 +29,18 @@ Execute the complete test suite one final time. Report results.
 ## 3. Update manifest
 
 On user approval:
-- **Incremental mode**: Set `units[{unit}].phase` to `"completed"`, add `"implement"` to `units[{unit}].completedPhases`, set `units[{unit}].status` to `"completed"`, clear `currentTask` and `currentWave`. Check if ALL units completed — if yes, add `"implement"` to `state.sharedPhases`, present: "👉 All units complete. Proceeding to build verification." Then hand off to `aidlc-build`. If not all complete, present: "👉 Return to unit selection for next unit." Then dispatch unit selection (foundation or decomposition skill depending on `state.foundationSkipped`).
+- **Incremental mode**: Set `units[{unit}].phase` to `"completed"`, add `"implement"` to `units[{unit}].completedPhases`, set `units[{unit}].status` to `"completed"`, clear `currentTask` and `currentWave`. Check if ALL units completed:
+  - **All units complete**: Add `"implement"` to `state.sharedPhases`. Present: "👉 All units complete. Proceeding to build verification." Then hand off to `aidlc-build`.
+  - **Units remaining**: Do NOT auto-proceed. Return to the Unit Dashboard. Present:
+    ```
+    ✅ {unit} implementation complete.
+
+    🔲 **Your turn**:
+    - 🎯 "start {other-unit}" — begin design for another unit
+    - 🎯 "resume {other-unit}" — continue an in-progress unit
+    - 📋 "show units" — see the unit dashboard
+    ```
+    **STOP and wait.** The user decides which unit to work on next.
 - **Comprehensive mode**: Add `"implement"` to `state.sharedPhases`. Hand off to `aidlc-build`.
 
 ## 4. Append final audit entry

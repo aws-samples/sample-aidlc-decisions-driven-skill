@@ -154,4 +154,17 @@ Artifacts at `{SPECS_DIR}/{feature}/design.md` (+ `design/` folder if complex).
 
 On "back to [phase]": Set current design artifact status to `"draft"`. Dispatch the named phase skill.
 
-On approval: update manifest — **incremental mode**: set `units[{unit}].artifacts.design.status` to `"approved"`, set `units[{unit}].phase` to `"design"`, add `"design"` to `units[{unit}].completedPhases`. **Comprehensive mode**: set `artifacts.design.status` to `"approved"`, add `"design"` to `state.sharedPhases`. Append audit entry. Then auto-continue to tasks.
+On approval: update manifest — **incremental mode**: set `units[{unit}].artifacts.design.status` to `"approved"`, set `units[{unit}].phase` to `"design"`, add `"design"` to `units[{unit}].completedPhases`. **Comprehensive mode**: set `artifacts.design.status` to `"approved"`, add `"design"` to `state.sharedPhases`. Append audit entry.
+
+**Handoff after approval**:
+- **Comprehensive mode**: Auto-continue to tasks.
+- **Incremental mode**: Do NOT auto-continue. Return to the orchestrator's Unit Dashboard. Present:
+  ```
+  ✅ {unit} design approved.
+
+  🔲 **Your turn**:
+  - ▶️ "tasks" — continue to task breakdown for {unit}
+  - 🎯 "start {other-unit}" — begin design for another unit
+  - 📋 "show units" — see the unit dashboard
+  ```
+  **STOP and wait.** The user decides what happens next — not the workflow.

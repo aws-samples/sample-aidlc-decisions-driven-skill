@@ -181,4 +181,17 @@ Artifact at `{SPECS_DIR}/{feature}/tasks.md`.
 
 **STOP and wait.**
 
-On approval: update manifest (status → "approved", add to sharedPhases/completedPhases). Append audit. Auto-continue to implement.
+On approval: update manifest (status → "approved", add to sharedPhases/completedPhases). Append audit.
+
+**Handoff after approval**:
+- **Comprehensive mode**: Auto-continue to implement.
+- **Incremental mode**: Do NOT auto-continue. Return to the orchestrator's Unit Dashboard. Present:
+  ```
+  ✅ {unit} tasks approved.
+
+  🔲 **Your turn**:
+  - ▶️ "implement" — start implementation for {unit}
+  - 🎯 "start {other-unit}" — begin design for another unit
+  - 📋 "show units" — see the unit dashboard
+  ```
+  **STOP and wait.** The user decides what happens next — not the workflow.
