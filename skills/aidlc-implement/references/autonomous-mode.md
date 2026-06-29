@@ -10,7 +10,6 @@ Same as parallel mode:
 - **Kiro IDE**: Autopilot mode required
 - **Kiro CLI**: `/tools trust-all` or `/tools trust read write shell`
 - **Claude Code**: No special prerequisite
-- **Cursor/Windsurf**: Not available — fall back to standard mode
 
 Only show the prerequisite that matches the detected environment.
 

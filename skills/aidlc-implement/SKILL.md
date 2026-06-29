@@ -11,8 +11,6 @@ metadata:
     - kiro-ide
     - kiro-cli
     - claude-code
-    - cursor
-    - windsurf
 ---
 
 # Implementation Skill
@@ -121,7 +119,6 @@ Execute actions sequentially. **Load the action file when you reach that step â€
 ### Tool Extensions (beyond shared base)
 - **Kiro**: also uses `invokeSubAgent`, `taskStatus`
 - **Claude Code**: also uses `Agent`, `TaskUpdate`
-- **Cursor/Windsurf**: no sub-agents (parallel/autonomous unavailable)
 
 ### User Approval
 - Approval signals: "next", "go", "proceed", "yes", "continue", "ok", "done", "approved"

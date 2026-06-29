@@ -32,7 +32,7 @@ Skills use a three-layer structure for token efficiency:
 ```
 
 Each spoke:
-- Detects its own environment (Kiro, Claude Code, Cursor, Windsurf)
+- Detects its own environment (Kiro, Claude Code)
 - Resolves its own inputs (manifest → user override → conventional path → ask)
 - Reads/writes the shared manifest (`aidlc-manifest.yaml`)
 - Appends to the shared audit trail
@@ -156,7 +156,7 @@ Skills find what they need via the input resolution algorithm:
 .aidlc/prototype/{feature}/         # Throwaway prototype code
 ```
 
-Where `SPECS_DIR` is always `.aidlc/specs`, `STEERING_DIR` is platform-dependent (`.kiro/steering`, `.claude/rules`, `.cursor/rules`, `.windsurf/rules`), and `WORKFLOW_DIR` is always `.aidlc/workflow`.
+Where `SPECS_DIR` is always `.aidlc/specs`, `STEERING_DIR` is platform-dependent (`.kiro/steering`, `.claude/rules`), and `WORKFLOW_DIR` is always `.aidlc/workflow`.
 
 ## Manifest Overview
 

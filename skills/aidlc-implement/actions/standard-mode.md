@@ -42,7 +42,6 @@ Run the test suite. Only mark task complete when all tests pass. If tests fail:
 
 - **Kiro**: Use `taskStatus` tool
 - **Claude Code**: Use `TaskUpdate` tool OR `Edit` to change `- [ ]` → `- [x]`
-- **Cursor/Windsurf**: Use `Edit` to change `- [ ]` → `- [x]` (checkboxes only, not detail items)
 
 ## 6. Update manifest
 

@@ -11,8 +11,6 @@ metadata:
     - kiro-ide
     - kiro-cli
     - claude-code
-    - cursor
-    - windsurf
 ---
 
 # Code Review Skill

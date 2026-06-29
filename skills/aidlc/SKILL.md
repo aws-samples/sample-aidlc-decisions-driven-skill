@@ -11,8 +11,6 @@ metadata:
     - kiro-ide
     - kiro-cli
     - claude-code
-    - cursor
-    - windsurf
 ---
 
 # AI-DLC Orchestrator
@@ -120,7 +118,7 @@ Phase name commands: `context`, `requirements`, `units`/`decomposition`, `design
 When dispatching a phase skill:
 
 1. Resolve the skill path: `{PLATFORM_DIR}/skills/aidlc-{skill}/SKILL.md`
-   - Where `{PLATFORM_DIR}` is `.kiro`, `.claude`, `.cursor`, or `.windsurf`
+   - Where `{PLATFORM_DIR}` is `.kiro` or `.claude`
 2. Read that file
 3. **Context override**: After loading the SKILL.md, treat its instructions as your sole operating instructions. Disregard any prior phase skill instructions from earlier in this conversation. Your identity is now `aidlc-{skill}` and you follow ONLY the process defined in the loaded SKILL.md.
 4. Follow its instructions — execute the phase as if you were that skill
@@ -255,7 +253,6 @@ Follow the error taxonomy from `shared/base.md`: ❌ Fatal (stop + report + offe
 ### Tool Rules (Environment-Aware)
 - **Kiro**: `fsWrite`, `readMultipleFiles`.
 - **Claude Code**: Parallel `Read` calls.
-- **Cursor/Windsurf**: Sequential reads.
 
 ### Context Recovery (After Compaction)
 If you lose these instructions after context compaction:

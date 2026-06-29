@@ -9,7 +9,6 @@ Before starting, verify the environment supports parallel execution:
 - **Kiro IDE**: Ensure user is in **Autopilot mode** (no per-tool prompts needed)
 - **Kiro CLI**: Instruct user to run `/tools trust-all` or `/tools trust read write shell` to avoid per-tool prompts
 - **Claude Code**: No special prerequisite needed
-- **Cursor/Windsurf**: **Not available** — fall back to standard mode
 
 Only show the prerequisite that matches the detected environment.
 

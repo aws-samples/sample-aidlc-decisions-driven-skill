@@ -133,7 +133,7 @@ Say "reverse-engineer" to run deep codebase analysis. Produces 13 comprehensive 
 
 This power is designed for **Kiro**. Skills in `.kiro/skills/`, steering files in `.kiro/steering/`.
 
-> For other platforms (Claude Code, Cursor, Windsurf), see the [README](../../README.md) for installation instructions.
+> For Claude Code, see the [README](../../README.md) for installation instructions.
 
 ## Troubleshooting
 

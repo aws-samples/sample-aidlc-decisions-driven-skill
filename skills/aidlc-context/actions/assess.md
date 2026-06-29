@@ -81,7 +81,6 @@ Read each asset template and generate the corresponding steering file:
 
 **Kiro only**: Add `inclusion: always` YAML front-matter to each steering file.
 **Claude Code only**: Also generate `.claude/CLAUDE.md` using `{ASSETS_DIR}/claude-md.md`.
-**Cursor/Windsurf**: No front-matter, no CLAUDE.md.
 
 **Greenfield**: Populate `product.md` from user's request. Use "Pending D3 decisions" placeholders in `tech.md` and `structure.md`.
 **Brownfield**: Populate all files with detected stack, structure, and conventions.

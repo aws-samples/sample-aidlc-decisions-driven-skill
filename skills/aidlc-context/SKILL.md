@@ -2,7 +2,7 @@
 name: aidlc-context
 description: Scan workspace, assess project landscape, and generate context document with steering files. First phase of the AI-DLC specification workflow.
 license: MIT
-compatibility: Requires file system access. Auto-detects environment (Kiro, Claude Code, Cursor, Windsurf).
+compatibility: Requires file system access. Auto-detects environment (Kiro, Claude Code).
 metadata:
   version: 1.0.0
   author: AI-DLC Maintainers
@@ -11,8 +11,6 @@ metadata:
     - kiro-ide
     - kiro-cli
     - claude-code
-    - cursor
-    - windsurf
 ---
 
 # Context Assessment Skill

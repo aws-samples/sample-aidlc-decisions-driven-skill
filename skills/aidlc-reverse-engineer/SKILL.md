@@ -11,8 +11,6 @@ metadata:
     - kiro-ide
     - kiro-cli
     - claude-code
-    - cursor
-    - windsurf
 ---
 
 # Reverse Engineer Skill
@@ -160,7 +158,6 @@ Execute phases sequentially. **Load the action file when you reach that phase â€
 ### Tool Extensions
 - **Kiro**: also uses `invokeSubAgent`
 - **Claude Code**: also uses `Agent`
-- **Cursor/Windsurf**: no sub-agents (always sequential)
 
 ### Recovery
 - Read `{WORK_DIR}/progress.json` â†’ resume from next incomplete module.

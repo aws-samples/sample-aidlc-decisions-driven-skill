@@ -12,7 +12,7 @@
 
 <!-- For chained skill dispatch within the same session. Covers essentials only. -->
 
-- **Platform**: detect `.kiro/` → `.claude/` → `.cursor/` → `.windsurf/`. Paths: `SPECS_DIR` = `.aidlc/specs`, `WORKFLOW_DIR` = `.aidlc/workflow`, `STEERING_DIR` = platform-dependent (`steering` or `rules`), `SKILL_DIR` = `{PLATFORM_DIR}/skills/aidlc-{current-skill}`
+- **Platform**: detect `.kiro/` → `.claude/`. Paths: `SPECS_DIR` = `.aidlc/specs`, `WORKFLOW_DIR` = `.aidlc/workflow`, `STEERING_DIR` = platform-dependent (`steering` or `rules`), `SKILL_DIR` = `{PLATFORM_DIR}/skills/aidlc-{current-skill}`
 - **Feature**: scan `{WORKFLOW_DIR}/*/aidlc-manifest.yaml` → one=use it, many=ask, none=infer from `{SPECS_DIR}/` or ask
 - **Manifest**: silent read/write at `{WORKFLOW_DIR}/{feature}/aidlc-manifest.yaml`. On approval: set `status: "approved"`, add to `sharedPhases`
 - **Language**: ALL output in user's language (manifest `language` field). English only for: paths, code, YAML keys, skill/command names, tech terms. Translate templates before presenting. No mixing.
@@ -35,8 +35,6 @@
 |---|---|---|---|
 | `.kiro/` exists | Kiro | `.kiro/steering` | `.kiro/skills/` |
 | `.claude/` exists | Claude Code | `.claude/rules` | `.claude/skills/` |
-| `.cursor/` exists | Cursor | `.cursor/rules` | `.cursor/skills/` |
-| `.windsurf/` exists | Windsurf | `.windsurf/rules` | `.windsurf/skills/` |
 
 Derived: `SPECS_DIR` = `.aidlc/specs`, `WORKFLOW_DIR` = `.aidlc/workflow`, `ASSETS_DIR` = `{SKILL_DIR}/assets`, `REFERENCES_DIR` = `{SKILL_DIR}/references`
 

@@ -10,7 +10,6 @@ Read tasks.md (or unit-scoped tasks.md in incremental mode):
 - Count total tasks (nested checkboxes `- [ ]` under phases)
 - Count top-level phases (top-level checkboxes)
 - Count execution waves from `## Execution Waves` section
-- Check platform from manifest (parallel/autonomous not available on Cursor/Windsurf)
 
 ## Step 2: Present Mode Choice
 
@@ -30,8 +29,6 @@ Your project has [X tasks] across [Y phases] in [Z execution waves].
 | **standard** | One task at a time, review after each | Learning the codebase, tight control |
 | **parallel** | Dependency waves via sub-agents, review per wave | Speed with review checkpoints |
 | **autonomous** | All waves without stopping, single review at end | High confidence in the spec |
-
-[If Cursor/Windsurf: "⚠️ Parallel and autonomous modes are not available on {platform}."]
 
 👉 **Recommended: {mode}** — {one-line rationale}
 
