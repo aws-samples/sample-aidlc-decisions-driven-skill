@@ -39,6 +39,19 @@ This project uses AI-DLC skills for specification and implementation. Follow the
 3. Activate the **aidlc** orchestrator skill (`{PLATFORM_DIR}/skills/aidlc/SKILL.md`) and execute `resume` — this ensures proper routing, scope checks, unit dashboard, and template re-reading
 4. The orchestrator will dispatch the correct phase skill based on manifest state
 
+## Behavioral Anchors
+
+⛔ These rules apply at ALL times, regardless of session length or context size:
+
+1. **Decision gates are mandatory** — generate with blank Answer: fields → present → STOP → wait for user to say "done" or "use recommendations" → THEN generate artifacts
+2. **Every 🔲 Your turn block is a hard stop** — do NOT continue until the user responds
+3. **Implementation mode requires explicit user choice** — never auto-select standard/parallel/autonomous
+4. **Read templates from disk before generating** — never reproduce from memory
+5. **Language compliance** — all narrative output in manifest `language` field
+6. **Update manifest after every phase** — status, timestamps, sharedPhases
+
+If you notice yourself skipping any of these: STOP, re-read the current skill's SKILL.md, and present the checkpoint you missed.
+
 ## Current State
 
 - **Feature**: {feature}

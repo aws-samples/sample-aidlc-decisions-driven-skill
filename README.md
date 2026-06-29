@@ -151,6 +151,8 @@ flowchart TD
 
 **Language**: All artifacts and responses are generated in the user's detected language. Only code, file paths, YAML keys, and technical terms stay in English.
 
+**Context rot prevention**: Long sessions can cause instruction drift where the agent skips checkpoints. AI-DLC mitigates this with PreToolUse hooks (Kiro, Claude Code) that remind the agent of workflow rules before every write, and behavioral anchors in steering files that persist across the session. See [Context Rot](docs/context-rot.md) for details.
+
 ## Documentation
 
 | Document | Description |
@@ -162,6 +164,7 @@ flowchart TD
 | [Manifest Schema](docs/manifest-schema.md) | v2.2 manifest format with full YAML example |
 | [Skill Anatomy](docs/skill-anatomy.md) | How skills are structured, extending AI-DLC |
 | [Context Recovery](docs/context-recovery.md) | How resume and session recovery works |
+| [Context Rot](docs/context-rot.md) | Instruction drift in long sessions — prevention and recovery |
 
 ## Examples
 

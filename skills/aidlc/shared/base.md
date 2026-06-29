@@ -22,7 +22,7 @@
 - **Decision gates**: generate blank answers → present → STOP → validate conflicts → resolve → store in manifest. Never auto-fill.
 - **Output paths**: comprehensive = `{SPECS_DIR}/{feature}/`, incremental = `{SPECS_DIR}/{feature}/units/{unit}/`. Never mix.
 - **Handoff**: read `{PLATFORM_DIR}/skills/aidlc-{next}/SKILL.md` → follow its instructions. Transparent to user.
-- **Tools**: Kiro=`fsWrite`,`readMultipleFiles`,`readCode`. Claude Code=`Write`/`Edit`,parallel `Read`. Cursor/Windsurf=sequential.
+- **Tools**: Kiro=`fsWrite`,`readMultipleFiles`,`readCode`. Claude Code=`Write`/`Edit`,parallel `Read`.
 - **Errors**: ❌ Fatal (stop, report, offer fix) | ⚠️ Degraded (report, continue) | ℹ️ Info (skip silently). Never lose work. Missing optional files=silent.
 
 ---

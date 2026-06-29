@@ -23,6 +23,17 @@ This project uses AI-DLC skills for structured software specification and implem
 3. **Decision gates**: WAIT for user approval after each phase
 4. **Rules files**: Read `.claude/rules/*.md` for persistent project context
 
+## ⛔ Behavioral Anchors (Non-Negotiable)
+
+1. **Decision gates are mandatory** — generate with blank Answer: fields → present → STOP → wait for user to say "done" or "use recommendations" → THEN generate artifacts
+2. **Every 🔲 Your turn block is a hard stop** — do NOT continue until the user responds
+3. **Implementation mode requires explicit user choice** — never auto-select standard/parallel/autonomous
+4. **Read templates from disk before generating** — never reproduce from memory
+5. **Language compliance** — all narrative output in manifest `language` field
+6. **Update manifest after every phase** — status, timestamps, sharedPhases
+
+If you notice yourself skipping any of these: STOP, re-read the current skill's SKILL.md, and present the checkpoint you missed.
+
 ## Available Skills
 
 | Skill | Phase | What it does |
