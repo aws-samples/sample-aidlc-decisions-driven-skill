@@ -17,6 +17,44 @@ ELSE (comprehensive or no units):
 
 Create the output directories if they don't exist. All file writes in this action use these resolved paths — no exceptions.
 
+## Step 0.5: Version Resolution
+
+After D3 choices are locked, resolve the **current stable version** for each selected technology before generating design documents.
+
+**Process**:
+1. Extract all technology choices from D3 (manifest `decisions.design` or Decisions Summary)
+2. For each tool/framework/library chosen, use **web search** or **package registry lookup** to find the latest stable release:
+   - npm registry → Node.js/TypeScript ecosystem (Express, Prisma, Zod, Jest, etc.)
+   - PyPI → Python ecosystem (FastAPI, SQLAlchemy, pytest, etc.)
+   - Maven Central → Java/Kotlin ecosystem (Spring Boot, JUnit, etc.)
+   - crates.io → Rust ecosystem
+   - Go module proxy → Go ecosystem
+   - Official release pages → runtimes (Node.js, Python, Go, Java), databases (PostgreSQL, MySQL), IaC tools (Terraform, CDK)
+3. Record resolved versions as a **version map**: `{tool}: {major.minor.patch}`
+4. Use these resolved versions in ALL subsequent design documents (implementation.md, components.md, etc.)
+
+**Fallback** (web search unavailable or fails):
+- Use training-data knowledge for version numbers
+- Mark each unverified version with `⚠️ unverified` in the version map
+- Add a note in the design summary: "Some versions could not be verified against live registries"
+
+**Priority targets** (resolve these first — most impactful for downstream correctness):
+- Language/runtime version (Node.js, Python, Java, Go)
+- Primary framework (Express, NestJS, FastAPI, Spring Boot, etc.)
+- ORM / database client (Prisma, TypeORM, SQLAlchemy, etc.)
+- Database engine version (PostgreSQL, MySQL, MongoDB)
+- Test runner (Jest, Vitest, pytest, JUnit)
+- IaC tool (CDK, Terraform, Pulumi) if applicable
+- Build tool (Vite, Webpack, esbuild) if applicable
+
+**Rules**:
+- Only resolve tools that were explicitly chosen in D3 — do not add new dependencies
+- Prefer LTS releases over bleeding-edge when both are available (e.g., Node.js LTS over Current)
+- If a tool has a recently released major version (< 3 months old) with limited ecosystem support, prefer the previous stable major unless D3 explicitly chose the new one
+- Store the version map in the manifest under `versions` (see Update Manifest section)
+
+---
+
 ## Choose Format
 
 - **Simple** (≤10 stories AND single domain) → compact `design.md` using `{ASSETS_DIR}/design-compact.md`
@@ -29,6 +67,15 @@ If `{STEERING_DIR}/resources.md` exists and lists available resources (not "none
 - **API specs**: Read OpenAPI/GraphQL schemas → use as basis for design/api-spec.md instead of designing from scratch
 - **Design system docs**: Read referenced docs → align component naming and patterns
 - **Reference implementations**: Read referenced repos → align architecture patterns
+- **Package registries** (for Step 0.5 Version Resolution): Use web search or registry tools to look up latest stable versions. Target registries by ecosystem:
+  - **npm** (npmjs.com) → Node.js / TypeScript dependencies
+  - **PyPI** (pypi.org) → Python dependencies
+  - **Maven Central** (search.maven.org) → Java / Kotlin dependencies
+  - **crates.io** → Rust dependencies
+  - **pkg.go.dev** → Go modules
+  - **NuGet** (nuget.org) → .NET dependencies
+  - **Official release pages** → runtimes (nodejs.org, python.org), databases (postgresql.org), IaC tools
+  - If no web search or registry tools are available, fall back to training-data knowledge and mark versions as `⚠️ unverified`
 - Cite external sources in design documents
 
 ## Writing Strategy
@@ -87,6 +134,8 @@ Load ONLY the guides that apply from `{REFERENCES_DIR}/`. Do NOT read guides tha
 - ✅ Cross-references between design files are correct
 - ✅ Testing strategy covers all D3 testing choices (if testing-strategy.md generated)
 - ✅ Test directory structure in testing-strategy.md is consistent with implementation.md
+- ✅ **Version pinning**: All dependencies in implementation.md use specific stable versions from the version map (Step 0.5). No "latest", no unpinned ranges. Versions marked `⚠️ unverified` are acceptable but must retain the marker.
+- ✅ **No EOL/deprecated versions**: No dependency uses a version that has reached end-of-life or been officially deprecated. If detected during version resolution, flag and substitute with the current stable alternative.
 - ✅ **Traceability complete** (see Traceability Gap Detection below)
 
 ## Traceability Gap Detection
@@ -121,6 +170,20 @@ Read current steering files first, preserve all existing content, update only th
 
 - **Incremental mode**: Add `units[{unit}].artifacts.design` entry: `status: "draft"`, `timestamp`, `files` listing all generated design files. Write design decisions to `units[{unit}].decisions.design`.
 - **Comprehensive mode**: Add top-level `artifacts.design` entry: `status: "draft"`, `timestamp`, `files`. Write design decisions to top-level `decisions.design`.
+- **Version resolution metadata**: Add a `versions` section to the manifest (top-level for comprehensive, under `units[{unit}]` for incremental):
+  ```yaml
+  versions:
+    resolved_at: "{ISO timestamp}"
+    source: "web-search" | "training-knowledge" | "mixed"
+    map:
+      express: "5.1.0"
+      prisma: "6.2.1"
+      node: "22.15.0"
+      # ... one entry per resolved tool
+  ```
+  - `source: "web-search"` — all versions confirmed via live registry lookup
+  - `source: "training-knowledge"` — all versions from model knowledge (no web access)
+  - `source: "mixed"` — some verified, some not (individual entries marked `⚠️ unverified` in design docs)
 - Update `steering.updatedBy.tech` to include `design`
 - Update `steering.updatedBy.structure` to include `design`
 

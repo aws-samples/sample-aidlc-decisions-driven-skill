@@ -13,7 +13,7 @@
 
 ### D3-1: Backend Framework
 **Question**: Which backend framework for handling HTTP requests?
-- 1) Express 4.x — lightweight, mature, huge ecosystem **(Recommended)**
+- 1) Express — lightweight, mature, huge ecosystem **(Recommended)**
 - 2) NestJS — opinionated, built-in DI, decorators
 - 3) Fastify — high performance, schema-based validation
 - 4) Hono — ultra-lightweight, edge-ready
@@ -25,7 +25,7 @@
 
 ### D3-2: ORM / Data Access
 **Question**: How will you access PostgreSQL?
-- 1) Prisma 5.x — type-safe, migrations, great DX **(Recommended)**
+- 1) Prisma — type-safe, migrations, great DX **(Recommended)**
 - 2) Drizzle — lightweight, SQL-like syntax, type-safe
 - 3) TypeORM — decorator-based, active record + data mapper
 - 4) Raw SQL with pg driver
@@ -114,9 +114,9 @@
 ---
 
 ## Decisions Summary
-- D3-1 Backend Framework: Express 4.x
-- D3-2 ORM: Prisma 5.x
-- D3-3 Validation: Zod 3.x
+- D3-1 Backend Framework: Express
+- D3-2 ORM: Prisma
+- D3-3 Validation: Zod
 - D3-4 API Style: REST
 - D3-5 Error Handling: Centralized middleware, JSON format
 - D3-6 Testing: Jest + supertest

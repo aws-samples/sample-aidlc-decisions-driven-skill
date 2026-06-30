@@ -10,6 +10,7 @@ Analyze the **FULL SYSTEM** before generating questions — read requirements, u
 - Always generate with blank `Answer:` fields — never pre-fill
 - If user said "use recommendations" on a previous gate, that does NOT carry forward — each gate starts fresh
 - **Skip questions** that the foundation unit's design already answers (repo strategy, API architecture, auth approach, error format, inter-unit comms, DB strategy, shared types) — those decisions are settled. Do NOT include them in the decisions file. Only applies when a foundation unit exists and has completed its design phase.
+- **No version suffixes in options**: Present tool/library names WITHOUT version numbers (e.g., "Express" not "Express 4.x", "Prisma" not "Prisma 5.x"). Version resolution happens later during design generation (Step 0.5) using live registry lookups. Hardcoding versions in D3 options causes them to go stale.
 
 Read `{REFERENCES_DIR}/technology-questions-catalog.md` (the **index file** — it lists which sub-catalogs to load), then load ONLY the relevant sub-catalogs based on context:
 
