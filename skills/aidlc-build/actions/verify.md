@@ -166,7 +166,7 @@ Compare reported coverage against threshold (from testing-strategy.md or config)
 | Coverage | ✅ / ❌ | {X}% (threshold: {Y}%) |
 ```
 
-**All gates pass** → proceed to report (load `{SKILL_DIR}/actions/report.md`).
+**All gates pass** → proceed to operational gates (step 5) if `design/operations.md` exists, otherwise proceed to report (load `{SKILL_DIR}/actions/report.md`).
 
 **Gate failures**:
 ```
@@ -182,7 +182,97 @@ Quality gate failures are advisory — the user decides whether to fix or procee
 
 ---
 
-## 5. Audit entry
+## 5. Operational quality gates (conditional)
+
+**Skip this step if**: `design/operations.md` does not exist (scope is `bugfix`/`refactor`, or observability was set to "None").
+
+If `design/operations.md` exists, verify the operational infrastructure is functional:
+
+### Health endpoint check
+```bash
+# Start the application in test mode (or use the already-running test server)
+# Verify health endpoint responds
+curl -sf http://localhost:{PORT}/health
+# Expected: 200 with JSON body containing "status":"ok"
+```
+
+If the app can't be started (missing DB, missing env vars), verify the health route exists in source code instead:
+- Check that a route handler is registered at `/health` (grep source files)
+- Check that a readiness route exists at `/health/ready` (if D3 lifecycle ≥ option 2)
+
+### Startup validation check
+```bash
+# Start with a deliberately missing required env var
+# Expected: exit code 1 with clear error message (not a stack trace)
+unset DATABASE_URL && {start command}
+# Verify: process exits with non-zero code AND stderr/stdout contains meaningful message
+```
+
+If the application start is expensive or requires infrastructure, verify structurally:
+- Check for a config validation module (env schema file exists)
+- Check that required env vars are listed and validated on startup
+
+### Graceful shutdown check (if D3 lifecycle ≥ option 2)
+```bash
+# Start application, send SIGTERM, verify clean exit
+{start command} &
+PID=$!
+sleep 2
+kill -TERM $PID
+wait $PID
+# Expected: exit code 0 (not 137/SIGKILL)
+```
+
+If process-level testing isn't feasible, verify structurally:
+- Check for SIGTERM/SIGINT signal handler registration in source code
+- Check for server.close() or equivalent shutdown sequence
+
+### Logging verification
+- Check that the chosen logging library is imported and configured
+- Check that request logging middleware is registered (produces structured logs on each request)
+- Check that no `console.log` / `print()` / `System.out.println` is used for application logging (only the structured logger)
+
+### Metrics endpoint (if D3 observability ≥ Standard)
+```bash
+curl -sf http://localhost:{PORT}/metrics
+# Expected: 200 with Prometheus-format metrics OR OTLP endpoint configured
+```
+
+If runtime check isn't feasible, verify structurally:
+- Metrics library is installed and configured
+- `/metrics` route exists or OTLP exporter is configured
+
+### Present operational gate results
+
+```
+📍 Operational Gates
+
+| Gate | Status | Details |
+|---|---|---|
+| Health endpoint | ✅ / ❌ | /health responds 200, /health/ready checks DB |
+| Startup validation | ✅ / ❌ | Exits with clear error on missing DATABASE_URL |
+| Graceful shutdown | ✅ / ❌ | Clean exit on SIGTERM within timeout |
+| Structured logging | ✅ / ❌ | pino/winston configured, no raw console.log |
+| Metrics (if applicable) | ✅ / ❌ | /metrics responds with Prometheus format |
+```
+
+**All operational gates pass** → proceed to report (load `{SKILL_DIR}/actions/report.md`).
+
+**Operational gate failures**:
+```
+🔲 **Your turn**:
+- 🔧 "fix" — I'll resolve the operational gaps
+- ⏭️ "proceed anyway" — accept current state (non-blocking)
+- ↩️ "back to implement" — return to add missing operational infrastructure
+```
+
+**STOP and wait.**
+
+Operational gates are advisory (same as quality gates). Missing operational infrastructure doesn't block deployment but should be flagged as a gap.
+
+---
+
+## 6. Audit entry
 
 After all steps complete (or user decides to proceed):
 
@@ -190,7 +280,7 @@ After all steps complete (or user decides to proceed):
 ### [{ISO timestamp}] Build: Verification
 
 **Phase**: build
-**Action**: build-run, test-run, quality-check
+**Action**: build-run, test-run, quality-check, ops-check
 **Artifacts**: (source code verified, no new files)
-**Outcome**: Build {passed/failed}. Tests: {X} passed, {Y} failed. Gates: {N} passed, {M} failed, {O} skipped.
+**Outcome**: Build {passed/failed}. Tests: {X} passed, {Y} failed. Gates: {N} passed, {M} failed, {O} skipped. Ops: {P} passed, {Q} failed, {R} skipped.
 ```

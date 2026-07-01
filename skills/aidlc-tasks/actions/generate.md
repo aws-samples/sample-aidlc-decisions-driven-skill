@@ -51,6 +51,31 @@ Derive from design documents:
 - **NFRs** → infrastructure/performance tasks
 - **Correctness properties** → PBT tasks
 - **Testing strategy** → test setup, framework configuration, and test scenario tasks
+- **Operations** → logging, health, metrics, shutdown, and config infrastructure tasks
+
+### Operations Task Derivation (from D3-Ops + design/operations.md or operations section)
+
+If `design/operations.md` exists (or operations section in compact design), derive tasks:
+
+| Operations Source | Derived Task(s) |
+|---|---|
+| Logging strategy | Logger setup task (library install, config, request-id middleware) |
+| Health & Readiness | Health endpoints task (liveness + readiness with dependency checks) |
+| Graceful Shutdown | Shutdown handler task (signal handling, connection draining, timeout) |
+| Configuration Management | Config validation task (env schema, startup checks) |
+| Metrics (if Standard+) | Metrics instrumentation task (middleware, custom metrics, /metrics endpoint) |
+| Error Tracking (if Dedicated) | Error tracking integration task (SDK setup, context enrichment, source maps) |
+| Alerting (if Full) | Alerting configuration task (rules, thresholds, notification channels) |
+
+**Placement rules**:
+- Logger setup + config validation → **Phase 1** (project setup / infrastructure) — these are foundational, needed by all other code
+- Health endpoints + graceful shutdown → **same phase as API routes** or immediately after (depends on request handler being set up)
+- Metrics instrumentation → **after core features** (needs components to exist before instrumenting them)
+- Error tracking + alerting → **polish phase** (after implementation, before build)
+
+**Task sizing**: Operations tasks are typically sub-tasks (0.5-1 day each), not full phases. Group them into 1-2 tasks unless the observability level is "Full" (which may warrant its own phase).
+
+**Scope check**: If scope is `bugfix` or `refactor`, do NOT derive operations tasks (operations.md won't exist for these scopes).
 
 ### Testing Task Derivation (from D3/D4 + design/testing-strategy.md or testing section)
 
@@ -113,6 +138,9 @@ Group phases into waves based on inter-phase dependencies:
 - ✅ If load testing selected in D3, load test task(s) exist
 - ✅ If TDD selected in D4, test tasks precede implementation tasks in ordering
 - ✅ Testing tasks derive from D3 testing choices — no test frameworks assumed without D3 backing
+- ✅ If `design/operations.md` exists: logger setup task in Phase 1, health endpoint task exists, graceful shutdown task exists, config validation task exists
+- ✅ If D3 observability = Standard or Full: metrics instrumentation task exists
+- ✅ If D3 error tracking = Dedicated: error tracking integration task exists
 - ✅ **Traceability complete** (see Traceability Gap Detection below)
 
 ## Traceability Gap Detection

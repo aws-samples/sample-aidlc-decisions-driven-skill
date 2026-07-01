@@ -94,6 +94,7 @@ Ready to generate technology decisions and architecture design.
 | design/api-spec.md | `{SPECS_DIR}/{feature}/design/api-spec.md` |
 | design/integration.md | `{SPECS_DIR}/{feature}/design/integration.md` |
 | design/implementation.md | `{SPECS_DIR}/{feature}/design/implementation.md` |
+| design/operations.md | `{SPECS_DIR}/{feature}/design/operations.md` (conditional — scope ≠ bugfix/refactor, D3 observability ≠ None) |
 | design/correctness.md | `{SPECS_DIR}/{feature}/design/correctness.md` (conditional) |
 | design/testing-strategy.md | `{SPECS_DIR}/{feature}/design/testing-strategy.md` (conditional) |
 | design/nfr.md | `{SPECS_DIR}/{feature}/design/nfr.md` (conditional) |

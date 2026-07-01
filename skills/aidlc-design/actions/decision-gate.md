@@ -36,6 +36,63 @@ Select 8–15 questions total based on project complexity.
 
 **MANDATORY**: Include the Correctness & Property-Based Testing question.
 
+**MANDATORY (unless scope = `bugfix` or `refactor`)**: Include the Operations & Observability questions below.
+
+---
+
+## Operations & Observability Questions (D3-Ops)
+
+**Include when**: scope is `new` or `feature`. **Skip when**: scope is `bugfix` or `refactor`.
+
+These questions are ALWAYS included (not from sub-catalogs) when the scope condition is met. They determine the level of operational infrastructure generated in `design/operations.md`.
+
+### Required Operations Questions
+
+```markdown
+### D3-[N]: Observability Strategy
+**Question**: What level of observability does this service need?
+- 1) Minimal — structured logging + health endpoint (sufficient for internal tools, dev projects)
+- 2) Standard — logging + metrics + health + readiness **(Recommended for production services)**
+- 3) Full — logging + metrics + distributed tracing + alerting + dashboards (for critical services with SLAs)
+- 4) None — skip observability entirely (prototype only)
+- 5) Other (please specify): _______
+
+**Answer**: 
+
+---
+
+### D3-[N+1]: Error Tracking
+**Question**: How should runtime errors be captured and reported?
+- 1) Log-based only — errors in structured logs, query via log aggregation platform **(Recommended for simple services)**
+- 2) Dedicated error tracking service — Sentry / Datadog / Rollbar **(Recommended for production with on-call)**
+- 3) Cloud-native — CloudWatch Insights / GCP Error Reporting / Azure Monitor
+- 4) None — no error tracking beyond basic logging
+- 5) Other (please specify): _______
+
+**Answer**: 
+
+---
+
+### D3-[N+2]: Health & Lifecycle Management
+**Question**: What lifecycle management does the service need?
+- 1) Basic health endpoint only (sufficient for simple deployments)
+- 2) Health + readiness + graceful shutdown **(Recommended for containerized/orchestrated)**
+- 3) Health + readiness + graceful shutdown + startup probe + drain delay (for zero-downtime deployments with warm-up)
+- 4) Other (please specify): _______
+
+**Answer**: 
+```
+
+**Stack-aware option filtering for operations questions**:
+- Observability options stay the same across stacks (they're level-based, not tool-based)
+- Error tracking option 3 (cloud-native): only show the sub-option matching the detected cloud provider
+- Health/lifecycle option 3: only relevant when target deployment is Kubernetes or similar orchestrator
+
+**Recommendation logic**:
+- Solo dev / internal tool / prototype → recommend Minimal + Log-based + Basic
+- Production service (any team size) → recommend Standard + Log-based + Health+readiness+graceful
+- Critical service with SLA or on-call team → recommend Full + Dedicated + Health+readiness+graceful+drain
+
 Read `{PLATFORM_DIR}/skills/aidlc/shared/decision-gate.md` for the output structure.
 
 Present the decision file:
@@ -80,6 +137,16 @@ After D3 answers are filled, validate for conflicts.
 - **Architecture & Performance** → if D3 includes architecture patterns or performance targets
 - **Security** → if D3 includes security choices, PII/compliance, or frontend+backend combinations
 - **Workflow & Cost** → if D3 includes repo strategy, CI/CD, observability, or cost-sensitive infrastructure
+- **Operations & Observability** → if D3 includes operations questions (always, unless scope skips them)
+
+**Operations-Specific Validation Rules** (inline — no external file needed):
+
+| Conflict | Severity | Detection | Resolution |
+|---|---|---|---|
+| Full observability for solo/prototype | 🟡 Medium | observability=Full AND (teamSize=solo OR complexity=Low) | Downgrade to Standard or justify |
+| No observability for production | 🟡 Medium | observability=None AND scope=`feature` AND context-summary.impact≠"prototype" | Upgrade to Minimal or justify |
+| Dedicated error tracking without metrics | 🟢 Low | error-tracking=Dedicated AND observability=Minimal | Consider Standard (metrics help correlate errors) |
+| Full lifecycle without container target | 🟢 Low | lifecycle=option3 AND no container/K8s in D3 infra choices | Downgrade to option 2 unless specific need |
 
 **Context-Based Severity Adjustments**:
 - **Team Size**: Small (1–3) → complexity conflicts severity UP; Large (9+) → DOWN

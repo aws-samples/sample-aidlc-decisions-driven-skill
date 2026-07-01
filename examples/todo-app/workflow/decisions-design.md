@@ -113,6 +113,41 @@
 
 ---
 
+### D3-10: Observability Strategy
+**Question**: What level of observability does this service need?
+- 1) Minimal — structured logging + health endpoint **(Recommended)**
+- 2) Standard — logging + metrics + health + readiness
+- 3) Full — logging + metrics + distributed tracing + alerting + dashboards
+- 4) None — skip observability entirely (prototype only)
+- 5) Other (please specify): _______
+
+**Answer**: 1
+
+---
+
+### D3-11: Error Tracking
+**Question**: How should runtime errors be captured and reported?
+- 1) Log-based only — errors in structured logs, query via log aggregation platform **(Recommended)**
+- 2) Dedicated error tracking service — Sentry / Datadog / Rollbar
+- 3) Cloud-native — GCP Error Reporting
+- 4) None — no error tracking beyond basic logging
+- 5) Other (please specify): _______
+
+**Answer**: 1
+
+---
+
+### D3-12: Health & Lifecycle Management
+**Question**: What lifecycle management does the service need?
+- 1) Basic health endpoint only
+- 2) Health + readiness + graceful shutdown **(Recommended)**
+- 3) Health + readiness + graceful shutdown + startup probe + drain delay
+- 4) Other (please specify): _______
+
+**Answer**: 2
+
+---
+
 ## Decisions Summary
 - D3-1 Backend Framework: Express
 - D3-2 ORM: Prisma
@@ -123,3 +158,6 @@
 - D3-7 Code Organization: Layered (controller → service → repository)
 - D3-8 Schema Management: Prisma Migrate
 - D3-9 Property Testing: No
+- D3-10 Observability: Minimal (structured logging + health)
+- D3-11 Error Tracking: Log-based only
+- D3-12 Lifecycle: Health + readiness + graceful shutdown

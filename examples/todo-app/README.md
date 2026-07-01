@@ -39,6 +39,7 @@ examples/todo-app/
 | Workflow path | Context → Requirements → Design → Tasks → Implement → Build and Test → Deploy |
 | Implementation mode | Standard (sequential) |
 | Decision gates | D1, D3, D4, D5 |
+| Observability | Minimal (structured logging + health + graceful shutdown) |
 | Total tasks | 8 across 3 phases in 3 execution waves |
 
 This example follows the simple project path — no decomposition, no units.

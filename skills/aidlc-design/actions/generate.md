@@ -84,6 +84,7 @@ If `{STEERING_DIR}/resources.md` exists and lists available resources (not "none
 2. Write independent design detail files in parallel (same turn):
    - `design/components.md`, `design/data-model.md`, `design/api-spec.md` simultaneously
    - `design/integration.md`, `design/implementation.md` simultaneously
+   - `design/operations.md` (if D3 observability ≠ "None" AND scope ≠ `bugfix`/`refactor`)
    - `design/testing-strategy.md` (if D3 includes testing choices and project ≠ prototype/no-testing)
    - `design/nfr.md` (if applicable), `design/correctness.md` (if applicable)
 3. **Checkpoint after each file write**: Update manifest `artifacts.design.files` to include the just-written file and set `artifacts.design.status` to `"partial"`. This enables context recovery to skip already-written files.
@@ -106,6 +107,7 @@ Load ONLY the guides that apply from `{REFERENCES_DIR}/`. Do NOT read guides tha
 | `mobile-architecture.md` | D3 includes mobile platform choice |
 | `distributed-patterns.md` | Architecture = microservices or distributed system |
 | `property-based-testing.md` | D3 PBT answer = Yes |
+| `observability-patterns.md` | D3 observability answer ≠ "None" (read ONLY the section matching the project stack) |
 
 **Testing strategy generation**: If D3 includes any testing framework choices (unit, integration, E2E, load, API testing) AND project is not "prototype/no-testing", generate `design/testing-strategy.md` using `{ASSETS_DIR}/design-testing-strategy.md` template. Read the D3 testing answers to populate frameworks, and cross-reference `design/components.md` + `design/api-spec.md` for coverage mapping.
 
@@ -122,9 +124,19 @@ Load ONLY the guides that apply from `{REFERENCES_DIR}/`. Do NOT read guides tha
   - `{ASSETS_DIR}/design-api-spec.md`
   - `{ASSETS_DIR}/design-integration.md`
   - `{ASSETS_DIR}/design-implementation.md`
+  - `{ASSETS_DIR}/design-operations.md` — if D3 observability ≠ "None" AND scope ≠ `bugfix`/`refactor`
   - `{ASSETS_DIR}/design-testing-strategy.md` — ONLY if D3 includes testing choices AND project ≠ prototype/no-testing
   - `{ASSETS_DIR}/design-correctness.md` — ONLY if PBT selected
   - `{ASSETS_DIR}/nfr.md` — ONLY if NFR questions answered
+
+**Operations generation rules**:
+- For **Simple format** (compact `design.md`): embed an `## Operations` section within the compact design file (include Logging, Health, Graceful Shutdown at minimum). Do NOT generate a separate `design/operations.md` file.
+- For **Complex format** (modular): generate `design/operations.md` as a separate file using the template.
+- Section inclusion is driven by the D3 observability level:
+  - `Minimal` → Logging + Health & Readiness + Graceful Shutdown + Configuration Management
+  - `Standard` → All of Minimal + Metrics + Error Handling & Reporting
+  - `Full` → All of Standard + Alerting
+- Read `{REFERENCES_DIR}/observability-patterns.md` (ONLY the section matching the project stack) for implementation patterns.
 
 ## Validate
 
@@ -134,6 +146,7 @@ Load ONLY the guides that apply from `{REFERENCES_DIR}/`. Do NOT read guides tha
 - ✅ Cross-references between design files are correct
 - ✅ Testing strategy covers all D3 testing choices (if testing-strategy.md generated)
 - ✅ Test directory structure in testing-strategy.md is consistent with implementation.md
+- ✅ **Operations design** (if generated): per-component logging table covers ALL components from `design/components.md`; readiness checks cover all critical dependencies from `design/integration.md` + primary database; health endpoint paths don't conflict with API routes in `design/api-spec.md`; configuration variables include all secrets/env vars from `design/implementation.md`
 - ✅ **Version pinning**: All dependencies in implementation.md use specific stable versions from the version map (Step 0.5). No "latest", no unpinned ranges. Versions marked `⚠️ unverified` are acceptable but must retain the marker.
 - ✅ **No EOL/deprecated versions**: No dependency uses a version that has reached end-of-life or been officially deprecated. If detected during version resolution, flag and substitute with the current stable alternative.
 - ✅ **Traceability complete** (see Traceability Gap Detection below)
@@ -200,6 +213,7 @@ Read current steering files first, preserve all existing content, update only th
 - **Entities**: [Y] modeled
 - **Endpoints**: [Z] specified
 - **Integrations**: [W] defined
+- **Operations**: [Minimal / Standard / Full / Skipped] — [logging, health, metrics, alerting as applicable]
 - **PBT Properties**: [N] (or "Skipped")
 - **Testing Strategy**: [Included / Skipped]
 - **NFR**: [Included / Skipped]

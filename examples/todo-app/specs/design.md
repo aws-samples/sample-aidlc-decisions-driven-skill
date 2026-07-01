@@ -223,3 +223,69 @@ npm run dev                   # Start dev server
 | US-003 Update Todo | TodoController, TodoService, TodoRepository | PATCH /api/todos/:id | Todo |
 | US-004 Delete Todo | TodoController, TodoService, TodoRepository | DELETE /api/todos/:id | Todo |
 | US-005 Filter by Status | TodoController, TodoService, TodoRepository | GET /api/todos?status= | Todo |
+
+---
+
+## Operations
+
+### Summary
+- **Observability Level**: Minimal
+- **Error Tracking**: Log-based only
+- **Lifecycle Management**: Health + readiness + graceful shutdown
+
+### Logging
+
+**Strategy**: Structured JSON via pino + pino-http middleware
+
+| Component | Key Log Events | Level |
+|---|---|---|
+| TodoController | Request received, validation failed, response sent | info, warn |
+| TodoService | Todo created/updated/deleted, business rule applied | info |
+| TodoRepository | Query executed, connection error | debug, error |
+| Error Handler | Unhandled error caught | error |
+
+**Correlation**: `X-Request-ID` header propagated (generated if absent).
+**Sensitive Data**: No PII in this app (no auth). Log todo IDs but not full content on debug level.
+
+### Health & Readiness
+
+| Endpoint | Purpose | Checks |
+|---|---|---|
+| `GET /health` | Liveness | Process alive, returns `{"status":"ok","uptime":N}` |
+| `GET /health/ready` | Readiness | PostgreSQL `SELECT 1` (2s timeout) |
+
+Readiness returns `503` if database is unreachable.
+
+### Graceful Shutdown
+
+```
+SIGTERM → stop accepting connections → wait for in-flight (30s) → disconnect Prisma → exit 0
+```
+
+- **Timeout**: 30s (env: `SHUTDOWN_TIMEOUT_MS`)
+- **Signals**: SIGTERM, SIGINT
+
+### Configuration Management
+
+| Variable | Required | Default | Sensitive? | Description |
+|---|---|---|---|---|
+| `PORT` | No | 3000 | No | HTTP listen port |
+| `NODE_ENV` | No | development | No | Runtime environment |
+| `DATABASE_URL` | Yes | — | Yes | PostgreSQL connection string |
+| `LOG_LEVEL` | No | info | No | Minimum log level (fatal/error/warn/info/debug) |
+| `SHUTDOWN_TIMEOUT_MS` | No | 30000 | No | Graceful shutdown timeout |
+
+**Startup validation**: Validate `DATABASE_URL` is present and is a valid PostgreSQL URI. Exit 1 with clear message if missing.
+
+### Error Handling
+
+| Category | HTTP Status | Log Level | Example |
+|---|---|---|---|
+| Client error | 4xx | warn | Validation failed, todo not found |
+| Operational error | 5xx (retriable) | error | DB timeout, connection pool exhausted |
+| Programming error | 5xx (bug) | error | Unhandled exception |
+
+Error log format:
+```json
+{"level":"error","timestamp":"ISO","requestId":"uuid","error":{"name":"...","message":"...","code":"..."}}
+```

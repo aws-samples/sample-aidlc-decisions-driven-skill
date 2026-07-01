@@ -56,7 +56,7 @@ context-summary:
 
 decisions:
   requirements: { scope: "Single feature", user-types: 1, integrations: 0 }
-  design: { api-style: "REST", database: "PostgreSQL", orm: "Prisma", testing: "Jest" }
+  design: { api-style: "REST", database: "PostgreSQL", orm: "Prisma", testing: "Jest", observability: "Minimal", error-tracking: "Log-based", lifecycle: "Health + readiness + graceful shutdown" }
   tasks: { breakdown: "layer-by-layer", testing: "test-after" }
   deploy: { ci-platform: "GitHub Actions", target: "Docker/Cloud Run", strategy: "recreate", environments: "dev + production" }
 

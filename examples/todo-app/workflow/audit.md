@@ -40,14 +40,14 @@
 **Phase**: design
 **Action**: decision-gate
 **Artifacts**: decisions-design.md
-**Outcome**: D3 completed. Stack: Express + Prisma + PostgreSQL + Zod + Jest. No conflicts detected.
+**Outcome**: D3 completed. Stack: Express + Prisma + PostgreSQL + Zod + Jest. Observability: Minimal (logging + health + graceful shutdown). No conflicts detected.
 
 ### [2026-04-26T10:45:00Z] Design: Generation
 
 **Phase**: design
 **Action**: generation
 **Artifacts**: design.md
-**Outcome**: Compact design generated (single file, ≤10 stories). 3 components, 1 entity, 5 endpoints.
+**Outcome**: Compact design generated (single file, ≤10 stories). 3 components, 1 entity, 5 endpoints. Operations section included (Minimal: logging, health, graceful shutdown).
 
 ### [2026-04-26T10:45:30Z] Design: Approved
 

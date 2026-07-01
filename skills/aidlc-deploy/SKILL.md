@@ -66,6 +66,7 @@ Ready to generate deployment configuration and CI/CD pipeline.
 | Existing CI config | Current pipeline to extend or replace | YAML (.github/workflows/*.yml, .gitlab-ci.yml, etc.) |
 | Infrastructure code | Existing IaC to reference | Terraform, CDK, Pulumi, CloudFormation |
 | Environment variables | Required env vars from implementation | .env.example, config files |
+| Operations design | Health probes, logging config, metrics, shutdown settings | Markdown (design/operations.md) |
 
 ### Outputs
 | Artifact | Default Path | Description |
@@ -85,7 +86,8 @@ Ready to generate deployment configuration and CI/CD pipeline.
 4. Read `{WORKFLOW_DIR}/{feature}/build-report.md` for build context
 5. Check for existing CI/CD configs (see detection list in references)
 6. Read `design/implementation.md` for infrastructure requirements
-7. Read steering files Summary sections
+7. Read `design/operations.md` if it exists (for health probes, logging, metrics, shutdown config)
+8. Read steering files Summary sections
 
 ---
 
