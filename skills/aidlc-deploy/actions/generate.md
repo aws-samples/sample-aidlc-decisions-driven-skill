@@ -1,246 +1,253 @@
 # Action: Generate Pipeline and Configs
 
-## 1. Read decisions
+## 1. Load decisions and references
 
-Load `{WORKFLOW_DIR}/{feature}/decisions-deploy.md` for D5 answers:
-- CI/CD platform → determines config format
-- Deployment target → determines deploy steps
-- Environments → determines environment files
-- Secrets → determines secret references
-- Branch strategy → determines triggers
+Read D5 answers from manifest `decisions.deploy`. Load references conditionally:
+
+| D5 Answer | Load Reference |
+|---|---|
+| CI = GitHub Actions | `{REFS}/platform-github-actions.md` (stack section + target section only) |
+| CI = GitLab CI | `{REFS}/platform-gitlab-ci.md` (stack section + target section only) |
+| CI = CodePipeline | `{REFS}/platforms.md` (CodePipeline section) |
+| IaC = Terraform | `{REFS}/iac-terraform.md` (target section + database section) |
+| IaC = CDK | `{REFS}/iac-cdk.md` (target section + database section) |
+| IaC = None | Skip IaC references |
+
+**Stack-aware selective reading**: read ONLY the section matching `context-summary.stack`:
+- TypeScript/Node → "Stack: Node.js / TypeScript" section
+- Python → "Stack: Python / FastAPI" section
+- Java/Kotlin → "Stack: Java / Spring Boot" section
+- Go → "Stack: Go" section
+
+**Target-aware selective reading**: read ONLY the deploy target section matching D5-2 answer.
+
+Also read: `design/operations.md` (if exists), `design/implementation.md`, version map from manifest.
+
+## 1.5. Version resolution for deploy tooling
+
+Resolve current versions for deploy-specific tools via web search:
+- **GHA actions**: `actions/checkout`, `actions/setup-node`, `actions/upload-artifact`, cloud auth actions — verify current `@v{N}` tags
+- **Terraform providers**: `hashicorp/aws`, `hashicorp/google` — verify current major version from registry.terraform.io
+- **CDK**: `aws-cdk-lib` — verify current version from npm
+- **Docker base images**: `node:{version}-slim`, `python:{version}`, etc. — use versions from design manifest version map
+- **CI service images**: `postgres`, `redis` — use versions from design manifest version map
+
+**Fallback**: if web search unavailable, use versions shown in reference templates as defaults. Mark with `# version unverified` comment in generated files.
+
+**Rules**: Same as design Step 0.5 — prefer LTS, don't pick bleeding-edge, only resolve tools actually being used.
 
 ## 2. Generate CI/CD pipeline
 
-Based on CI platform decision, generate the appropriate config file:
+Based on D5-1 (CI platform), generate the pipeline config using the loaded platform reference as the template source.
 
-### GitHub Actions
-Path: `.github/workflows/deploy.yml`
+**Substitution rules** — replace placeholders in templates:
+- `{NODE_VERSION}`, `{PYTHON_VERSION}`, etc. → from manifest `versions.map`
+- `{DB_VERSION}` → from manifest `versions.map` (database engine)
+- `{SERVICE}` → from manifest `feature` or `context-summary.feature` (kebab-case)
+- `{REGION}` → from D5 answers or default for target cloud
+- `{PORT}` → from `design/operations.md` or `design/implementation.md`
+- `{CLUSTER}`, `{NAMESPACE}`, `{REPO}` → derived from service name + environment
 
-Structure:
-```yaml
-name: Deploy
-on:
-  push:
-    branches: [{branch triggers from D5}]
-  pull_request:
-    branches: [main]
+**Pipeline must include**:
+- Build step (matching what aidlc-build verified)
+- Full test suite (unit + integration)
+- Quality gates (lint, type-check, security scan)
+- Deploy per environment (from D5-4)
+- Promotion gates (from D5-5): auto or manual
+- Database migration step (from D5-9) — before or during deploy
+- Post-deploy verification (from D5-10) — health check, smoke test, or E2E
 
-env:
-  # Project-specific environment variables
+**Output paths**:
+- GitHub Actions: `.github/workflows/ci.yml` + `.github/workflows/deploy.yml` (or combined)
+- GitLab CI: `.gitlab-ci.yml`
+- CodePipeline: `buildspec.yml`
 
-jobs:
-  build:
-    # Build step (mirrors what aidlc-build verified)
-  test:
-    # Full test suite
-  quality:
-    # Lint, type-check, security scan
-  deploy-{env}:
-    # Per-environment deploy jobs with appropriate gates
-```
+## 3. Generate Dockerfile (if container target)
 
-### GitLab CI
-Path: `.gitlab-ci.yml`
+If D5-2 is container-based (Cloud Run, ECS, K8s) and no Dockerfile exists:
 
-### AWS CodePipeline / CodeBuild
-Path: `buildspec.yml` + `pipeline.yml` (or CDK if IaC selected)
-
-### Other platforms
-Generate the equivalent config following platform conventions.
-
----
-
-## 3. Generate environment configs
-
-For each environment specified in D5:
-
-### Environment variable template
-Path: `.env.{environment}.example` (never actual secrets)
-
-```bash
-# {Environment} Configuration
-# Copy to .env.{environment} and fill in actual values
-
-APP_ENV={environment}
-APP_PORT=3000
-DATABASE_URL=  # Set in CI/CD secrets
-API_KEY=       # Set in CI/CD secrets
-```
-
-### Environment-specific overrides (if applicable)
-- Kubernetes: `k8s/{environment}/` with kustomize overlays or Helm values
-- Docker Compose: `docker-compose.{environment}.yml`
-- Serverless: `serverless-{environment}.yml` or stage config
-- Terraform: `environments/{environment}/terraform.tfvars`
-
----
-
-## 4. Generate deployment scripts (if applicable)
-
-For targets that benefit from deploy scripts:
-
-Path: `scripts/deploy.sh` (or platform equivalent)
-
-Include:
-- Pre-deploy health check
-- Deployment execution
-- Post-deploy smoke test
-- Rollback trigger on failure
-
----
-
-## 5. Generate Dockerfile / container config (if applicable)
-
-If deployment target is container-based and no Dockerfile exists:
-
-Path: `Dockerfile`
-
-Follow best practices:
-- Multi-stage build (build → production)
+Generate using the Dockerfile template from the platform reference. Apply:
+- Multi-stage build (builder → production)
 - Non-root user
-- Minimal base image
-- Health check instruction
+- HEALTHCHECK from `design/operations.md` health endpoint
+- STOPSIGNAL SIGTERM
 - `.dockerignore` for build context optimization
 
----
+**Output**: `Dockerfile` + `.dockerignore` at project root.
 
-## 5.5. Apply operations design to deployment config (conditional)
+## 4. Generate environment configs
 
-**Skip this step if**: `design/operations.md` does not exist.
+For each environment in D5-4:
+- `.env.{environment}.example` — all env vars from `design/operations.md` Configuration section
+- Mark sensitive vars with comments: `# Set in CI/CD secrets — do not commit`
+- Include: APP_ENV, PORT, LOG_LEVEL, DATABASE_URL, plus any from operations/implementation
 
-If `design/operations.md` exists, read it and apply operational settings to the generated deployment files:
+## 5. Generate IaC (conditional)
 
-### Container health probes (if Dockerfile generated or K8s target)
+**Skip if** D5-7 = "None".
 
-Read the Health & Readiness section from `design/operations.md` and generate:
+If IaC selected, generate infrastructure files using the loaded IaC reference:
 
-**Dockerfile HEALTHCHECK** (if Dockerfile generated):
-```dockerfile
-HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
-  CMD curl -f http://localhost:{PORT}/health || exit 1
-```
+### Terraform (D5-7 = Terraform)
 
-**Kubernetes probes** (if K8s deployment target):
-```yaml
-livenessProbe:
-  httpGet:
-    path: /health
-    port: {PORT}
-  initialDelaySeconds: 10
-  periodSeconds: 30
-  timeoutSeconds: 3
-readinessProbe:
-  httpGet:
-    path: /health/ready
-    port: {PORT}
-  initialDelaySeconds: 5
-  periodSeconds: 10
-  timeoutSeconds: 3
-```
+Generate `infra/` directory:
+- `main.tf` — provider, backend (S3/GCS based on target cloud)
+- `variables.tf` — all configurable values
+- `outputs.tf` — service URL, database endpoint
+- `versions.tf` — required providers
+- Target-specific resource file (e.g., `ecs.tf`, `cloud-run.tf`)
+- `database.tf` — if data model exists in design
+- `monitoring.tf` — if `design/operations.md` exists and observability ≥ Standard
+- `environments/dev.tfvars` + `environments/production.tfvars`
 
-**Cloud Run / ECS / App Runner** (if applicable):
-- Configure health check path and interval per platform conventions
-- Set startup grace period from `design/operations.md` configuration (drain delay)
+### CDK (D5-7 = CDK)
 
-### Graceful shutdown configuration
+Generate `infra/` directory:
+- `bin/app.ts` — CDK app entry with environment switching
+- `lib/app-stack.ts` — main stack composing constructs
+- `lib/service.ts` — container or lambda service construct
+- `lib/database.ts` — if data model exists
+- `lib/networking.ts` — VPC construct
+- `lib/monitoring.ts` — if `design/operations.md` exists and observability ≥ Standard
+- `config/dev.ts` + `config/production.ts`
+- `cdk.json` + `package.json` + `tsconfig.json`
 
-Read the Graceful Shutdown section and apply:
+### IaC generation rules
+- Use environment-aware sizing (dev=small, production=larger)
+- Enable deletion protection for production resources
+- Use secret management per D5-6 choice
+- Include health probes from `design/operations.md`
+- Include monitoring/alerting from `design/operations.md` (if observability ≥ Standard)
+- All resources tagged with project + environment + "ManagedBy: {iac-tool}"
 
-**Kubernetes**: Set `terminationGracePeriodSeconds` to match the shutdown timeout from operations.md (default 30s).
+## 6. Generate deployment scripts
 
-**Docker**: Ensure `STOPSIGNAL SIGTERM` is set (default, but be explicit).
+Generate helper scripts:
+- `scripts/deploy.sh` — manual deploy for emergencies (bypassing CI)
+- `scripts/rollback.sh` — rollback per D5-8 strategy (platform-specific commands)
 
-**Cloud Run**: Set `--timeout` for request draining per the configured shutdown timeout.
+Scripts should include:
+- Pre-flight checks (auth configured, required tools installed)
+- The actual deploy/rollback command
+- Post-deploy health check
 
-**ECS**: Set `stopTimeout` in task definition.
+## 7. Generate deploy-summary.md
 
-### Log routing
+Write to `{WORKFLOW_DIR}/{feature}/deploy-summary.md`:
 
-Read the Logging section from `design/operations.md` and configure log delivery:
+```markdown
+# Deployment Summary — {feature}
 
-| Platform | Log Configuration |
+**Date**: {ISO timestamp}
+**CI/CD Platform**: {from D5-1}
+**Deployment Target**: {from D5-2}
+**Strategy**: {from D5-3}
+**IaC**: {from D5-7 or "None"}
+
+## Pipeline
+
+| Stage | Trigger | Actions |
+|---|---|---|
+| Build | [trigger] | [actions] |
+| Test | After build | [test commands] |
+| Quality | After test | [lint, type-check, security] |
+| Migrate | Before deploy | [migration command — from D5-9] |
+| Deploy (dev) | [from D5-5] | [deploy steps] |
+| Verify (dev) | After deploy | [from D5-10] |
+| Deploy (production) | [from D5-5] | [deploy steps] |
+| Verify (production) | After deploy | [from D5-10] |
+
+## Environments
+
+| Environment | Trigger | Promotion | URL |
+|---|---|---|---|
+| [per D5-4] | [per D5-5] | [auto/manual] | [placeholder] |
+
+## Infrastructure (if IaC generated)
+
+| Resource | Type | Configuration |
+|---|---|---|
+| [per generated IaC] | [service type] | [key settings] |
+
+## Files Generated
+
+| File | Purpose |
 |---|---|
-| GitHub Actions + Cloud Run | `--set-env-vars LOG_LEVEL=info` in deploy step |
-| AWS ECS | `awslogs` log driver in task definition → CloudWatch |
-| Kubernetes | Structured JSON to stdout → collected by cluster log agent |
-| Docker Compose | JSON file driver with log rotation options |
+| [list all generated files with brief description] |
 
-Add LOG_LEVEL to environment config template (`.env.{environment}.example`).
+## Secrets Required
 
-### Metrics endpoint exposure (if D3 observability ≥ Standard)
+| Secret | Environments | Where to Configure |
+|---|---|---|
+| [from operations.md + IaC requirements] | [which envs] | [platform-specific location] |
 
-If the app exposes `/metrics`:
-- **Kubernetes**: Add annotations for Prometheus scraping:
-  ```yaml
-  annotations:
-    prometheus.io/scrape: "true"
-    prometheus.io/path: "/metrics"
-    prometheus.io/port: "{PORT}"
-  ```
-- **Cloud Run / ECS**: Document that metrics need a sidecar or push-based export (OTLP)
-- **Docker Compose**: Add Prometheus service to compose file (optional, for local dev)
+## Rollback
 
-### Error tracking environment variables (if D3 error tracking = Dedicated)
+- **Strategy**: [from D5-8]
+- **Command**: [platform-specific rollback command]
+- **Recovery time**: [estimated]
 
-Add error tracking service DSN/token to:
-- Secret references in pipeline config (e.g., `${{ secrets.SENTRY_DSN }}`)
-- Environment template files (`.env.{environment}.example`)
-- Source map upload step in CI pipeline (for JavaScript/TypeScript services)
+## Post-Deployment Checklist
 
-### Alerting integration (if D3 observability = Full)
+- [ ] Configure secrets in CI/CD platform
+- [ ] Provision database (if IaC = None)
+- [ ] Run first deployment to dev
+- [ ] Verify health endpoint responds
+- [ ] Run smoke/E2E test against dev
+- [ ] Configure production environment protection/approval
+- [ ] First production deployment
+```
 
-Add alerting configuration notes to `deploy-summary.md`:
-- Required external setup: alert notification channel (Slack webhook, PagerDuty key, etc.)
-- Recommended alert rules from `design/operations.md` Alerting section
-- Link to platform-specific alerting docs
+## 8. Apply operations design (from design/operations.md)
 
----
+If `design/operations.md` exists, ensure all generated files incorporate:
+- **Health probes**: Dockerfile HEALTHCHECK, K8s probes, Cloud Run probes, ALB health checks
+- **Graceful shutdown**: STOPSIGNAL, terminationGracePeriodSeconds, stop timeout
+- **Log routing**: LOG_LEVEL env var, structured JSON to stdout, platform log driver config
+- **Metrics**: /metrics endpoint exposure (Prometheus annotations for K8s, sidecar note for others)
+- **Error tracking**: SENTRY_DSN or equivalent in secrets + env config
+- **Alerting** (if Full): note in deploy-summary about required external setup
 
-## 6. Present generated files
+## 9. Present generated files
 
 ```
 📍 Deployment Configuration Generated
 
-**CI/CD**: {platform} — `{pipeline config path}`
-**Target**: {deployment target}
-**Strategy**: {strategy}
-**Environments**: {env list}
+- **CI/CD**: {platform} — `{pipeline path}`
+- **Target**: {deploy target}
+- **Strategy**: {strategy}
+- **IaC**: {tool} — `infra/` ({N} files) | None
+- **Environments**: {env list}
+- **Verification**: {from D5-10}
 
 Files created:
-- `{pipeline config path}` — CI/CD pipeline definition
-{- `{env config paths}` — environment configurations}
-{- `{deploy script path}` — deployment script}
-{- `Dockerfile` — container definition (if generated)}
+- `{pipeline config}` — CI/CD pipeline
+- `Dockerfile` + `.dockerignore` — container build (if applicable)
+- `.env.*.example` — environment templates
+- `infra/` — infrastructure code (if IaC selected)
+- `scripts/deploy.sh`, `scripts/rollback.sh` — helper scripts
+- `deploy-summary.md` — deployment documentation
 
-Pipeline stages:
-1. Build — compile and bundle
-2. Test — unit, integration, E2E
-3. Quality — lint, type-check, security
-4. Deploy ({env1}) — {auto/manual} promotion
-{5. Deploy ({env2}) — manual approval required}
-
+---
 🔲 **Your turn**:
 - ✅ "approve" — finalize deployment configuration
-- 🔍 "show [file]" — inspect a specific generated file
-- 🔧 "edit [file]" — modify a specific configuration
-- ➕ "add [component]" — add monitoring, alerts, or additional stages
+- 🔍 "show [file]" — inspect a generated file
+- 🔧 "edit [file]" — modify a specific file
+- ➕ "add [component]" — add monitoring, alerts, or additional config
 ```
 
 **STOP and wait.**
 
-On "edit": apply requested changes to the specific file, re-present.
-On "add": generate the additional component, add to pipeline if applicable.
-On "approve" → load `{SKILL_DIR}/actions/finalize.md`.
+On "edit": apply changes, re-present.
+On "approve": load `{SKILL_DIR}/actions/finalize.md`.
 
----
-
-## 7. Audit entry
+## 10. Audit entry
 
 ```
 ### [{ISO timestamp}] Deploy: Generation
 
 **Phase**: deploy
 **Action**: generation
-**Artifacts**: {list of generated files}
-**Outcome**: Generated {N} deployment files for {platform} targeting {target}. {M} environments configured.
+**Artifacts**: {list all generated files}
+**Outcome**: Generated {N} files. CI: {platform}, Target: {target}, IaC: {tool or "None"}. {M} environments configured.
 ```

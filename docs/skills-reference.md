@@ -11,7 +11,7 @@
 | `aidlc-tasks` | Construction | 5 | Breaks design into sequenced, estimable tasks. Generates execution waves with file ownership for parallel dispatch. |
 | `aidlc-implement` | Construction | 6 | Executes tasks in standard (one-at-a-time), parallel (wave-based sub-agents), or autonomous (all waves, no stops) mode. |
 | `aidlc-build` | Operation | 7 | Detects build tooling, runs final integration build, executes full test suites, validates quality gates (lint, type-check, security, coverage). Produces build report. |
-| `aidlc-deploy` | Operation | 8 | Generates CI/CD pipeline configs via D5 decision gate. Handles environment promotion, secrets management, rollback strategy, and deployment scripts. |
+| `aidlc-deploy` | Operation | 8 | Generates CI/CD pipeline configs and optional IaC (Terraform/CDK) via D5 decision gate. Handles environment promotion, secrets management, rollback strategy, database migrations, and post-deploy verification. Platform-specific templates for GitHub Actions, GitLab CI. |
 
 ## Supporting Skills
 

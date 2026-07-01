@@ -105,7 +105,7 @@ Skills find what they need via the input resolution algorithm:
 | `aidlc-tasks` | 5 | Breaks design into sequenced implementation tasks with execution waves and file ownership |
 | `aidlc-implement` | 6 | Executes tasks — standard (sequential), parallel (wave-based), or autonomous mode |
 | `aidlc-build` | 7 | Detects build tooling, runs final integration build, executes full test suites, validates quality gates |
-| `aidlc-deploy` | 8 | Generates CI/CD pipeline configs via D5 decision gate. Handles environment promotion, secrets management, rollback strategy |
+| `aidlc-deploy` | 8 | Generates CI/CD pipeline configs and optional IaC (Terraform/CDK) via D5 decision gate. Platform-specific templates for GitHub Actions, GitLab CI. Handles environment promotion, secrets, rollback, migrations |
 | `aidlc-prototype` | — | Standalone throwaway spike. Builds minimal code to validate requirements. Not a workflow phase |
 | `aidlc-solutions-review` | — | Cross-unit design review. Compares designs for conflicts, inconsistencies, and alignment issues. Produces severity-classified report |
 | `aidlc-code-review` | — | Code review against design specs, security, performance, test coverage, and coding standards. Produces actionable findings with suggested fixes |
@@ -141,7 +141,7 @@ Skills find what they need via the input resolution algorithm:
 | `aidlc-tasks` | decisions-tasks.md, tasks.md |
 | `aidlc-implement` | Source code, test files, tasks.md (checkbox updates) |
 | `aidlc-build` | `{WORKFLOW_DIR}/{feature}/build-report.md` |
-| `aidlc-deploy` | decisions-deploy.md, pipeline configs, environment configs, `{WORKFLOW_DIR}/{feature}/deploy-summary.md` |
+| `aidlc-deploy` | decisions-deploy.md, pipeline configs, Dockerfile, environment configs, IaC (infra/), deploy scripts, `{WORKFLOW_DIR}/{feature}/deploy-summary.md` |
 | `aidlc-prototype` | `.aidlc/prototype/{feature}/` (throwaway code + README) |
 | `aidlc-solutions-review` | `{WORKFLOW_DIR}/{feature}/architecture-review.md` |
 | `aidlc-code-review` | `{WORKFLOW_DIR}/{feature}/code-review.md` |

@@ -71,7 +71,10 @@ Ready to generate deployment configuration and CI/CD pipeline.
 |---|---|---|
 | decisions-deploy.md | `{WORKFLOW_DIR}/{feature}/decisions-deploy.md` | D5 decision gate answers |
 | Pipeline config | Project root (platform-specific) | CI/CD pipeline definition |
-| Environment configs | Project root or `infra/` | Environment-specific settings |
+| Dockerfile | Project root | Multi-stage container build (if container target) |
+| Environment configs | `.env.{env}.example` | Per-environment variable templates |
+| Infrastructure code | `infra/` | Terraform or CDK files (if IaC selected in D5) |
+| Deploy/rollback scripts | `scripts/` | Manual deploy and rollback helpers |
 | deploy-summary.md | `{WORKFLOW_DIR}/{feature}/deploy-summary.md` | Deployment configuration summary |
 
 ---
@@ -103,8 +106,16 @@ Execute actions sequentially. **Load the action file when you reach that step â€
 
 ## References
 
-For CI/CD platform specifics, read `{SKILL_DIR}/references/platforms.md` when generating.
-For deployment strategies, read `{SKILL_DIR}/references/strategies.md` during decision gate.
+Load conditionally based on D5 answers â€” never load all references at once:
+
+| Reference | Load When |
+|---|---|
+| `platforms.md` | Always (overview/fallback for unsupported platforms) |
+| `platform-github-actions.md` | D5 CI = GitHub Actions (read stack + target section only) |
+| `platform-gitlab-ci.md` | D5 CI = GitLab CI (read stack + target section only) |
+| `iac-terraform.md` | D5 IaC = Terraform (read target + database section only) |
+| `iac-cdk.md` | D5 IaC = CDK (read target + database section only) |
+| `strategies.md` | During decision gate (deployment strategy context) |
 
 ---
 
