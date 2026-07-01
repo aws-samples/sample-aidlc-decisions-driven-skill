@@ -1,6 +1,13 @@
 # AI-DLC — AI Development Lifecycle Skills
 
-A structured, decision-driven workflow for AI-assisted software development. AI-DLC guides projects from initial context assessment through requirements, design, task planning, implementation, build verification, and deployment — with built-in decision gates at every phase.
+[![version](https://img.shields.io/badge/version-1.0.0-blue)](CHANGELOG.md)
+[![license](https://img.shields.io/badge/license-MIT--0-green)](LICENSE.md)
+
+An opinionated implementation of the [AI-DLC (AI-Driven Development Life Cycle)](https://prod.d13rzhkk8cj2z0.amplifyapp.com/) methodology as a portable skill harness for AI coding assistants.
+
+This project implements AIDLC principles — decision-driven phases, manifest-based state, and human-in-the-loop control — with a focus on **portability** and **simplicity**. Skills are plain markdown files that work across platforms without runtime dependencies, custom tooling, or platform lock-in.
+
+For the official AIDLC workflow definitions maintained by AWS, see [awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows). For a detailed comparison, see [docs/comparison.md](docs/comparison.md).
 
 ## Why AI-DLC
 
@@ -157,6 +164,7 @@ flowchart TD
 
 | Document | Description |
 |---|---|
+| [Comparison](docs/comparison.md) | How this differs from official AIDLC workflows |
 | [Skills Reference](docs/skills-reference.md) | All skills — what they do, what they read/write |
 | [Decision Gates](docs/decision-gates.md) | D1–D5 details, how they work, conflict validation |
 | [Artifacts](docs/artifacts.md) | All generated files, paths, and platform variables |
