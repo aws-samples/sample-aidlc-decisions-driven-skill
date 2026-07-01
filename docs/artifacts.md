@@ -16,6 +16,7 @@ AI-DLC produces artifacts at conventional paths. All paths are platform-aware.
 | `design/api-spec.md` | aidlc-design | Endpoint specifications |
 | `design/integration.md` | aidlc-design | External service and inter-unit integration |
 | `design/implementation.md` | aidlc-design | Directory structure, conventions, project config |
+| `design/operations.md` | aidlc-design | Logging, health checks, graceful shutdown, metrics, config management (conditional) |
 | `design/correctness.md` | aidlc-design | Property-based testing properties (conditional) |
 | `design/testing-strategy.md` | aidlc-design | Testing architecture, frameworks, coverage mapping (conditional) |
 | `design/nfr.md` | aidlc-design | Non-functional requirements (conditional) |

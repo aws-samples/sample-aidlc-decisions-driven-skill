@@ -8,7 +8,7 @@ Each phase has a decision gate that generates targeted questions, validates answ
 |---|---|---|
 | D1 | Requirements | Feature scope, user types, core functionality, data entities, integrations, business rules, constraints |
 | D2 | Decomposition | Architecture pattern, decomposition strategy, unit proposals, dependencies, development sequence |
-| D3 | Design | Technology stack, frameworks, data layer, testing strategy, infrastructure, code organization |
+| D3 | Design | Technology stack, frameworks, data layer, testing strategy, observability & operations, infrastructure, code organization |
 | D4 | Tasks | Breakdown strategy, implementation approach (TDD/test-after), component priority, integration strategy, task granularity |
 | D5 | Deploy | CI/CD platform, deployment target, deployment strategy, environments, promotion, secrets management, rollback, monitoring |
 

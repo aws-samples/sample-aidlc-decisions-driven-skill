@@ -66,6 +66,8 @@ Loaded once per session. Provides common operations shared across all skills:
 - Decision gate protocol
 - Output path scoping
 - Edit action pattern
+- Context recovery
+- Skill handoff protocol
 
 ## Extending AI-DLC
 

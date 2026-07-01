@@ -7,7 +7,7 @@
 | `aidlc-context` | Inception | 1 | Scans workspace, detects stack and architecture (brownfield) or captures intent (greenfield). Produces `context.md` and steering files. Creates the manifest. |
 | `aidlc-requirements` | Inception | 2 | Translates context into user stories with EARS acceptance criteria. Generates personas (optional). Routes to decomposition, design, or prototype based on complexity. |
 | `aidlc-decomposition` | Inception | 3 | Breaks requirements into independently deliverable units using DDD concepts. Defines boundaries, dependencies, and development sequence. Proposes a foundation unit for shared scaffolding when needed. Presents incremental vs. comprehensive mode choice. |
-| `aidlc-design` | Construction | 4 | Makes technology decisions via D3 decision gate. Generates component design, data model, API spec, integration patterns, and implementation plan. Supports compact (≤10 stories) and modular (11+) formats. |
+| `aidlc-design` | Construction | 4 | Makes technology decisions via D3 decision gate. Generates component design, data model, API spec, integration patterns, implementation plan, and operations design (logging, health, metrics). Supports compact (≤10 stories) and modular (11+) formats. |
 | `aidlc-tasks` | Construction | 5 | Breaks design into sequenced, estimable tasks. Generates execution waves with file ownership for parallel dispatch. |
 | `aidlc-implement` | Construction | 6 | Executes tasks in standard (one-at-a-time), parallel (wave-based sub-agents), or autonomous (all waves, no stops) mode. |
 | `aidlc-build` | Operation | 7 | Detects build tooling, runs final integration build, executes full test suites, validates quality gates (lint, type-check, security, coverage). Produces build report. |

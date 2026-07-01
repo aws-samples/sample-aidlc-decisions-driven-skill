@@ -66,9 +66,9 @@ These anchors serve as background reinforcement throughout the session. They don
 
 When the orchestrator dispatches a new skill, it applies a "Context override" instruction that tells the model to treat the new SKILL.md as its sole operating instructions and disregard prior skill instructions. This prevents cross-phase contamination where patterns from an earlier phase bleed into a later one.
 
-### 4. Compact Summary for Chained Dispatch
+### 4. §Summary for Chained Dispatch
 
-The shared `base.md` has a Compact Summary (first 30 lines) that gets read on chained dispatch. This re-injects core behavioral rules at each phase transition without the cost of loading the full 160+ line file every time.
+The shared `base.md` has a §Summary section that gets read on chained dispatch. This re-injects core behavioral rules at each phase transition without the cost of loading the full file every time.
 
 ## Recovery
 

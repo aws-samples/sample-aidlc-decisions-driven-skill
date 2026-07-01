@@ -101,7 +101,7 @@ Skills find what they need via the input resolution algorithm:
 | `aidlc-context` | 1 | Scans workspace, gathers project context, creates manifest and steering files |
 | `aidlc-requirements` | 2 | Translates context into user stories with EARS acceptance criteria. Includes routing recommendation (decompose vs design vs prototype) |
 | `aidlc-decomposition` | 3 | Breaks complex projects into implementation units with boundaries and dependencies. Proposes a foundation unit for shared scaffolding when needed. Presents incremental vs comprehensive mode choice |
-| `aidlc-design` | 4 | Creates technical design — components, data model, API spec, integration patterns, implementation plan. Supports compact (simple) and full (complex) formats |
+| `aidlc-design` | 4 | Creates technical design — components, data model, API spec, integration patterns, implementation plan, operations design (logging, health, metrics). Supports compact (simple) and full (complex) formats |
 | `aidlc-tasks` | 5 | Breaks design into sequenced implementation tasks with execution waves and file ownership |
 | `aidlc-implement` | 6 | Executes tasks — standard (sequential), parallel (wave-based), or autonomous mode |
 | `aidlc-build` | 7 | Detects build tooling, runs final integration build, executes full test suites, validates quality gates |
@@ -124,7 +124,7 @@ Skills find what they need via the input resolution algorithm:
 | `aidlc-tasks` | context.md (Summary), design.md + design/*, steering files (Summaries) |
 | `aidlc-implement` | tasks.md, design.md + design/*, steering files (Summaries), design resources |
 | `aidlc-build` | Source code, build configs (package.json, Makefile, etc.), design/testing-strategy.md, steering files |
-| `aidlc-deploy` | build-report.md, design/implementation.md, context.md, existing CI configs, steering files |
+| `aidlc-deploy` | build-report.md, design/implementation.md, design/operations.md (if exists), context.md, existing CI configs, steering files |
 | `aidlc-prototype` | requirements.md (or inline stories), design resources |
 | `aidlc-solutions-review` | 2+ unit design docs (design.md + design/*), units.md, context.md |
 | `aidlc-code-review` | Source code, optionally: design docs, tasks.md, git diff |
