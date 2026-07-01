@@ -4,7 +4,7 @@ description: Deep brownfield codebase analysis. Extracts architecture, modules, 
 license: MIT
 compatibility: Requires file system access. Auto-detects environment.
 metadata:
-  version: 1.1.0
+  version: 1.0.0
   author: AI-DLC Maintainers
   keywords: reverse-engineer, brownfield, codebase-analysis, architecture, business-rules, AI-DLC
   supported_platforms:
@@ -31,7 +31,7 @@ When active:
 ## Activation
 
 ```
-✅ aidlc-reverse-engineer v1.1.0 active — {platform} detected.
+✅ aidlc-reverse-engineer v1.0.0 active — {platform} detected.
 Ready to analyze your codebase. Provide a scope or say "full project".
 ```
 

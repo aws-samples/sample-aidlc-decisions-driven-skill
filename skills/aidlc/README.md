@@ -170,7 +170,7 @@ The manifest (`aidlc-manifest.yaml`) is the single source of truth for workflow 
 - `steering` — `updatedBy` map tracking which phases updated each steering file
 - `units[]` — per-unit state for incremental mode: `status`, `phase`, `completedPhases`, `implementationMode`, `implementation` (task counters), `artifacts`, `decisions`. Multiple units can be `in-progress` simultaneously.
 
-**v2.2 conventions:**
+**v1.0.0 conventions:**
 - Shared phases tracked in `state.sharedPhases`. Per-unit phases in `units[].phase` + `units[].completedPhases`
 - Parallel units supported — different sessions can work on different units
 - Comprehensive mode uses `state.sharedPhases` for all phases; `units[]` stays empty

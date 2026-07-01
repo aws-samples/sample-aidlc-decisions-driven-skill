@@ -77,7 +77,7 @@ After loading a manifest, verify required fields exist and have valid values:
 
 | Field | Required | Valid Values |
 |---|---|---|
-| `version` | Yes | `"2.2"` (warn if older, offer repair) |
+| `version` | Yes | `"1.0.0"` (warn if older, offer repair) |
 | `feature` | Yes | Non-empty string |
 | `state.status` | Yes | `active` \| `completed` |
 | `state.sharedPhases` | Yes | Array of phase names |

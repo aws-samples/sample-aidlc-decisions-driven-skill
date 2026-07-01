@@ -1,4 +1,4 @@
-version: "2.2"
+version: "1.0.0"
 feature: "todo-app"
 language: "en"
 platform: "kiro"

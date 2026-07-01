@@ -97,7 +97,7 @@ If `.aidlc/reverse-engineer/` exists, read `overview.md` and `conventions.md` Su
 6. **Create skeleton manifest** (fresh start only — captures language early for all subsequent steps):
 
 ```yaml
-version: "2.2"
+version: "1.0.0"
 feature: "{feature}"
 language: "{language}"
 platform: "{platform}"

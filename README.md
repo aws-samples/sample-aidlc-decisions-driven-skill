@@ -161,8 +161,9 @@ flowchart TD
 | [Decision Gates](docs/decision-gates.md) | D1–D5 details, how they work, conflict validation |
 | [Artifacts](docs/artifacts.md) | All generated files, paths, and platform variables |
 | [Implementation Modes](docs/implementation-modes.md) | Standard, parallel, autonomous; incremental vs comprehensive |
-| [Manifest Schema](docs/manifest-schema.md) | v2.2 manifest format with full YAML example |
+| [Manifest Schema](docs/manifest-schema.md) | v1.0.0 manifest format with full YAML example |
 | [Skill Anatomy](docs/skill-anatomy.md) | How skills are structured, extending AI-DLC |
+| [Developing Skills](docs/developing-skills.md) | Step-by-step guide to creating a new skill |
 | [Context Recovery](docs/context-recovery.md) | How resume and session recovery works |
 | [Context Rot](docs/context-rot.md) | Instruction drift in long sessions — prevention and recovery |
 

@@ -1,11 +1,11 @@
-# Manifest Schema (v2.2)
+# Manifest Schema (v1.0.0)
 
 The manifest is the single source of truth for workflow state. It lives at `{WORKFLOW_DIR}/{feature}/aidlc-manifest.yaml`.
 
 ## Full Example
 
 ```yaml
-version: "2.2"
+version: "1.0.0"
 feature: "notifications"
 language: "en"
 platform: "kiro"

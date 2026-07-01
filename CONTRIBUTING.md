@@ -31,7 +31,7 @@ To send us a pull request, please:
 
 1. Fork the repository.
 2. Modify the source; please focus on the specific change you are contributing. If you also reformat all the code, it will be hard for us to focus on your change.
-3. Ensure local tests pass.
+3. Run `./scripts/validate.sh` to verify cross-references are intact.
 4. Commit to your fork using clear commit messages.
 5. Send us a pull request, answering any default questions in the pull request interface.
 6. Pay attention to any automated CI failures reported in the pull request, and stay involved in the conversation.
@@ -46,14 +46,24 @@ Looking at the existing issues is a great way to find something to contribute on
 
 ## Skill Development Notes
 
-### Behavioral Rules Duplication
+For a complete guide on creating a new skill, see [docs/developing-skills.md](docs/developing-skills.md).
 
-The `## Behavioral Rules` section is intentionally duplicated across all 11 SKILL.md files. This is by design — each skill must be self-contained for context recovery (when the AI's context window is compacted, it reloads a single SKILL.md and must have all instructions).
+### Validation
 
-When modifying behavioral rules (language, tools, recovery, errors, audit trail format):
-1. Make the change in one skill
-2. Apply the same change to all other skills
-3. Verify consistency across all 11 files
+Before submitting a PR, run the validation script to check cross-references:
+
+```bash
+./scripts/validate.sh
+```
+
+This verifies: core/optional skill files exist, shared resources present, all action files referenced in SKILL.md exist, frontmatter has required fields, and example manifest is valid. CI runs this automatically on every PR.
+
+### Shared Base Consistency
+
+The shared base (`skills/aidlc/shared/base.md`) is loaded by all skills. When modifying it:
+1. Verify all 13 skills still work with the updated base
+2. Check that §Summary still covers the essentials for chained dispatch
+3. Run `./scripts/validate.sh`
 
 ### Template Conventions
 

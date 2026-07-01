@@ -14,7 +14,7 @@ When user says "repair", "fix manifest", or "rebuild manifest":
    - `{SPECS_DIR}/{feature}/units/*/` → unit-scoped artifacts (incremental mode)
 3. Read each found artifact's Summary section to extract key metadata
 4. Rebuild the manifest:
-   - Set `version: "2.2"`, `feature`, `platform`
+   - Set `version: "1.0.0"`, `feature`, `platform`
    - Add each found artifact to `artifacts` with `status: "approved"` and current timestamp
    - Populate `context-summary` from context.md Summary
    - Populate `decisions` from any found `decisions-*.md` files (read Decisions Summary sections)
