@@ -1,164 +1,99 @@
 # AI-DLC Shared Base
 
-> **Usage**: Every phase skill references this file. Load once per session.
->
-> **Loading convention**:
-> - **First activation / resume / context recovery** → read this entire file
-> - **Chained dispatch (same session, base already in context)** → read only `## Compact Summary` (lines 1–30)
+> Load once per session (full file). On chained dispatch within same session, re-read only §Summary.
 
 ---
 
-## Compact Summary
+## Summary
 
-<!-- For chained skill dispatch within the same session. Covers essentials only. -->
-
-- **Platform**: detect `.kiro/` → `.claude/`. Paths: `SPECS_DIR` = `.aidlc/specs`, `WORKFLOW_DIR` = `.aidlc/workflow`, `STEERING_DIR` = platform-dependent (`steering` or `rules`), `SKILL_DIR` = `{PLATFORM_DIR}/skills/aidlc-{current-skill}`
-- **Feature**: scan `{WORKFLOW_DIR}/*/aidlc-manifest.yaml` → one=use it, many=ask, none=infer from `{SPECS_DIR}/` or ask
-- **Manifest**: silent read/write at `{WORKFLOW_DIR}/{feature}/aidlc-manifest.yaml`. On approval: set `status: "approved"`, add to `sharedPhases`
-- **Language**: ALL output in user's language (manifest `language` field). English only for: paths, code, YAML keys, skill/command names, tech terms. Translate templates before presenting. No mixing.
-- **Silent ops**: never narrate file reads, manifest writes, path resolution, template loading, scope detection
-- **Status header**: `📍 {Phase} | {Stage} | ✅ {Completed}` — top of every user-facing response (skip for errors/help)
-- **Audit**: append to `{WORKFLOW_DIR}/{feature}/audit.md` — format: `### [{ISO}] {Phase}: {Action}` with Phase/Action/Artifacts/Outcome fields
-- **Decision gates**: generate blank answers → present → STOP → validate conflicts → resolve → store in manifest. Never auto-fill.
-- **Output paths**: comprehensive = `{SPECS_DIR}/{feature}/`, incremental = `{SPECS_DIR}/{feature}/units/{unit}/`. Never mix.
-- **Handoff**: read `{PLATFORM_DIR}/skills/aidlc-{next}/SKILL.md` → follow its instructions. Transparent to user.
-- **Tools**: Kiro=`fsWrite`,`readMultipleFiles`,`readCode`. Claude Code=`Write`/`Edit`,parallel `Read`.
-- **Errors**: ❌ Fatal (stop, report, offer fix) | ⚠️ Degraded (report, continue) | ℹ️ Info (skip silently). Never lose work. Missing optional files=silent.
+- **Platform**: `.kiro/`→Kiro, `.claude/`→Claude Code
+- **Paths**: SPECS=`.aidlc/specs`, WORKFLOW=`.aidlc/workflow`, STEERING=Kiro:`.kiro/steering`|Claude:`.claude/rules`, SKILL_DIR=`{PLATFORM}/skills/aidlc-{skill}`, ASSETS=`{SKILL_DIR}/assets`, REFS=`{SKILL_DIR}/references`
+- **Feature**: scan `{WORKFLOW}/*/aidlc-manifest.yaml` → one=use, many=ask, none=infer or ask
+- **Manifest**: silent read/write. On approval: `status:"approved"`, add to `sharedPhases`. Downstream outdated: mark all later phases. Order: context→requirements→decomposition→design→tasks→implement→build→deploy.
+- **Language**: ALL output in user's language (manifest `language`). English only: paths, code, YAML keys, tech terms, skill names. Translate templates. No mixing.
+- **Silent**: never narrate reads, writes, detection, resolution, template loading, scope detection.
+- **Status header**: `📍 {Phase} | {Stage} | ✅ {Completed}` — every user-facing response (skip for errors/help).
+- **Audit**: append `### [{ISO}] {Phase}: {Action}` + Phase/Action/Artifacts/Outcome to `{WORKFLOW}/{feature}/audit.md`.
+- **Decisions**: blank answers → present → **STOP** → validate → resolve → store. ⛔ Never auto-fill. Never continue without "done"/"use recommendations".
+- **Output paths**: comprehensive=`{SPECS}/{feature}/`, incremental=`{SPECS}/{feature}/units/{unit}/`. Never mix.
+- **Handoff**: read `{PLATFORM}/skills/aidlc-{next}/SKILL.md` → follow as sole instructions. Transparent to user.
+- **Tools**: Kiro=`fsWrite`,`readMultipleFiles`,`readCode`. Claude=`Write`/`Edit`,parallel `Read`.
+- **Errors**: ❌ Fatal (stop+report+offer fix) | ⚠️ Degraded (report+continue) | ℹ️ Info (skip). Never lose work.
+- **Every `🔲 Your turn` block is a hard stop.** Do not continue past it.
 
 ---
 
-## Full Reference
+## Incremental Mode Paths
 
-### Environment Detection
+- Unit artifacts: `{SPECS}/{feature}/units/{unit}/`
+- Unit workflow: `{WORKFLOW}/{feature}/units/{unit}/`
+- Manifest entries: `units[name={unit}].artifacts.{phase}`
+- Never write unit-scoped artifacts to the shared feature directory.
 
-| Check | Platform | STEERING_DIR | SKILL_DIR base |
-|---|---|---|---|
-| `.kiro/` exists | Kiro | `.kiro/steering` | `.kiro/skills/` |
-| `.claude/` exists | Claude Code | `.claude/rules` | `.claude/skills/` |
+---
 
-Derived: `SPECS_DIR` = `.aidlc/specs`, `WORKFLOW_DIR` = `.aidlc/workflow`, `ASSETS_DIR` = `{SKILL_DIR}/assets`, `REFERENCES_DIR` = `{SKILL_DIR}/references`
-
-### Feature Name Resolution
-
-1. Scan `{WORKFLOW_DIR}/*/aidlc-manifest.yaml`
-2. One manifest → use its `feature` field
-3. Multiple → ask user
-4. None → infer from `{SPECS_DIR}/` folders, or ask
-
-### Manifest Operations
-
-- **Path**: `{WORKFLOW_DIR}/{feature}/aidlc-manifest.yaml` — silent, never narrate
-- **On approval**: `artifacts.{phase}.status: "approved"`, `artifacts.{phase}.timestamp: "{ISO}"`, add phase to `state.sharedPhases`
-- **Downstream outdated**: when artifact edited post-approval, mark all later phases `status: "outdated"`. Order: context → requirements → decomposition → design → tasks → implement → build → deploy. Only active phases for current scope (see `scopes.md`).
-- **Incremental mode**: unit artifacts at `{SPECS_DIR}/{feature}/units/{unit}/`, unit workflow at `{WORKFLOW_DIR}/{feature}/units/{unit}/`, manifest entries at `units[name={unit}].artifacts.{phase}`
-
-### Language Rule
-
-ALL output in user's language (from manifest `language` field). Translate all template text before presenting.
-
-**English only**: file paths, skill/phase/command names, tech terms (REST, API, JWT), code, YAML keys, manifest values.
-
-**Artifacts**: narrative content in user's language. English for IDs (US-NNN), paths, code. Steering files stay English (machine-read).
-
-No mixing within a response or artifact file.
-
-### Silent Operations
-
-Never narrate: platform detection, file reads, path resolution, directory creation, manifest writes, audit entries, template/guide loading, scope detection. If intermediate text is required, it must be in user's language.
-
-### Status Header
-
-Top of every user-facing response (decision gates, generation results, approvals, transitions):
+## Status Header Details
 
 ```
-📍 {AIDLC Phase} | {Current Stage} | ✅ {Completed Stages}
+📍 {AIDLC Phase} | {Current Stage} | ✅ {Completed}
 ```
 
-- Phase: `Inception` (context/requirements/decomposition), `Construction` (design/tasks/implement), `Operation` (build/deploy)
-- Completed: short names from `state.sharedPhases` — `ctx`, `req`, `decomp`, `design`, `tasks`, `impl`, `build`, `deploy`. Incremental: `auth(impl)`, `payments(design)`
+- Phase grouping: Inception (context/requirements/decomposition), Construction (design/tasks/implement), Operation (build/deploy)
+- Completed shortnames: `ctx`, `req`, `decomp`, `design`, `tasks`, `impl`, `build`, `deploy`. Incremental: `auth(impl)`, `payments(design)`
 
-Skip for error messages and help/status commands.
+---
 
-### Error Handling
+## Error Protocol
 
-Classify and present errors consistently:
+| Level | When | Action |
+|---|---|---|
+| ❌ Fatal | Missing required input, corrupt manifest | `❌ {What}\n👉 {Fix}` — stop |
+| ⚠️ Degraded | Missing optional, stale artifact | Report briefly, continue |
+| ℹ️ Info | Optional file absent, skipped phase | Skip silently |
 
-| Level | Icon | Meaning | Action |
-|---|---|---|---|
-| **Fatal** | ❌ | Skill cannot continue — missing required input, corrupt manifest, unrecoverable state | Report what happened + what to do. Offer `repair` or manual fix. Stop. |
-| **Degraded** | ⚠️ | Skill continues with reduced capability — missing optional input, stale artifact, platform limitation | Report briefly, continue. User can fix later. |
-| **Info** | ℹ️ | Non-blocking note — skipped phase, optional file absent, expected condition | Report only if user-relevant. Often skip silently. |
+Rules: missing optional files=silent. Unreadable file=⚠️. Required missing=❌. Write failure=report immediately.
 
-**Error message format** (for Fatal and Degraded):
-```
-{icon} {What happened}
-👉 {What to do next}
-```
+---
 
-**Rules**:
-- Missing optional files → skip silently (Info level, no output)
-- File exists but unreadable → ⚠️ Degraded ("File exists but could not be read: {path}")
-- Required input missing → ❌ Fatal (stop, suggest how to produce the missing input)
-- Manifest corrupt/invalid → ❌ Fatal (suggest `repair`)
-- Never lose work silently — if a write fails, report immediately
+## Decision Gate Protocol
 
-### Context Recovery
+Shared pattern for all gates (D1–D5):
+1. Read `shared/decision-gate.md` for output structure
+2. Generate with blank `Answer:` — never pre-fill
+3. Present path + "use recommendations" option. **STOP.**
+4. After answers: validate conflicts (per-skill rules), present by severity 🔴→🟡→🟢
+5. Resolve → store in manifest `decisions.{phase}` → proceed to generation
 
-1. Read `{STEERING_DIR}/aidlc-workflow.md` → manifest path
-2. Read manifest → current phase, artifacts, decisions
-3. Activate orchestrator (`{PLATFORM_DIR}/skills/aidlc/SKILL.md`), execute `resume`
-4. Orchestrator re-reads current skill's SKILL.md, loads action files, re-reads templates/references from disk. Never generate from memory.
+---
 
-### Audit Trail
+## Edit Action Pattern
 
-Append to `{WORKFLOW_DIR}/{feature}/audit.md` after significant actions:
+Standard for all phase edits:
+1. Backup → `{WORKFLOW}/{feature}/history/{file}-{ISO}.md`
+2. Apply changes
+3. Re-validate (phase checks)
+4. Cascade to related artifacts
+5. Mark downstream `status:"outdated"`
+6. Learning loop: if correction is a general rule → ask to save to `{STEERING}/corrections.md`
+7. Present with `🔲 Your turn` block
+8. **STOP**
 
-```
-### [{ISO timestamp}] {Phase}: {Action}
+---
 
-**Phase**: {phase-name}
-**Action**: {action-type}
-**Artifacts**: {files created or modified}
-**Outcome**: {result summary}
-```
+## Context Recovery
 
-### Skill Handoff
+1. Read `{STEERING}/aidlc-workflow.md` → manifest path
+2. Read manifest → phase, artifacts, decisions
+3. Read current skill's SKILL.md → reload instructions
+4. Resume from current action. Never generate from memory — always re-read templates from disk.
 
-1. Resolve: `{PLATFORM_DIR}/skills/aidlc-{next-skill}/SKILL.md`
-2. Read and follow its instructions — transition is transparent to user
-3. If not found: `👉 Next: Activate the **aidlc-{next-skill}** skill to continue.`
+---
 
-**Loading convention for chained dispatch**: If base.md is already in context from this session, the next skill reads only the Compact Summary section. On resume or context recovery, read the full file.
+## Skill Handoff
 
-### Decision Gate Protocol
+1. Resolve `{PLATFORM}/skills/aidlc-{next}/SKILL.md`
+2. Read it — treat as sole operating instructions (disregard prior skill's rules)
+3. If not found: `👉 Activate **aidlc-{next}** to continue.`
 
-Shared pattern for D1, D2, DF, D3, D4, D5:
-
-1. Read `{PLATFORM_DIR}/skills/aidlc/shared/decision-gate.md` for output structure
-2. Generate with blank `Answer:` fields — **never pre-fill**
-3. Present file path + "use recommendations" option. **STOP — do NOT continue.**
-4. After answers: validate conflicts (per-skill rules), present grouped by severity (🔴→🟡→🟢)
-5. Resolve conflicts → store compact summary in manifest `decisions.{phase}`
-6. Proceed to generation
-
-**⛔ Never auto-fill decisions.** Never proceed past step 3 without user saying "done" or "use recommendations."
-
-### Output Path Scoping
-
-- **Comprehensive** (or no units): `{SPECS_DIR}/{feature}/`
-- **Incremental** (specific unit): `{SPECS_DIR}/{feature}/units/{unit}/`
-
-Never write unit-scoped artifacts to the shared directory.
-
-### Edit Action Pattern
-
-Standard for all phase edits (design-edit, requirements-edit, etc.):
-
-1. **Backup**: copy to `{WORKFLOW_DIR}/{feature}/history/{filename}-{ISO}.md`
-2. **Apply**: read current, apply changes
-3. **Re-validate**: run phase validation checks
-4. **Cascade**: update all affected related artifacts
-5. **Mark outdated**: downstream phases → `status: "outdated"`
-6. **Learning loop**: if correction is a general rule, ask to save to `{STEERING_DIR}/corrections.md`
-7. **Present**: show changes with `🔲 **Your turn**` block
-8. **STOP** — wait for approval
+On chained dispatch: next skill reads only §Summary of this file.
+On resume/recovery: read full file.

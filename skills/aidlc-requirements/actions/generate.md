@@ -2,95 +2,58 @@
 
 ## Scope Check
 
-Read `state.scope` from manifest. If scope is `bugfix`, use **Lightweight Mode** below instead of the full generation process.
+Read `state.scope`. If `bugfix` → use Lightweight Mode. Otherwise → Full Mode.
 
-### Lightweight Mode (bugfix scope)
+### Lightweight Mode (bugfix)
 
-For bugfix scope, produce minimal focused requirements:
-
-1. **Skip** D1 decision gate entirely (no decisions-requirements.md generated)
-2. **Skip** personas generation
-3. **Generate** a focused `requirements.md` with:
-   - 1–3 user stories maximum, focused on the fix
-   - Each story describes: what's broken, expected behavior, fix verification
-   - EARS acceptance criteria focused on regression prevention
-   - No functional areas grouping needed — single "Bug Fix" section
-
-**Bugfix requirements structure**:
-```markdown
-# Requirements — Bug Fix
-
-## Summary
-- **Total Stories**: [1-3]
-- **Bug**: [1-sentence description of the bug]
-- **Impact**: [What's affected]
-- **Root Cause** (if known): [Brief description]
-
-## Bug Fix Stories
-
-### US-01: [Fix description]
-- **As a** [affected user type]
-- **I want** [the correct behavior]
-- **So that** [impact of the fix]
-- **Priority**: High
-
-**Acceptance Criteria (EARS)**:
-1. WHEN [trigger condition] THE system SHALL [correct behavior]
-2. WHEN [previously broken scenario] THE system SHALL NOT [broken behavior]
-3. AFTER [fix applied] THE [related feature] SHALL [continue working] (regression check)
-```
-
-4. **Update manifest**: Add requirements artifact with `status: "draft"`
-5. **Present** and wait for approval
-6. **On approval**: Skip routing-decision — go directly to `aidlc-design` (bugfix never decomposes)
+1. Skip D1 gate, skip personas
+2. Generate focused `requirements.md` (1-3 stories): what's broken, expected behavior, regression check
+3. EARS criteria focused on fix verification
+4. Structure: `# Requirements — Bug Fix` → Summary (bug, impact, root cause) → Stories with EARS
+5. Update manifest: `artifacts.requirements` → `status:"draft"`
+6. Present → STOP → on approval: skip routing, go directly to `aidlc-design`
 
 ---
 
-## Full Mode (new/feature scope)
+## Full Mode (new/feature)
 
-### External Resources (Conditional)
+### External Resources
 
-If `{STEERING_DIR}/resources.md` lists available resources:
-- **Design tool**: Use MCP to read screens, user flows → extract user journeys and acceptance criteria
-- **Design docs/wireframes**: Read files → identify UI requirements
-- **API specs**: Read OpenAPI/GraphQL → identify integration stories and data entities
-- **Documentation**: Use web search/fetch → gather domain context
-- Cite external sources in generated stories
+If `{STEERING}/resources.md` lists resources:
+- Design tool MCP → extract user journeys/acceptance criteria
+- Wireframes/docs → UI requirements
+- API specs → integration stories + entities
+- Web search → domain context
+- Cite sources in stories
 
-## Personas (Conditional)
+### Personas (conditional)
 
-Generate IF D1 indicated "Yes" for personas or multiple user types.
-Read `{ASSETS_DIR}/persona.md` for output structure.
-Generate `{SPECS_DIR}/{feature}/personas.md`.
+Generate IF D1=Yes for personas or multiple user types.
+Template: `{ASSETS}/persona.md` → write `{SPECS}/{feature}/personas.md`
 
-## Requirements
+### Requirements
 
-Derive from D1 decisions + context + personas (if exists).
-Read decisions from manifest `decisions.requirements` section. Fall back to reading `## Decisions Summary` from the decisions file if manifest section is missing.
-Read `{ASSETS_DIR}/requirements.md` for output structure.
-Generate `{SPECS_DIR}/{feature}/requirements.md`.
+Derive from D1 decisions + context + personas.
+Read D1 from manifest `decisions.requirements` (fallback: Decisions Summary section).
+Template: `{ASSETS}/requirements.md` → write `{SPECS}/{feature}/requirements.md`
 
-## Validate Output
+### Validate
 
-- ✅ All D1 scope features have stories
-- ✅ All user types represented
-- ✅ All stories have EARS acceptance criteria
-- ✅ Stories organized by functional area
-- ✅ Priorities assigned
+- All D1 scope features have stories
+- All user types represented
+- All stories have EARS acceptance criteria
+- Organized by functional area, priorities assigned
 
-## Update Steering
+### Update Steering
 
-Update `{STEERING_DIR}/product.md`:
-- **Target Users**: Merge new user types alongside existing. Do not remove previous.
-- **Key Features**: Merge new functional areas alongside existing. Do not remove previous.
-- Read current file first, preserve all existing sections.
+`product.md`: merge new user types + features alongside existing. Preserve prior content.
 
-## Update Manifest
+### Update Manifest
 
-- Add `requirements` phase entry: `status: "draft"`, `timestamp`, `files: [requirements.md, personas.md]`
-- Update `steering.updatedBy.product` to include `requirements`
+`artifacts.requirements` → `status:"draft"`, files: [requirements.md, personas.md]
+`steering.updatedBy.product` += `requirements`
 
-## Present Results
+### Present Results
 
 ```
 📍 Requirements
@@ -102,7 +65,7 @@ Update `{STEERING_DIR}/product.md`:
 - **User Types**: [list]
 - **Personas**: [Generated / Skipped]
 
-Artifact at `{SPECS_DIR}/{feature}/requirements.md`.
+Artifact at `{SPECS}/{feature}/requirements.md`.
 
 ---
 🔲 **Your turn**:
@@ -110,24 +73,24 @@ Artifact at `{SPECS_DIR}/{feature}/requirements.md`.
 - ✏️ "change [what]" — request edits
 ```
 
-**STOP and wait for approval.**
+**STOP and wait.**
 
-On approval: update manifest (`artifacts.requirements.status` → `"approved"`, add `"requirements"` to `state.sharedPhases`). Store team size in `context-summary.teamSize`. Append audit entry. Then auto-continue to routing-decision.
+On approval: `status:"approved"`, add `"requirements"` to `sharedPhases`, store `teamSize`. Audit. Auto-continue to routing-decision.
 
 ---
 
 # Action: routing-decision
 
-After requirements are approved, analyze complexity and project context to recommend next phase.
+After requirements approved, recommend next phase.
 
 ## Analyze
 
-- Count: total stories, distinct domains, user types, integrations
-- Extract from context.md Summary: project type, impact, architecture
+Count: stories, distinct domains, user types, integrations.
+Read context.md Summary: project type, impact, architecture.
 
 ## Routing Logic
 
-| Context | Recommend Design | Recommend Decomposition |
+| Context | → Design | → Decomposition |
 |---|---|---|
 | Brownfield + extends existing | Default | 10+ stories AND 3+ domains AND cross-cutting |
 | Brownfield + cross-cutting | Below all thresholds | 5+ stories OR 2+ domains OR 3+ user types OR 3+ integrations |
@@ -141,7 +104,7 @@ After requirements are approved, analyze complexity and project context to recom
 Your project has [X stories] across [Y areas] with [Z user types] and [W integrations].
 
 👉 Recommendation: [Decompose into units / Go straight to design]
-Reason: [brief explanation]
+Reason: [brief]
 
 ---
 🔲 **Your turn**:

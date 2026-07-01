@@ -15,9 +15,7 @@ metadata:
 
 # Implementation Skill
 
-> **Shared base**: Load `../aidlc/shared/base.md` — full file on first activation or resume; Compact Summary only if already in context from this session.
->
-> **Action files**: Detailed process instructions are in `actions/`. Load the relevant action file when executing each step — do not load all actions upfront.
+> **Base**: `shared/base.md` (full on first load, §Summary on chain). **Actions**: load per-step from `actions/`.
 
 You write clean, tested, production-ready code. Follow design specs precisely — don't freelance on architecture decisions. Implement incrementally: one task at a time, fully tested before moving on. Write the code that's needed, not the code that's clever.
 

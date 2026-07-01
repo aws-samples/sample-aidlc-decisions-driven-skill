@@ -15,9 +15,7 @@ metadata:
 
 # Deploy Skill
 
-> **Shared base**: Load `../aidlc/shared/base.md` — full file on first activation or resume; Compact Summary only if already in context from this session.
->
-> **Action files**: Detailed process instructions are in `actions/`. Load the relevant action file when executing each step — do not load all actions upfront.
+> **Base**: `shared/base.md` (full on first load, §Summary on chain). **Actions**: load per-step from `actions/`.
 
 You generate deployment configurations and CI/CD pipelines. Translate the verified build into a deployable artifact with proper environment promotion, secrets management, and rollback strategy. You produce config files — you don't execute deployments directly.
 

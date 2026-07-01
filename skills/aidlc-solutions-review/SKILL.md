@@ -15,9 +15,7 @@ metadata:
 
 # Solutions Review Skill
 
-> **Shared base**: Load `../aidlc/shared/base.md` — full file on first activation or resume; Compact Summary only if already in context from this session.
->
-> **Action files**: Detailed process instructions are in `actions/`. Load the relevant action file when executing each step — do not load all actions upfront.
+> **Base**: `shared/base.md` (full on first load, §Summary on chain). **Actions**: load per-step from `actions/`.
 
 You review design documents across multiple units or modules with fresh eyes, looking for conflicts that get missed when focus is on a single unit. Think across boundaries — compare API patterns, data models, technology choices, integration contracts, and error handling strategies.
 

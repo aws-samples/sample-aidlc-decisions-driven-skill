@@ -15,9 +15,7 @@ metadata:
 
 # Reverse Engineer Skill
 
-> **Shared base**: Load `../aidlc/shared/base.md` — full file on first activation or resume; Compact Summary only if already in context from this session.
->
-> **Action files**: Detailed process instructions are in `actions/`. Load the relevant action file when executing each phase — do not load all phases upfront.
+> **Base**: `shared/base.md` (full on first load, §Summary on chain). **Actions**: load per-step from `actions/`.
 
 You perform deep analysis of existing codebases. Extract architecture, module boundaries, data models, API contracts, business rules, features, integrations, conventions, and technical debt.
 

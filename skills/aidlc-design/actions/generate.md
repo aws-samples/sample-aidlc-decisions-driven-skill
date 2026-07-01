@@ -2,203 +2,119 @@
 
 ## Step 0: Resolve Output Paths
 
-Before generating anything, compute and lock the output paths for this run:
-
 ```
-IF incremental mode (unit is set):
-  DESIGN_OUT = {SPECS_DIR}/{feature}/units/{unit}/
-  DESIGN_DETAIL_OUT = {SPECS_DIR}/{feature}/units/{unit}/design/
-  DECISIONS_OUT = {WORKFLOW_DIR}/{feature}/units/{unit}/
-ELSE (comprehensive or no units):
-  DESIGN_OUT = {SPECS_DIR}/{feature}/
-  DESIGN_DETAIL_OUT = {SPECS_DIR}/{feature}/design/
-  DECISIONS_OUT = {WORKFLOW_DIR}/{feature}/
+IF incremental (unit set):
+  DESIGN_OUT = {SPECS}/{feature}/units/{unit}/
+  DETAIL_OUT = {SPECS}/{feature}/units/{unit}/design/
+ELSE:
+  DESIGN_OUT = {SPECS}/{feature}/
+  DETAIL_OUT = {SPECS}/{feature}/design/
 ```
 
-Create the output directories if they don't exist. All file writes in this action use these resolved paths — no exceptions.
+Create directories if needed. All writes use these paths — no exceptions.
 
 ## Step 0.5: Version Resolution
 
-After D3 choices are locked, resolve the **current stable version** for each selected technology before generating design documents.
+Resolve current stable version for each D3-chosen technology via web search / package registry:
+- npm→Node/TS, PyPI→Python, Maven→Java, crates.io→Rust, pkg.go.dev→Go, official pages→runtimes/DBs
+- Record as version map: `{tool}: {major.minor.patch}`
+- Use in ALL design docs (implementation.md, components.md, etc.)
 
-**Process**:
-1. Extract all technology choices from D3 (manifest `decisions.design` or Decisions Summary)
-2. For each tool/framework/library chosen, use **web search** or **package registry lookup** to find the latest stable release:
-   - npm registry → Node.js/TypeScript ecosystem (Express, Prisma, Zod, Jest, etc.)
-   - PyPI → Python ecosystem (FastAPI, SQLAlchemy, pytest, etc.)
-   - Maven Central → Java/Kotlin ecosystem (Spring Boot, JUnit, etc.)
-   - crates.io → Rust ecosystem
-   - Go module proxy → Go ecosystem
-   - Official release pages → runtimes (Node.js, Python, Go, Java), databases (PostgreSQL, MySQL), IaC tools (Terraform, CDK)
-3. Record resolved versions as a **version map**: `{tool}: {major.minor.patch}`
-4. Use these resolved versions in ALL subsequent design documents (implementation.md, components.md, etc.)
-
-**Fallback** (web search unavailable or fails):
-- Use training-data knowledge for version numbers
-- Mark each unverified version with `⚠️ unverified` in the version map
-- Add a note in the design summary: "Some versions could not be verified against live registries"
-
-**Priority targets** (resolve these first — most impactful for downstream correctness):
-- Language/runtime version (Node.js, Python, Java, Go)
-- Primary framework (Express, NestJS, FastAPI, Spring Boot, etc.)
-- ORM / database client (Prisma, TypeORM, SQLAlchemy, etc.)
-- Database engine version (PostgreSQL, MySQL, MongoDB)
-- Test runner (Jest, Vitest, pytest, JUnit)
-- IaC tool (CDK, Terraform, Pulumi) if applicable
-- Build tool (Vite, Webpack, esbuild) if applicable
+**Priority**: runtime → framework → ORM → database → test runner → IaC → build tool
 
 **Rules**:
-- Only resolve tools that were explicitly chosen in D3 — do not add new dependencies
-- Prefer LTS releases over bleeding-edge when both are available (e.g., Node.js LTS over Current)
-- If a tool has a recently released major version (< 3 months old) with limited ecosystem support, prefer the previous stable major unless D3 explicitly chose the new one
-- Store the version map in the manifest under `versions` (see Update Manifest section)
+- Only D3-chosen tools — no extras. Prefer LTS over bleeding-edge.
+- If major version <3 months old with limited ecosystem → prefer previous stable.
+- Fallback (no web): use training knowledge, mark `⚠️ unverified`.
+- Store in manifest `versions` section.
 
 ---
 
-## Choose Format
+## Format Selection
 
-- **Simple** (≤10 stories AND single domain) → compact `design.md` using `{ASSETS_DIR}/design-compact.md`
-- **Complex** (11+ stories OR multiple domains) → modular `design.md` + `design/` folder
+- **Simple** (≤10 stories AND single domain): compact `design.md` using `{ASSETS}/design-compact.md`
+- **Complex** (11+ stories OR multiple domains): modular `design.md` + `design/` folder
 
-## External Resources (Conditional)
+## External Resources
 
-If `{STEERING_DIR}/resources.md` exists and lists available resources (not "none"):
-- **Design tool**: Use design tool MCP (if available) to read component inventory, design tokens → incorporate into design/components.md
-- **API specs**: Read OpenAPI/GraphQL schemas → use as basis for design/api-spec.md instead of designing from scratch
-- **Design system docs**: Read referenced docs → align component naming and patterns
-- **Reference implementations**: Read referenced repos → align architecture patterns
-- **Package registries** (for Step 0.5 Version Resolution): Use web search or registry tools to look up latest stable versions. Target registries by ecosystem:
-  - **npm** (npmjs.com) → Node.js / TypeScript dependencies
-  - **PyPI** (pypi.org) → Python dependencies
-  - **Maven Central** (search.maven.org) → Java / Kotlin dependencies
-  - **crates.io** → Rust dependencies
-  - **pkg.go.dev** → Go modules
-  - **NuGet** (nuget.org) → .NET dependencies
-  - **Official release pages** → runtimes (nodejs.org, python.org), databases (postgresql.org), IaC tools
-  - If no web search or registry tools are available, fall back to training-data knowledge and mark versions as `⚠️ unverified`
-- Cite external sources in design documents
+If `{STEERING}/resources.md` lists resources (not "none"):
+- Design tool MCP → components.md. API specs → api-spec.md basis. Design docs → align patterns.
+- Package registries for version resolution (npm, PyPI, Maven, etc.)
+- Cite external sources.
 
 ## Writing Strategy
 
-1. Read all needed templates + input artifacts in one `readMultipleFiles` call
-2. Write independent design detail files in parallel (same turn):
-   - `design/components.md`, `design/data-model.md`, `design/api-spec.md` simultaneously
-   - `design/integration.md`, `design/implementation.md` simultaneously
-   - `design/operations.md` (if D3 observability ≠ "None" AND scope ≠ `bugfix`/`refactor`)
-   - `design/testing-strategy.md` (if D3 includes testing choices and project ≠ prototype/no-testing)
-   - `design/nfr.md` (if applicable), `design/correctness.md` (if applicable)
-3. **Checkpoint after each file write**: Update manifest `artifacts.design.files` to include the just-written file and set `artifacts.design.status` to `"partial"`. This enables context recovery to skip already-written files.
-4. Write `design.md` last (it references the detail files — keep it slim: Summary + Architecture + Traceability + References only)
-5. After all files written, update manifest status from `"partial"` to `"draft"`
+1. Read all needed templates + inputs in one call
+2. Write parallel batches:
+   - Batch 1: `components.md`, `data-model.md`, `api-spec.md`
+   - Batch 2: `integration.md`, `implementation.md`
+   - Conditional: `operations.md` (if observability≠None, scope≠bugfix/refactor), `testing-strategy.md` (if testing choices, not prototype), `correctness.md` (if PBT), `nfr.md` (if NFR answered)
+3. Checkpoint: after each write, update manifest `artifacts.design.files` + set `status:"partial"`
+4. Write `design.md` last (slim: Summary + Architecture + Traceability + References)
+5. Update manifest status `"partial"` → `"draft"`
 
 ## No-Assumptions Rule
 
-**CRITICAL**: ONLY use choices from D3. Read decisions from manifest `decisions.design` section. Fall back to reading `## Decisions Summary` from the decisions file if manifest section is missing. Do not parse the full question/answer blocks. Use `[TBD - not decided in D3]` for any missing decisions. Never assume technology choices that weren't explicitly decided.
+**⛔ ONLY D3 choices.** Read from manifest `decisions.design` (fallback: Decisions Summary section). Use `[TBD - not decided in D3]` for missing. Never assume unchosen tech.
 
-## Load Guides Conditionally
-
-Load ONLY the guides that apply from `{REFERENCES_DIR}/`. Do NOT read guides that don't match.
+## Load Guides
 
 | Guide | Load When |
 |---|---|
-| `architecture-patterns.md` | **ALWAYS** |
-| `api-design.md` | D3 includes API design choices (REST/GraphQL/gRPC) |
-| `frontend-architecture.md` | D3 includes frontend framework choice |
-| `mobile-architecture.md` | D3 includes mobile platform choice |
-| `distributed-patterns.md` | Architecture = microservices or distributed system |
-| `property-based-testing.md` | D3 PBT answer = Yes |
-| `observability-patterns.md` | D3 observability answer ≠ "None" (read ONLY the section matching the project stack) |
+| `architecture-patterns.md` | ALWAYS |
+| `api-design.md` | API choices in D3 |
+| `frontend-architecture.md` | Frontend framework in D3 |
+| `mobile-architecture.md` | Mobile platform in D3 |
+| `distributed-patterns.md` | Microservices/distributed |
+| `property-based-testing.md` | PBT=Yes |
+| `observability-patterns.md` | Observability≠None (stack-specific section only) |
 
-**Testing strategy generation**: If D3 includes any testing framework choices (unit, integration, E2E, load, API testing) AND project is not "prototype/no-testing", generate `design/testing-strategy.md` using `{ASSETS_DIR}/design-testing-strategy.md` template. Read the D3 testing answers to populate frameworks, and cross-reference `design/components.md` + `design/api-spec.md` for coverage mapping.
+Skip non-matching. Stack-aware: read only language-relevant sections within loaded guides.
 
-**SKIP all non-matching guides.** For a simple backend API project, load only `architecture-patterns.md` and `api-design.md` (~8KB instead of ~25KB).
-
-**Stack-aware selective reading**: When loading `architecture-patterns.md` or `api-design.md`, read ONLY sections relevant to the chosen stack from D3 (e.g., for TypeScript/Express, skip Java Spring patterns and Go Gin patterns). If a guide has language-specific subsections, read only the matching one.
+**Testing strategy**: generate if D3 has testing choices AND not prototype. Use `{ASSETS}/design-testing-strategy.md`, cross-ref components + api-spec for coverage mapping.
 
 ## Templates
 
-- Simple: `{ASSETS_DIR}/design-compact.md` ONLY
-- Complex: `{ASSETS_DIR}/design.md` + modular templates:
-  - `{ASSETS_DIR}/design-components.md`
-  - `{ASSETS_DIR}/design-data-model.md`
-  - `{ASSETS_DIR}/design-api-spec.md`
-  - `{ASSETS_DIR}/design-integration.md`
-  - `{ASSETS_DIR}/design-implementation.md`
-  - `{ASSETS_DIR}/design-operations.md` — if D3 observability ≠ "None" AND scope ≠ `bugfix`/`refactor`
-  - `{ASSETS_DIR}/design-testing-strategy.md` — ONLY if D3 includes testing choices AND project ≠ prototype/no-testing
-  - `{ASSETS_DIR}/design-correctness.md` — ONLY if PBT selected
-  - `{ASSETS_DIR}/nfr.md` — ONLY if NFR questions answered
+Simple: `design-compact.md` only.
+Complex: `design.md` + `design-components.md` + `design-data-model.md` + `design-api-spec.md` + `design-integration.md` + `design-implementation.md` + conditionals: `design-operations.md`, `design-testing-strategy.md`, `design-correctness.md`, `nfr.md`
 
-**Operations generation rules**:
-- For **Simple format** (compact `design.md`): embed an `## Operations` section within the compact design file (include Logging, Health, Graceful Shutdown at minimum). Do NOT generate a separate `design/operations.md` file.
-- For **Complex format** (modular): generate `design/operations.md` as a separate file using the template.
-- Section inclusion is driven by the D3 observability level:
-  - `Minimal` → Logging + Health & Readiness + Graceful Shutdown + Configuration Management
-  - `Standard` → All of Minimal + Metrics + Error Handling & Reporting
-  - `Full` → All of Standard + Alerting
-- Read `{REFERENCES_DIR}/observability-patterns.md` (ONLY the section matching the project stack) for implementation patterns.
+**Operations rules**:
+- Simple format: embed `## Operations` in compact file (no separate file)
+- Complex format: separate `design/operations.md`
+- Sections by level: Minimal=logging+health+shutdown+config, Standard=+metrics+errors, Full=+alerting
+- Read `observability-patterns.md` (stack section only)
 
 ## Validate
 
-- ✅ All components, entities, endpoints, integrations designed
-- ✅ All D3 choices used, no assumptions beyond D3
-- ✅ Design files reference each other correctly
-- ✅ Cross-references between design files are correct
-- ✅ Testing strategy covers all D3 testing choices (if testing-strategy.md generated)
-- ✅ Test directory structure in testing-strategy.md is consistent with implementation.md
-- ✅ **Operations design** (if generated): per-component logging table covers ALL components from `design/components.md`; readiness checks cover all critical dependencies from `design/integration.md` + primary database; health endpoint paths don't conflict with API routes in `design/api-spec.md`; configuration variables include all secrets/env vars from `design/implementation.md`
-- ✅ **Version pinning**: All dependencies in implementation.md use specific stable versions from the version map (Step 0.5). No "latest", no unpinned ranges. Versions marked `⚠️ unverified` are acceptable but must retain the marker.
-- ✅ **No EOL/deprecated versions**: No dependency uses a version that has reached end-of-life or been officially deprecated. If detected during version resolution, flag and substitute with the current stable alternative.
-- ✅ **Traceability complete** (see Traceability Gap Detection below)
+**Coverage**: all components/entities/endpoints/integrations designed
+**D3 compliance**: all choices used, no assumptions, `[TBD]` for missing
+**Cross-refs**: files reference each other correctly
+**Testing**: strategy covers D3 choices; directory structure consistent with implementation.md
+**Operations** (if generated): logging table covers all components; readiness covers all deps; health paths no conflict with API; config vars include all secrets from implementation.md
+**Versions**: all pinned (no "latest"), no EOL/deprecated
+**Traceability**: run gap detection (below)
 
 ## Traceability Gap Detection
 
-After generating all design files, run this check BEFORE presenting results to the user:
-
-1. **Extract all requirement IDs**: Read `requirements.md` (or unit-scoped requirements), collect every `US-*` ID
-2. **Scan design output**: Check the Traceability section in `design.md` for each US-* ID
-3. **Classify coverage**:
-   - **Covered**: US-* appears in traceability table with at least one component mapped
-   - **Gap**: US-* does not appear, or appears with no component/endpoint/entity mapped
-4. **If gaps exist**: Mark them as `⚠️ Gap` in the traceability table with a brief reason (deferred to another unit, out of scope for this design, handled by shared infrastructure, etc.)
-5. **Reverse check**: For each component in `design/components.md`, verify it traces to at least one US-*. Components without a requirement must be justified (infrastructure, shared utilities, framework scaffolding)
-
-**Fail condition**: If any US-* has no design coverage AND no documented justification, do NOT present results. Instead, fix the gap by either:
-- Adding the missing component/endpoint/entity to the design
-- Documenting why the gap is intentional (deferred, covered elsewhere)
-
-Then proceed to present results.
+Run BEFORE presenting:
+1. Collect all `US-*` from requirements.md
+2. Check design.md Traceability — each US-* must map to ≥1 component
+3. Gaps → mark `⚠️ Gap` with reason in traceability table
+4. Reverse: each component must trace to ≥1 US-* (justify if not: infra/scaffold)
+5. **FAIL if** any US-* has zero coverage without justification — fix before presenting
 
 ## Update Steering
 
-After generating design documents, update steering files with D3 decisions:
-
-**`{STEERING_DIR}/tech.md`**: Fill "Pending D3 decisions" placeholders with actual choices. Do NOT overwrite previously settled decisions from earlier features or workflow runs.
-
-**`{STEERING_DIR}/structure.md`**: Fill "will be defined during design phase" placeholders with actual structure from `design/implementation.md`. Do NOT overwrite previously documented structure.
-
-Read current steering files first, preserve all existing content, update only the placeholder sections or append new entries.
+- `tech.md`: fill D3 placeholders. Preserve existing decisions.
+- `structure.md`: fill structure from implementation.md. Preserve existing.
+- Read current files first — never overwrite prior content.
 
 ## Update Manifest
 
-- **Incremental mode**: Add `units[{unit}].artifacts.design` entry: `status: "draft"`, `timestamp`, `files` listing all generated design files. Write design decisions to `units[{unit}].decisions.design`.
-- **Comprehensive mode**: Add top-level `artifacts.design` entry: `status: "draft"`, `timestamp`, `files`. Write design decisions to top-level `decisions.design`.
-- **Version resolution metadata**: Add a `versions` section to the manifest (top-level for comprehensive, under `units[{unit}]` for incremental):
-  ```yaml
-  versions:
-    resolved_at: "{ISO timestamp}"
-    source: "web-search" | "training-knowledge" | "mixed"
-    map:
-      express: "5.1.0"
-      prisma: "6.2.1"
-      node: "22.15.0"
-      # ... one entry per resolved tool
-  ```
-  - `source: "web-search"` — all versions confirmed via live registry lookup
-  - `source: "training-knowledge"` — all versions from model knowledge (no web access)
-  - `source: "mixed"` — some verified, some not (individual entries marked `⚠️ unverified` in design docs)
-- Update `steering.updatedBy.tech` to include `design`
-- Update `steering.updatedBy.structure` to include `design`
+Incremental: `units[{unit}].artifacts.design` → `status:"draft"`, files list, decisions at `units[{unit}].decisions.design`
+Comprehensive: `artifacts.design` → `status:"draft"`, files list, decisions at `decisions.design`
+Versions: `versions: { resolved_at, source: "web-search"|"training-knowledge"|"mixed", map: {...} }`
+Steering: `updatedBy.tech` += `design`, `updatedBy.structure` += `design`
 
 ## Present Results
 
@@ -213,12 +129,12 @@ Read current steering files first, preserve all existing content, update only th
 - **Entities**: [Y] modeled
 - **Endpoints**: [Z] specified
 - **Integrations**: [W] defined
-- **Operations**: [Minimal / Standard / Full / Skipped] — [logging, health, metrics, alerting as applicable]
+- **Operations**: [Minimal / Standard / Full / Skipped]
 - **PBT Properties**: [N] (or "Skipped")
 - **Testing Strategy**: [Included / Skipped]
 - **NFR**: [Included / Skipped]
 
-Artifacts at `{SPECS_DIR}/{feature}/design.md` (+ `design/` folder if complex).
+Artifacts at `{SPECS}/{feature}/design.md` (+ `design/` folder if complex).
 
 ---
 🔲 **Your turn**:
@@ -227,21 +143,19 @@ Artifacts at `{SPECS_DIR}/{feature}/design.md` (+ `design/` folder if complex).
 - ← "back to [requirements/decomposition]" — return to a previous phase
 ```
 
-**STOP and wait for approval.**
+**STOP and wait.**
 
-On "back to [phase]": Set current design artifact status to `"draft"`. Dispatch the named phase skill.
+On "back to [phase]": set status `"draft"`, dispatch that phase skill.
 
-On approval: update manifest — **incremental mode**: set `units[{unit}].artifacts.design.status` to `"approved"`, set `units[{unit}].phase` to `"design"`, add `"design"` to `units[{unit}].completedPhases`. **Comprehensive mode**: set `artifacts.design.status` to `"approved"`, add `"design"` to `state.sharedPhases`. Append audit entry.
-
-**Handoff after approval**:
-- **Comprehensive mode**: Auto-continue to tasks.
-- **Incremental mode**: Do NOT auto-continue. Return to the orchestrator's Unit Dashboard. Present:
+On approval:
+- Comprehensive: `artifacts.design.status:"approved"`, add `"design"` to `sharedPhases`. Audit. Auto-continue to tasks.
+- Incremental: `units[{unit}].artifacts.design.status:"approved"`, add to `completedPhases`. Audit. Return to Unit Dashboard:
   ```
   ✅ {unit} design approved.
 
   🔲 **Your turn**:
-  - ▶️ "tasks" — continue to task breakdown for {unit}
-  - 🎯 "start {other-unit}" — begin design for another unit
-  - 📋 "show units" — see the unit dashboard
+  - ▶️ "tasks" — task breakdown for {unit}
+  - 🎯 "start {other-unit}" — design another unit
+  - 📋 "show units" — unit dashboard
   ```
-  **STOP and wait.** The user decides what happens next — not the workflow.
+  **STOP and wait.**

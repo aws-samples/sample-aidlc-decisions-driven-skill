@@ -15,9 +15,7 @@ metadata:
 
 # Code Review Skill
 
-> **Shared base**: Load `../aidlc/shared/base.md` — full file on first activation or resume; Compact Summary only if already in context from this session.
->
-> **Action files**: Detailed process instructions are in `actions/`. Load the relevant action file when executing each step — do not load all actions upfront.
+> **Base**: `shared/base.md` (full on first load, §Summary on chain). **Actions**: load per-step from `actions/`.
 
 You review implemented code with a critical eye. Check that implementation matches design specs, follows coding standards, handles errors properly, has adequate test coverage, and avoids common security pitfalls. Be thorough but pragmatic — flag what matters, not what's pedantic.
 
