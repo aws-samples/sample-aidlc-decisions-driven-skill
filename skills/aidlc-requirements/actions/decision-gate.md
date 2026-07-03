@@ -10,7 +10,7 @@ Read `{PLATFORM_DIR}/skills/aidlc/shared/decision-gate.md` for the output struct
 - Include context summary from context input
 - Generate questions covering: feature scope, user types, core functionality, data entities, integrations, business rules, constraints, priorities
 - **MANDATORY**: Include explicit personas question
-- **MANDATORY**: Include team size question — "How many developers will work on this project?" with options: 1) Solo (1 developer), 2) Small team (2–3), 3) Medium team (4–8), 4) Large team (9+). This is used by downstream validation rules in D2, D3, and DF gates.
+- **MANDATORY**: Include team size question — "How many developers will work on this project?" with options: 1) Solo (1 developer), 2) Small team (2–3), 3) Medium team (4–8), 4) Large team (9+). This is used by downstream validation rules in D2, D3, and D5 gates.
 
 Present:
 

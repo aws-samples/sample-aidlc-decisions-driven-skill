@@ -15,7 +15,7 @@ echo ""
 
 # 1. Check all core skills have SKILL.md
 echo "## Core Skills"
-CORE_SKILLS="aidlc aidlc-context aidlc-requirements aidlc-design aidlc-tasks aidlc-implement aidlc-build aidlc-deploy"
+CORE_SKILLS="aidlc aidlc-context aidlc-requirements aidlc-design aidlc-tasks aidlc-implement"
 for skill in $CORE_SKILLS; do
     if [ -f "$SKILLS_DIR/$skill/SKILL.md" ]; then
         echo "  ✅ $skill/SKILL.md"
@@ -28,7 +28,7 @@ echo ""
 
 # 2. Check optional skills
 echo "## Optional Skills"
-OPTIONAL_SKILLS="aidlc-decomposition aidlc-prototype aidlc-reverse-engineer aidlc-solutions-review aidlc-code-review"
+OPTIONAL_SKILLS="aidlc-build aidlc-deploy aidlc-decomposition aidlc-prototype aidlc-reverse-engineer aidlc-solutions-review aidlc-code-review"
 for skill in $OPTIONAL_SKILLS; do
     if [ -f "$SKILLS_DIR/$skill/SKILL.md" ]; then
         echo "  ✅ $skill/SKILL.md"

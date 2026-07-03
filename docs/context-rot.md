@@ -49,24 +49,11 @@ This approach is preferred over PreToolUse hooks because:
 - **No noise** — doesn't produce visible output or slow down internal operations (audit, manifest)
 - **Cross-platform** — works on both Kiro (steering) and Claude Code (CLAUDE.md)
 
-### 2. Behavioral Anchors in Steering Files
-
-Steering files persist across the entire session. The `aidlc-workflow.md` file (auto-included on Kiro, referenced in CLAUDE.md on Claude Code) contains a "Behavioral Anchors" section with non-negotiable rules:
-
-1. Decision gates are mandatory — generate blank → present → STOP → wait
-2. Every `🔲 Your turn` block is a hard stop
-3. Implementation mode requires explicit user choice
-4. Read templates from disk before generating
-5. Language compliance
-6. Update manifest after every phase
-
-These anchors serve as background reinforcement throughout the session. They don't fire at a specific moment like hooks, but they maintain constant presence in context.
-
-### 3. Skill Handoff Identity Reset
+### 2. Skill Handoff Identity Reset
 
 When the orchestrator dispatches a new skill, it applies a "Context override" instruction that tells the model to treat the new SKILL.md as its sole operating instructions and disregard prior skill instructions. This prevents cross-phase contamination where patterns from an earlier phase bleed into a later one.
 
-### 4. §Summary for Chained Dispatch
+### 3. §Summary for Chained Dispatch
 
 The shared `base.md` has a §Summary section that gets read on chained dispatch. This re-injects core behavioral rules at each phase transition without the cost of loading the full file every time.
 

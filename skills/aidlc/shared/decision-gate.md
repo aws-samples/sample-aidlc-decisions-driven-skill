@@ -2,7 +2,7 @@
 
 Generate `{WORKFLOW_DIR}/{feature}/decisions-{phase}.md` with this structure.
 
-All decision files (D1, D2, D3, D4, DF) follow the same format.
+All decision files (D1, D2, D3, D4, D5) follow the same format.
 
 **Question guidelines**:
 - Be specific and contextual — not "What database?" but "What database for user data and orders?"

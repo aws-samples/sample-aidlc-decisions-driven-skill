@@ -61,7 +61,7 @@ This verifies: core/optional skill files exist, shared resources present, all ac
 ### Shared Base Consistency
 
 The shared base (`skills/aidlc/shared/base.md`) is loaded by all skills. When modifying it:
-1. Verify all 13 skills still work with the updated base
+1. Verify all skills (12 phase/supporting skills + the orchestrator) still work with the updated base
 2. Check that §Summary still covers the essentials for chained dispatch
 3. Run `./scripts/validate.sh`
 

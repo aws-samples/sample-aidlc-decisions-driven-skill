@@ -17,6 +17,8 @@ Verify required skill directories and SKILL.md files exist:
 | `aidlc-design` | Yes |
 | `aidlc-tasks` | Yes |
 | `aidlc-implement` | Yes |
+| `aidlc-build` | No |
+| `aidlc-deploy` | No |
 | `aidlc-decomposition` | No |
 | `aidlc-prototype` | No |
 | `aidlc-reverse-engineer` | No |
@@ -30,6 +32,7 @@ For each, check `{PLATFORM_DIR}/skills/{skill}/SKILL.md` exists and is readable.
 Verify shared files exist:
 - `{PLATFORM_DIR}/skills/aidlc/shared/base.md`
 - `{PLATFORM_DIR}/skills/aidlc/shared/decision-gate.md`
+- `{PLATFORM_DIR}/skills/aidlc/shared/scopes.md`
 
 ### Check 3: Action File References
 

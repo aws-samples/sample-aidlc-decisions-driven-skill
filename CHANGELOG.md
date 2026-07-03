@@ -4,6 +4,25 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.0.1] — 2026-07-03
+
+### Fixed
+
+- **Documentation**: Corrected manifest version reference in CHANGELOG (was "v2.2", actual schema is v1.0.0)
+- **Decision gates**: Replaced stale "DF" (legacy foundation gate) references with "D5" in `shared/decision-gate.md` and `aidlc-requirements/actions/decision-gate.md`
+- **README**: Context rot prevention description now correctly states steering file anchors as primary mechanism (hooks are optional)
+- **README**: Changed "three phases" to "three stages" to avoid confusion with the 8 individual workflow phases
+- **docs/context-rot.md**: Removed duplicate "Behavioral Anchors in Steering Files" section, renumbered remaining sections
+- **examples/todo-app**: Fixed self-contradictory D5 statement in README, added `decisions-deploy.md` to structure tree
+- **examples/todo-app**: Created missing `decisions-deploy.md` file (referenced by audit trail but absent from disk)
+- **examples/todo-app**: Added missing `scope: new` field to example manifest's state block (required by schema)
+- **powers/aidlc/POWER.md**: Added missing `scope [name]` command to command table
+- **powers/aidlc/POWER.md**: Corrected decision gate coverage claim to exclude Implement phase (Context, Implement, and Build have no gate)
+- **skills/aidlc/actions/doctor.md**: Added `aidlc-build` and `aidlc-deploy` to skill checklist (optional), added `scopes.md` to shared resources check
+- **skills/aidlc/README.md**: Removed "v2" from title and opening paragraph (no other file uses this versioning)
+- **scripts/validate.sh**: Moved `aidlc-build` and `aidlc-deploy` from core to optional skills (aligning with SKILL.md orchestrator behavior)
+- **CONTRIBUTING.md**: Clarified "13 skills" to "12 phase/supporting skills + the orchestrator"
+
 ## [1.0.0] — 2026-06-30
 
 ### Added
@@ -32,7 +51,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Architecture
 
 - Hub-and-spoke orchestrator with layered instruction loading (base → SKILL.md → actions)
-- Manifest v2.2 as single source of truth for workflow state
+- Manifest v1.0.0 as single source of truth for workflow state
 - Shared base (~100 lines) loaded once per session, §Summary for chained dispatch
 - Action files loaded on-demand per step (not upfront)
 - Asset templates define output structure; reference catalogs loaded conditionally by stack/target

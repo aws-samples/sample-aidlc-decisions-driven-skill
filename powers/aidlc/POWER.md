@@ -37,6 +37,7 @@ AI-DLC is implemented as a set of **skills** that get installed into your worksp
 | `prototype` | Build a throwaway spike to validate requirements |
 | `review` | Run solutions review or code review |
 | `reverse-engineer` | Deep codebase analysis (13 report documents) |
+| `scope [name]` | Change workflow scope (new/feature/bugfix/refactor) |
 | Phase names | Jump to any phase: `context`, `requirements`, `design`, `tasks`, `implement`, `build`, `deploy`, etc. |
 
 ### Phases
@@ -50,7 +51,7 @@ AI-DLC is implemented as a set of **skills** that get installed into your worksp
 7. **Build** — Final integration build, test suites, quality gates
 8. **Deploy** — CI/CD pipeline generation + decision gate
 
-Each phase (except Context and Build) has a **decision gate** — a set of questions you answer to guide the AI's output. You can fill answers manually or say "use recommendations" to auto-fill.
+Each phase (except Context, Implement, and Build) has a **decision gate** — a set of questions you answer to guide the AI's output. You can fill answers manually or say "use recommendations" to auto-fill.
 
 ## Installation
 

@@ -17,6 +17,7 @@ examples/todo-app/
 │   ├── decisions-requirements.md       # D1 decision gate answers
 │   ├── decisions-design.md             # D3 decision gate answers
 │   ├── decisions-tasks.md              # D4 decision gate answers
+│   ├── decisions-deploy.md             # D5 decision gate answers
 │   ├── build-report.md                 # Build & test verification results
 │   └── deploy-summary.md              # Deployment configuration summary
 ├── steering/                           ← .kiro/steering/
@@ -70,4 +71,4 @@ Browse the files to understand what AI-DLC generates at each phase. Or use it as
 - The audit trail in `workflow/audit.md` shows the full chronological history
 - The manifest in `workflow/aidlc-manifest.yaml` is the single source of truth for workflow state
 - Steering files persist across sessions and inform all subsequent interactions
-- This example does not include D2 (decomposition) or D5 (deploy) since it's a simple project that skips decomposition. D5 is included as the deploy phase runs for all projects.
+- This example does not include D2 (decomposition) since it's a simple project that skips decomposition. D5 is included as the deploy phase runs for all projects.

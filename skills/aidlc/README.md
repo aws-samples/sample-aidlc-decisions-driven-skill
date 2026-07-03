@@ -1,8 +1,8 @@
-# AI-DLC v2 — Skill Architecture
+# AI-DLC — Skill Architecture
 
 ## Architecture Overview
 
-AI-DLC v2 uses a **hub-and-spoke** architecture with **layered instruction loading**. Each workflow phase is a self-contained skill with a compact SKILL.md index. The orchestrator reads project state and dispatches to the appropriate skill — but every skill also works independently without the orchestrator.
+AI-DLC uses a **hub-and-spoke** architecture with **layered instruction loading**. Each workflow phase is a self-contained skill with a compact SKILL.md index. The orchestrator reads project state and dispatches to the appropriate skill — but every skill also works independently without the orchestrator.
 
 Skills use a three-layer structure for token efficiency:
 1. **`aidlc/shared/base.md`** — loaded once per session (environment detection, manifest ops, behavioral rules)

@@ -1,6 +1,6 @@
 # AI-DLC — AI Development Lifecycle Skills
 
-[![version](https://img.shields.io/badge/version-1.0.0-blue)](CHANGELOG.md)
+[![version](https://img.shields.io/badge/version-1.0.1-blue)](CHANGELOG.md)
 [![license](https://img.shields.io/badge/license-MIT--0-green)](LICENSE.md)
 
 An opinionated implementation of the [AI-DLC (AI-Driven Development Life Cycle)](https://prod.d13rzhkk8cj2z0.amplifyapp.com/) methodology as a portable skill harness for AI coding assistants.
@@ -92,9 +92,9 @@ Try one of the [example requirements](examples/requirements/) included in this r
 
 ## Workflow Overview
 
-AI-DLC organizes the development lifecycle into three phases:
+AI-DLC organizes the development lifecycle into three stages:
 
-| Phase | Covers | Skills |
+| Stage | Covers | Skills |
 |---|---|---|
 | **Inception** | Context assessment, requirements, decomposition into units | aidlc-context, aidlc-requirements, aidlc-decomposition |
 | **Construction** | Technology decisions, design, task planning, implementation | aidlc-design, aidlc-tasks, aidlc-implement |
@@ -158,7 +158,7 @@ flowchart TD
 
 **Language**: All artifacts and responses are generated in the user's detected language. Only code, file paths, YAML keys, and technical terms stay in English.
 
-**Context rot prevention**: Long sessions can cause instruction drift where the agent skips checkpoints. AI-DLC mitigates this with PreToolUse hooks (Kiro, Claude Code) that remind the agent of workflow rules before every write, and behavioral anchors in steering files that persist across the session. See [Context Rot](docs/context-rot.md) for details.
+**Context rot prevention**: Long sessions can cause instruction drift where the agent skips checkpoints. AI-DLC mitigates this primarily with behavioral anchors in steering files that persist across the session, plus skill handoff identity resets at phase transitions. PreToolUse hooks are available as optional stricter enforcement on both Kiro and Claude Code. See [Context Rot](docs/context-rot.md) for details.
 
 ## Documentation
 
