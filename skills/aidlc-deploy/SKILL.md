@@ -4,7 +4,7 @@ description: CI/CD pipeline generation and deployment configuration. Produces pi
 license: MIT
 compatibility: Requires file system access. Auto-detects environment.
 metadata:
-  version: 1.0.0
+  version: 1.1.0
   author: AI-DLC Maintainers
   keywords: specification, deploy, CI/CD, pipeline, infrastructure, environment, AI-DLC
   supported_platforms:
@@ -30,7 +30,7 @@ When active:
 ## Activation
 
 ```
-✅ aidlc-deploy v1.0.0 active — {platform} detected.
+✅ aidlc-deploy v1.1.0 active — {platform} detected.
 Ready to generate deployment configuration and CI/CD pipeline.
 ```
 
@@ -40,12 +40,13 @@ Ready to generate deployment configuration and CI/CD pipeline.
 
 1. Generate D5 decision gate (deployment strategy, target platform, environments)
 2. Validate decisions for conflicts → resolve if any
-3. Generate CI/CD pipeline configuration
-4. Generate environment definitions and deployment scripts
-5. Present results → wait for approval → mark workflow complete
+3. Generate deployment specification (pipeline architecture, infrastructure topology, promotion flow)
+4. Present spec → wait for approval
+5. Generate CI/CD pipeline configuration, environment definitions, and deployment scripts
+6. Present results → wait for approval → mark workflow complete
 
 **Reads**: build-report.md, design/implementation.md, context.md, steering files, existing CI configs
-**Writes**: decisions-deploy.md, pipeline config files, environment configs
+**Writes**: decisions-deploy.md, deployment.md (specs), pipeline config files, environment configs
 
 ---
 
@@ -70,6 +71,7 @@ Ready to generate deployment configuration and CI/CD pipeline.
 | Artifact | Default Path | Description |
 |---|---|---|
 | decisions-deploy.md | `{WORKFLOW_DIR}/{feature}/decisions-deploy.md` | D5 decision gate answers |
+| deployment.md | `{SPECS_DIR}/{feature}/deployment.md` | Deployment specification (pipeline, infra, promotion, risks) |
 | Pipeline config | Project root (platform-specific) | CI/CD pipeline definition |
 | Dockerfile | Project root | Multi-stage container build (if container target) |
 | Environment configs | `.env.{env}.example` | Per-environment variable templates |
@@ -99,8 +101,9 @@ Execute actions sequentially. **Load the action file when you reach that step �
 | Step | Action | Load |
 |---|---|---|
 | 1 | Generate D5 decisions + validate | `{SKILL_DIR}/actions/decision-gate.md` |
-| 2 | Generate pipeline and configs | `{SKILL_DIR}/actions/generate.md` |
-| 3 | Finalize deployment | `{SKILL_DIR}/actions/finalize.md` |
+| 2 | Generate deployment specification | `{SKILL_DIR}/actions/plan.md` |
+| 3 | Generate pipeline and configs | `{SKILL_DIR}/actions/generate.md` |
+| 4 | Finalize deployment | `{SKILL_DIR}/actions/finalize.md` |
 
 ---
 
@@ -128,7 +131,7 @@ Load conditionally based on D5 answers — never load all references at once:
 ## Phase-Specific Rules
 
 - This is a project-wide phase — always runs at the feature level, never per-unit.
-- **Audit actions**: decision-gate, validation, generation, approval, deploy-complete.
+- **Audit actions**: decision-gate, plan, validation, generation, approval, deploy-complete.
 
 ### Deployment Rules
 - Generate config files — never execute actual deployments
@@ -150,5 +153,6 @@ Load conditionally based on D5 answers — never load all references at once:
 If context is lost mid-phase, follow `aidlc/shared/base.md` Context Recovery, then:
 - Check if `decisions-deploy.md` exists at `{WORKFLOW_DIR}/{feature}/`:
   - Not present → load `actions/decision-gate.md` (start from D5)
-  - Exists but no pipeline config generated → load `actions/generate.md`
+  - Exists but no `deployment.md` at `{SPECS_DIR}/{feature}/` → load `actions/plan.md`
+  - `deployment.md` exists but no pipeline config generated → load `actions/generate.md`
   - Pipeline config exists → load `actions/finalize.md` (present for approval)

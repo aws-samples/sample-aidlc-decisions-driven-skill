@@ -63,7 +63,7 @@ Write to `{WORKFLOW_DIR}/{feature}/deploy-summary.md`:
 artifacts.deploy:
   status: "approved"
   timestamp: "{ISO timestamp}"
-  files: [deploy-summary.md]
+  files: [deployment.md, deploy-summary.md]
 
 state.sharedPhases: [...existing, "deploy"]
 state.status: "completed"
@@ -81,6 +81,7 @@ All phases finished:
 - ✅ Construction: Design → Tasks → Implement
 - ✅ Operation: Build and Test → Deploy
 
+**Deployment spec**: `{SPECS_DIR}/{feature}/deployment.md`
 **Deployment summary**: `{WORKFLOW_DIR}/{feature}/deploy-summary.md`
 
 Next steps (manual):

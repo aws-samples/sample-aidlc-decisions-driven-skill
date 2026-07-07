@@ -199,7 +199,7 @@ decisions.deploy:
 
 ## 5. Proceed
 
-Load `{SKILL_DIR}/actions/generate.md`.
+Load `{SKILL_DIR}/actions/plan.md`.
 
 ## 6. Audit entry
 

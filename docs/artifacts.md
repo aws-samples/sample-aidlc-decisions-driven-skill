@@ -21,6 +21,7 @@ AI-DLC produces artifacts at conventional paths. All paths are platform-aware.
 | `design/testing-strategy.md` | aidlc-design | Testing architecture, frameworks, coverage mapping (conditional) |
 | `design/nfr.md` | aidlc-design | Non-functional requirements (conditional) |
 | `tasks.md` | aidlc-tasks | Sequenced tasks with execution waves |
+| `deployment.md` | aidlc-deploy | Deployment specification (pipeline, infrastructure, promotion, rollback, risks) |
 
 ## Workflow Artifacts (`{WORKFLOW_DIR}/{feature}/`)
 

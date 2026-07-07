@@ -10,7 +10,8 @@ examples/todo-app/
 │   ├── context.md                      # Project landscape assessment
 │   ├── requirements.md                 # User stories with EARS criteria
 │   ├── design.md                       # Compact design (architecture, components, API)
-│   └── tasks.md                        # Implementation tasks with execution waves
+│   ├── tasks.md                        # Implementation tasks with execution waves
+│   └── deployment.md                   # Deployment specification (pipeline, infra, rollback)
 ├── workflow/                            ← .aidlc/workflow/todo-app/
 │   ├── aidlc-manifest.yaml             # Workflow state (single source of truth)
 │   ├── audit.md                        # Chronological log of all actions

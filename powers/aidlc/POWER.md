@@ -116,7 +116,8 @@ Say "reverse-engineer" to run deep codebase analysis. Produces 13 comprehensive 
 │   ├── requirements.md
 │   ├── units.md
 │   ├── design/
-│   └── tasks.md
+│   ├── tasks.md
+│   └── deployment.md
 ├── workflow/{feature}/        ← workflow state
 │   ├── aidlc-manifest.yaml
 │   ├── audit.md

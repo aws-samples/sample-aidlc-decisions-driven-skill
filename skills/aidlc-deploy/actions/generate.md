@@ -1,8 +1,8 @@
 # Action: Generate Pipeline and Configs
 
-## 1. Load decisions and references
+## 1. Load decisions, deployment spec, and references
 
-Read D5 answers from manifest `decisions.deploy`. Load references conditionally:
+Read D5 answers from manifest `decisions.deploy`. Read the approved deployment specification from `{SPECS_DIR}/{feature}/deployment.md`. Load references conditionally:
 
 | D5 Answer | Load Reference |
 |---|---|
@@ -22,6 +22,8 @@ Read D5 answers from manifest `decisions.deploy`. Load references conditionally:
 **Target-aware selective reading**: read ONLY the deploy target section matching D5-2 answer.
 
 Also read: `design/operations.md` (if exists), `design/implementation.md`, version map from manifest.
+
+**Plan conformance**: The approved `deployment.md` is the authoritative source for what to generate. Follow its pipeline architecture, infrastructure topology, environment layout, and file list. Do not deviate from the spec without user approval. If implementation reveals that the spec needs adjustment, present the discrepancy and wait for user confirmation before proceeding.
 
 ## 1.5. Version resolution for deploy tooling
 
@@ -131,74 +133,7 @@ Scripts should include:
 - The actual deploy/rollback command
 - Post-deploy health check
 
-## 7. Generate deploy-summary.md
-
-Write to `{WORKFLOW_DIR}/{feature}/deploy-summary.md`:
-
-```markdown
-# Deployment Summary — {feature}
-
-**Date**: {ISO timestamp}
-**CI/CD Platform**: {from D5-1}
-**Deployment Target**: {from D5-2}
-**Strategy**: {from D5-3}
-**IaC**: {from D5-7 or "None"}
-
-## Pipeline
-
-| Stage | Trigger | Actions |
-|---|---|---|
-| Build | [trigger] | [actions] |
-| Test | After build | [test commands] |
-| Quality | After test | [lint, type-check, security] |
-| Migrate | Before deploy | [migration command — from D5-9] |
-| Deploy (dev) | [from D5-5] | [deploy steps] |
-| Verify (dev) | After deploy | [from D5-10] |
-| Deploy (production) | [from D5-5] | [deploy steps] |
-| Verify (production) | After deploy | [from D5-10] |
-
-## Environments
-
-| Environment | Trigger | Promotion | URL |
-|---|---|---|---|
-| [per D5-4] | [per D5-5] | [auto/manual] | [placeholder] |
-
-## Infrastructure (if IaC generated)
-
-| Resource | Type | Configuration |
-|---|---|---|
-| [per generated IaC] | [service type] | [key settings] |
-
-## Files Generated
-
-| File | Purpose |
-|---|---|
-| [list all generated files with brief description] |
-
-## Secrets Required
-
-| Secret | Environments | Where to Configure |
-|---|---|---|
-| [from operations.md + IaC requirements] | [which envs] | [platform-specific location] |
-
-## Rollback
-
-- **Strategy**: [from D5-8]
-- **Command**: [platform-specific rollback command]
-- **Recovery time**: [estimated]
-
-## Post-Deployment Checklist
-
-- [ ] Configure secrets in CI/CD platform
-- [ ] Provision database (if IaC = None)
-- [ ] Run first deployment to dev
-- [ ] Verify health endpoint responds
-- [ ] Run smoke/E2E test against dev
-- [ ] Configure production environment protection/approval
-- [ ] First production deployment
-```
-
-## 8. Apply operations design (from design/operations.md)
+## 7. Apply operations design (from design/operations.md)
 
 If `design/operations.md` exists, ensure all generated files incorporate:
 - **Health probes**: Dockerfile HEALTHCHECK, K8s probes, Cloud Run probes, ALB health checks
@@ -206,9 +141,9 @@ If `design/operations.md` exists, ensure all generated files incorporate:
 - **Log routing**: LOG_LEVEL env var, structured JSON to stdout, platform log driver config
 - **Metrics**: /metrics endpoint exposure (Prometheus annotations for K8s, sidecar note for others)
 - **Error tracking**: SENTRY_DSN or equivalent in secrets + env config
-- **Alerting** (if Full): note in deploy-summary about required external setup
+- **Alerting** (if Full): include alerting configuration in generated IaC/pipeline where possible; note remaining manual setup steps for finalize summary
 
-## 9. Present generated files
+## 8. Present generated files
 
 ```
 📍 Deployment Configuration Generated
@@ -226,7 +161,6 @@ Files created:
 - `.env.*.example` — environment templates
 - `infra/` — infrastructure code (if IaC selected)
 - `scripts/deploy.sh`, `scripts/rollback.sh` — helper scripts
-- `deploy-summary.md` — deployment documentation
 
 ---
 🔲 **Your turn**:
@@ -241,7 +175,7 @@ Files created:
 On "edit": apply changes, re-present.
 On "approve": load `{SKILL_DIR}/actions/finalize.md`.
 
-## 10. Audit entry
+## 9. Audit entry
 
 ```
 ### [{ISO timestamp}] Deploy: Generation

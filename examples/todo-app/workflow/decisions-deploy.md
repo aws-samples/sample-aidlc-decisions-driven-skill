@@ -13,9 +13,9 @@
 
 ### D5-1: CI/CD Platform
 **Question**: Which CI/CD platform for automated build and deployment?
-- 1) GitHub Actions — native to GitHub, free for public repos **(Recommended)**
+- 1) GitHub Actions — native to GitHub, free for public repos **(Recommended — detected GitHub repo)**
 - 2) GitLab CI — integrated with GitLab, powerful pipelines
-- 3) CircleCI — fast, good caching, Docker-native
+- 3) AWS CodePipeline + CodeBuild — AWS-native, tight IAM integration
 - 4) Other (please specify): _______
 
 **Answer**: 1
@@ -24,11 +24,12 @@
 
 ### D5-2: Deployment Target
 **Question**: Where will the application be deployed?
-- 1) Google Cloud Run — serverless containers, scale to zero **(Recommended)**
-- 2) AWS ECS Fargate — managed containers, AWS ecosystem
-- 3) Kubernetes (GKE/EKS) — full orchestration, complex
-- 4) Railway/Render — simple PaaS, minimal config
-- 5) Other (please specify): _______
+- 1) Docker → ECS Fargate (AWS) — managed containers with ALB, VPC, auto-scaling **(Recommended for AWS)**
+- 2) Docker → Cloud Run (GCP) — serverless containers, scale to zero
+- 3) Docker → Kubernetes (EKS/GKE/AKS) — full orchestration, complex
+- 4) Serverless → Lambda + API Gateway — event-driven, no containers
+- 5) Static → S3 + CloudFront — frontend only
+- 6) Other (please specify): _______
 
 **Answer**: 1
 
@@ -36,8 +37,8 @@
 
 ### D5-3: Deployment Strategy
 **Question**: How should new versions be rolled out?
-- 1) Recreate — stop old, start new (simple, brief downtime) **(Recommended)**
-- 2) Rolling update — gradual replacement, zero downtime
+- 1) Rolling update — gradual replacement, zero downtime **(Recommended for production APIs)**
+- 2) Recreate — stop old, start new (simple, brief downtime)
 - 3) Blue/Green — parallel environments, instant switchover
 - 4) Canary — gradual traffic shift, early error detection
 - 5) Other (please specify): _______
@@ -48,7 +49,7 @@
 
 ### D5-4: Environments
 **Question**: Which deployment environments do you need?
-- 1) dev + production (minimum viable) **(Recommended)**
+- 1) dev + production (minimum viable) **(Recommended for solo/small teams)**
 - 2) dev + staging + production
 - 3) dev + staging + production + preview per PR
 - 4) Other (please specify): _______
@@ -70,9 +71,9 @@
 
 ### D5-6: Secrets Management
 **Question**: How will secrets (DB credentials, API keys) be managed?
-- 1) CI/CD platform secrets (GitHub Actions secrets) **(Recommended)**
-- 2) Cloud provider secret manager (GCP Secret Manager, AWS Secrets Manager)
-- 3) Environment variables in deployment platform
+- 1) AWS Secrets Manager — cloud-native, rotation support, ECS integration **(Recommended for AWS)**
+- 2) CI/CD platform secrets (GitHub Actions secrets)
+- 3) AWS Systems Manager Parameter Store — simpler, cheaper, good for config
 - 4) Other (please specify): _______
 
 **Answer**: 1
@@ -81,10 +82,10 @@
 
 ### D5-7: Infrastructure as Code
 **Question**: Use IaC for infrastructure provisioning?
-- 1) None — manual setup via cloud console (acceptable for simple projects) **(Recommended)**
-- 2) Terraform — declarative, multi-cloud
-- 3) AWS CDK — imperative, TypeScript, AWS-native
-- 4) Pulumi — imperative, multi-language, multi-cloud
+- 1) Terraform — declarative, multi-cloud, state-managed **(Recommended for production)**
+- 2) AWS CDK (TypeScript) — programmatic, type-safe, AWS-native
+- 3) CloudFormation / SAM — AWS-native YAML/JSON
+- 4) None — manual setup via AWS console
 - 5) Other (please specify): _______
 
 **Answer**: 1
@@ -93,9 +94,9 @@
 
 ### D5-8: Rollback Strategy
 **Question**: How to handle failed deployments?
-- 1) Redeploy previous revision — Cloud Run keeps revision history **(Recommended)**
-- 2) Git revert + redeploy — roll back code, trigger new deploy
-- 3) Blue/Green switch — redirect traffic to previous environment
+- 1) ECS circuit breaker — automatic rollback on deployment failure **(Recommended)**
+- 2) Redeploy previous task definition — manual rollback via CI
+- 3) Blue/Green switch — redirect traffic to previous target group
 - 4) Other (please specify): _______
 
 **Answer**: 1
@@ -105,7 +106,7 @@
 ### D5-9: Database Migrations
 **Question**: How should database migrations run during deployment?
 - 1) Before deploy — run as a separate CI step **(Recommended)**
-- 2) During deploy — run as container startup command
+- 2) During deploy — run as ECS task before service update
 - 3) Manual — run migrations manually before deploying
 - 4) Other (please specify): _______
 
@@ -115,10 +116,10 @@
 
 ### D5-10: Post-Deploy Verification
 **Question**: How to verify successful deployment?
-- 1) Health check endpoint — verify /health returns 200 **(Recommended)**
-- 2) Smoke tests — run critical path tests against deployed app
+- 1) Health check endpoint — ALB target group health check on /health **(Recommended minimum)**
+- 2) Smoke tests — run critical path tests against deployed environment
 - 3) E2E tests — full end-to-end test suite
-- 4) None — rely on monitoring and alerts
+- 4) None — rely on CloudWatch monitoring and alerts
 - 5) Other (please specify): _______
 
 **Answer**: 1
@@ -127,15 +128,15 @@
 
 ## Decisions Summary
 - D5-1 CI/CD Platform: GitHub Actions
-- D5-2 Deployment Target: Google Cloud Run (Docker)
-- D5-3 Deployment Strategy: Recreate
+- D5-2 Deployment Target: ECS Fargate (AWS)
+- D5-3 Deployment Strategy: Rolling update
 - D5-4 Environments: dev + production
 - D5-5 Promotion: Automatic (push→dev, tag→production)
-- D5-6 Secrets: GitHub Actions secrets
-- D5-7 IaC: None
-- D5-8 Rollback: Redeploy previous Cloud Run revision
+- D5-6 Secrets: AWS Secrets Manager
+- D5-7 IaC: Terraform
+- D5-8 Rollback: ECS circuit breaker (automatic)
 - D5-9 Migrations: Before deploy (CI step)
-- D5-10 Verification: Health check endpoint
+- D5-10 Verification: ALB health check endpoint
 
 ---
 

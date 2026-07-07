@@ -1,6 +1,6 @@
 # AI-DLC — AI Development Lifecycle Skills
 
-[![version](https://img.shields.io/badge/version-1.0.1-blue)](CHANGELOG.md)
+[![version](https://img.shields.io/badge/version-1.1.0-blue)](CHANGELOG.md)
 [![license](https://img.shields.io/badge/license-MIT--0-green)](LICENSE.md)
 
 An opinionated implementation of the [AI-DLC (AI-Driven Development Life Cycle)](https://prod.d13rzhkk8cj2z0.amplifyapp.com/) methodology as a portable skill harness for AI coding assistants.

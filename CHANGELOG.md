@@ -4,6 +4,25 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.1.0] — 2026-07-07
+
+### Added
+
+- **Deploy: Deployment specification step**: Added a new planning step between the D5 decision gate and config generation. The deploy skill now produces `deployment.md` in `{SPECS_DIR}/{feature}/` as the source of truth for deployment architecture before generating any pipeline or IaC files.
+- **Deploy: Asset template**: Added `skills/aidlc-deploy/assets/deployment.md` template following the same pattern as design skill templates. Covers pipeline architecture, target infrastructure, promotion flow, security, operations integration, rollback, migrations, files to generate, risk assessment, and cost estimate.
+- **Deploy: Plan conformance rule**: The generate step now reads and follows the approved `deployment.md` spec as its authoritative source. Deviations require user confirmation.
+
+### Changed
+
+- **Deploy: 4-step process**: Deploy skill process table updated from 3 steps (decision-gate → generate → finalize) to 4 steps (decision-gate → plan → generate → finalize)
+- **Deploy: Artifact location**: Deployment specification (`deployment.md`) now lives in `{SPECS_DIR}/{feature}/` alongside other spec artifacts (context, requirements, design, tasks) instead of the workflow directory
+- **Deploy: generate.md cleanup**: Removed duplicate `deploy-summary.md` generation from generate step — summary is now only produced during finalization (where it belongs)
+- **Todo-app example**: Updated to use AWS solutions (ECS Fargate, ALB, RDS, ECR, Terraform) instead of GCP (Cloud Run, Cloud SQL)
+
+### Fixed
+
+- **Deploy: generate.md**: Removed duplicate deploy-summary.md generation that conflicted with finalize.md (summary was being written in both steps)
+
 ## [1.0.1] — 2026-07-03
 
 ### Fixed
