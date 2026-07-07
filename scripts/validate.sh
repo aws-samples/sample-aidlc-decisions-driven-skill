@@ -110,17 +110,15 @@ for skill_dir in "$SKILLS_DIR"/aidlc*/; do
     skill_md="$skill_dir/SKILL.md"
     [ -f "$skill_md" ] || continue
     
-    has_name=$(grep -c "^name:" "$skill_md" 2>/dev/null || echo 0)
-    has_desc=$(grep -c "^description:" "$skill_md" 2>/dev/null || echo 0)
-    has_version=$(grep -c "version:" "$skill_md" 2>/dev/null || echo 0)
+    has_name=$(grep -c "^name:" "$skill_md" 2>/dev/null) || has_name=0
+    has_desc=$(grep -c "^description:" "$skill_md" 2>/dev/null) || has_desc=0
     
-    if [ "$has_name" -gt 0 ] && [ "$has_desc" -gt 0 ] && [ "$has_version" -gt 0 ]; then
-        echo "  ✅ $skill_name — name, description, version present"
+    if [ "$has_name" -gt 0 ] && [ "$has_desc" -gt 0 ]; then
+        echo "  ✅ $skill_name — name, description present"
     else
         missing=""
         [ "$has_name" -eq 0 ] && missing="name "
-        [ "$has_desc" -eq 0 ] && missing="${missing}description "
-        [ "$has_version" -eq 0 ] && missing="${missing}version"
+        [ "$has_desc" -eq 0 ] && missing="${missing}description"
         echo "  ❌ $skill_name — missing frontmatter: $missing"
         ERRORS=$((ERRORS + 1))
     fi

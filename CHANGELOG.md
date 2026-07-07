@@ -18,6 +18,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **Deploy: Artifact location**: Deployment specification (`deployment.md`) now lives in `{SPECS_DIR}/{feature}/` alongside other spec artifacts (context, requirements, design, tasks) instead of the workflow directory
 - **Deploy: generate.md cleanup**: Removed duplicate `deploy-summary.md` generation from generate step — summary is now only produced during finalization (where it belongs)
 - **Todo-app example**: Updated to use AWS solutions (ECS Fargate, ALB, RDS, ECR, Terraform) instead of GCP (Cloud Run, Cloud SQL)
+- **Versioning**: Removed per-skill version numbers from all SKILL.md frontmatter and activation messages. Project uses a single version (CHANGELOG + README badge) since skills are installed as a unit.
 
 ### Fixed
 

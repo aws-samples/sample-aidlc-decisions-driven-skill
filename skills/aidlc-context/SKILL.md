@@ -4,7 +4,6 @@ description: Scan workspace, assess project landscape, and generate context docu
 license: MIT
 compatibility: Requires file system access. Auto-detects environment (Kiro, Claude Code).
 metadata:
-  version: 1.0.0
   author: AI-DLC Maintainers
   keywords: specification, context, discovery, assessment, workspace, AI-DLC
   supported_platforms:
@@ -30,7 +29,7 @@ When active:
 ## Activation
 
 ```
-✅ aidlc-context v1.0.0 active — {platform} detected.
+✅ aidlc-context active — {platform} detected.
 Ready to assess your project and generate context.
 ```
 

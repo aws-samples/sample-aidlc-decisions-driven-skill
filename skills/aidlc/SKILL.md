@@ -4,7 +4,6 @@ description: AI-DLC workflow orchestrator. Reads manifest state, dispatches to p
 license: MIT
 compatibility: Requires file system access. Auto-detects environment.
 metadata:
-  version: 1.0.0
   author: AI-DLC Maintainers
   keywords: specification, orchestrator, workflow, routing, AI-DLC
   supported_platforms:
@@ -30,7 +29,7 @@ When active:
 ## Activation
 
 ```
-✅ aidlc v1.0.0 — {platform}
+✅ aidlc active — {platform}
 ```
 
 Then immediately detect language from the user's message. ALL subsequent output must be in that language. Do NOT produce further English text after this one-line activation confirmation.

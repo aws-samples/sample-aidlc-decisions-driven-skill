@@ -4,7 +4,6 @@ description: CI/CD pipeline generation and deployment configuration. Produces pi
 license: MIT
 compatibility: Requires file system access. Auto-detects environment.
 metadata:
-  version: 1.1.0
   author: AI-DLC Maintainers
   keywords: specification, deploy, CI/CD, pipeline, infrastructure, environment, AI-DLC
   supported_platforms:
@@ -30,7 +29,7 @@ When active:
 ## Activation
 
 ```
-✅ aidlc-deploy v1.1.0 active — {platform} detected.
+✅ aidlc-deploy active — {platform} detected.
 Ready to generate deployment configuration and CI/CD pipeline.
 ```
 

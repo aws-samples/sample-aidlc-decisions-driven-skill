@@ -4,7 +4,6 @@ description: Review implemented code against design specs, coding standards, and
 license: MIT
 compatibility: Requires file system access. Auto-detects environment.
 metadata:
-  version: 1.0.0
   author: AI-DLC Maintainers
   keywords: code-review, quality, security, testing, compliance, standards, AI-DLC
   supported_platforms:
@@ -30,7 +29,7 @@ When active:
 ## Activation
 
 ```
-✅ aidlc-code-review v1.0.0 active — {platform} detected.
+✅ aidlc-code-review active — {platform} detected.
 Ready to review code against design specs and best practices.
 ```
 

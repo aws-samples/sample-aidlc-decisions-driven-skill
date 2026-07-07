@@ -4,7 +4,6 @@ description: Translate business needs into user stories with EARS acceptance cri
 license: MIT
 compatibility: Requires file system access. Auto-detects environment.
 metadata:
-  version: 1.0.0
   author: AI-DLC Maintainers
   keywords: specification, requirements, user-stories, EARS, personas, AI-DLC
   supported_platforms:
@@ -30,7 +29,7 @@ When active:
 ## Activation
 
 ```
-✅ aidlc-requirements v1.0.0 active — {platform} detected.
+✅ aidlc-requirements active — {platform} detected.
 Ready to generate requirements from project context.
 ```
 

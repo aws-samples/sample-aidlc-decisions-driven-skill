@@ -4,7 +4,6 @@ description: Build a throwaway spike to validate requirements. Demonstrates core
 license: MIT
 compatibility: Requires file system access. Auto-detects environment.
 metadata:
-  version: 1.0.0
   author: AI-DLC Maintainers
   keywords: specification, prototype, spike, validation, throwaway, AI-DLC
   supported_platforms:
@@ -30,7 +29,7 @@ When active:
 ## Activation
 
 ```
-✅ aidlc-prototype v1.0.0 active — {platform} detected.
+✅ aidlc-prototype active — {platform} detected.
 Ready to build a throwaway prototype to validate requirements.
 ```
 

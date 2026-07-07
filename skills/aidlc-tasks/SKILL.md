@@ -4,7 +4,6 @@ description: Bridge design to implementation. Break design documents into concre
 license: MIT
 compatibility: Requires file system access. Auto-detects environment.
 metadata:
-  version: 1.0.0
   author: AI-DLC Maintainers
   keywords: specification, tasks, implementation, planning, execution-waves, AI-DLC
   supported_platforms:
@@ -30,7 +29,7 @@ When active:
 ## Activation
 
 ```
-✅ aidlc-tasks v1.0.0 active — {platform} detected.
+✅ aidlc-tasks active — {platform} detected.
 Ready to generate implementation tasks from design documents.
 ```
 

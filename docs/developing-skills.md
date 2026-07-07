@@ -41,7 +41,6 @@ description: One sentence describing what this skill does.
 license: MIT
 compatibility: Requires file system access. Auto-detects environment.
 metadata:
-  version: 1.0.0
   author: AI-DLC Maintainers
   keywords: [specification, {your-keywords}, AI-DLC]
   supported_platforms:
@@ -71,7 +70,7 @@ When active:
 ## Activation
 
 ```
-✅ aidlc-{name} v1.0.0 active — {platform} detected.
+✅ aidlc-{name} active — {platform} detected.
 [Ready message]
 ```
 

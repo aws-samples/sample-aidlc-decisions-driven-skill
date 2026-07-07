@@ -4,7 +4,6 @@ description: Final integration build and test verification. Validates that imple
 license: MIT
 compatibility: Requires file system access. Auto-detects environment.
 metadata:
-  version: 1.0.0
   author: AI-DLC Maintainers
   keywords: specification, build, test, verification, quality-gate, CI, AI-DLC
   supported_platforms:
@@ -30,7 +29,7 @@ When active:
 ## Activation
 
 ```
-✅ aidlc-build v1.0.0 active — {platform} detected.
+✅ aidlc-build active — {platform} detected.
 Ready to verify build and run integration tests.
 ```
 

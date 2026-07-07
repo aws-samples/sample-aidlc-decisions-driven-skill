@@ -4,7 +4,6 @@ description: Code generation and testing. Execute implementation tasks from desi
 license: MIT
 compatibility: Requires file system access. Auto-detects environment.
 metadata:
-  version: 1.0.0
   author: AI-DLC Maintainers
   keywords: specification, implementation, code-generation, testing, parallel, autonomous, AI-DLC
   supported_platforms:
@@ -30,7 +29,7 @@ When active:
 ## Activation
 
 ```
-✅ aidlc-implement v1.0.0 active — {platform} detected.
+✅ aidlc-implement active — {platform} detected.
 Ready to implement tasks from design specifications.
 ```
 

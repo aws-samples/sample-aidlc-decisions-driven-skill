@@ -4,7 +4,6 @@ description: Cross-unit design review. Compares design documents across multiple
 license: MIT
 compatibility: Requires file system access. Auto-detects environment.
 metadata:
-  version: 1.0.0
   author: AI-DLC Maintainers
   keywords: specification, review, architecture, cross-unit, consistency, alignment, AI-DLC
   supported_platforms:
@@ -30,7 +29,7 @@ When active:
 ## Activation
 
 ```
-✅ aidlc-solutions-review v1.0.0 active — {platform} detected.
+✅ aidlc-solutions-review active — {platform} detected.
 Ready to review designs across units for cross-cutting conflicts.
 ```
 
