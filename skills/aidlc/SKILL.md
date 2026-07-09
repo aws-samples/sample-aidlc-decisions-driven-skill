@@ -59,7 +59,7 @@ Then immediately detect language from the user's message. ALL subsequent output 
 
 ## Initialization
 
-1. Detect environment (set SPECS_DIR, STEERING_DIR, WORKFLOW_DIR)
+1. Detect environment (set SPECS_DIR, WORKFLOW_DIR, BLUEPRINTS_DIR, SHIM; STEERING_DIR is legacy). Detect the **live platform** from where this skill is running (`.kiro/skills/`→Kiro, `.claude/skills/`→Claude Code) — this is authoritative for path resolution, not the manifest `platform` field.
 2. **Pre-flight validation**: Verify core skill files exist at `{PLATFORM_DIR}/skills/`:
    - Check for: `aidlc-context`, `aidlc-requirements`, `aidlc-design`, `aidlc-tasks`, `aidlc-implement` (minimum required)
    - For each, check `{PLATFORM_DIR}/skills/{skill}/SKILL.md` exists
@@ -86,6 +86,16 @@ After loading a manifest, verify required fields exist and have valid values:
 
 If validation fails, report: "⚠️ Manifest has issues: {list}. Run `repair` to fix." Continue with available data.
 
+### Platform Check
+
+Compare the live platform (step 1) against the manifest `platform` field, and check the current platform's shim exists at `{SHIM}`:
+
+- If `platform` differs from the live platform, OR the current platform's shim is missing (e.g., started in Kiro, now opened in Claude Code) → note it and suggest `adapt`:
+  ```
+  ℹ️ This project was set up for {manifest.platform}. You're on {live platform}. Run `adapt` to generate the {live platform} entry point — blueprints are shared, so no content is duplicated.
+  ```
+- `adapt` is non-destructive and does not block the workflow. The user can proceed, but ambient context loading may be incomplete until the shim exists. Blueprints (read by explicit path) are unaffected either way.
+
 ---
 
 ## Commands
@@ -103,6 +113,7 @@ The user can say any of these. Match loosely — "what's next", "show status", "
 | `repair` | Rebuild manifest from disk artifacts | `{SKILL_DIR}/actions/repair.md` |
 | `quick` | Single-pass mode for simple features | `{SKILL_DIR}/actions/quick-path.md` |
 | `doctor` | Verify installation health | `{SKILL_DIR}/actions/doctor.md` |
+| `adapt` | Generate the current platform's shim from existing blueprints (platform switch) | `{SKILL_DIR}/actions/adapt.md` |
 | `scope [name]` | Change workflow scope | — |
 | Phase names | Dispatch named skill directly | — |
 
@@ -253,10 +264,11 @@ Follow the error taxonomy from `shared/base.md`: ❌ Fatal (stop + report + offe
 
 ### Context Recovery (After Compaction)
 If you lose these instructions after context compaction:
-1. Read `{STEERING_DIR}/aidlc-workflow.md` for the manifest path and workflow overview
+1. Read the platform shim (`{SHIM}` — `.kiro/steering/aidlc.md` or `.claude/CLAUDE.md`) for behavioral anchors and the manifest pointer
 2. Read `{WORKFLOW_DIR}/{feature}/aidlc-manifest.yaml` for current phase and artifact paths
-3. Read `{SKILL_DIR}/SKILL.md` to reload this skill's instructions
-4. Resume from the current action indicated by the manifest state
+3. Read `{BLUEPRINTS_DIR}/*` for project content (product, tech, structure, resources, corrections)
+4. Read `{SKILL_DIR}/SKILL.md` to reload this skill's instructions
+5. Resume from the current action indicated by the manifest state
 
 ### Orchestrator Behavior
 - Execute phases by loading and following skill SKILL.md files — not by re-implementing phase logic

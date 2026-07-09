@@ -6,7 +6,7 @@ For each task:
 
 ## 1. Read task details and design specs
 
-Read the task entry from tasks.md. Read related design documents referenced by the task (Ref fields). If `{STEERING_DIR}/resources.md` lists available resources, use them:
+Read the task entry from tasks.md. Read related design documents referenced by the task (Ref fields). If `{BLUEPRINTS_DIR}/resources.md` lists available resources, use them:
 - **Design tool**: Use MCP to read exact specs → implement UI precisely
 - **API specs**: Read OpenAPI/GraphQL schemas → generate types, route stubs, validation
 - **Documentation**: Use web search to look up library APIs or troubleshoot errors

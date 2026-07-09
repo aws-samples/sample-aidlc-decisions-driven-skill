@@ -11,10 +11,12 @@ When user says "repair", "fix manifest", or "rebuild manifest":
    - `{SPECS_DIR}/{feature}/units.md` → decomposition phase
    - `{SPECS_DIR}/{feature}/design.md` + `design/` → design phase
    - `{SPECS_DIR}/{feature}/tasks.md` → tasks phase
+   - `{SPECS_DIR}/{feature}/deployment.md` → deploy specification (if present)
    - `{SPECS_DIR}/{feature}/units/*/` → unit-scoped artifacts (incremental mode)
+   - `{BLUEPRINTS_DIR}/` (project-level) → steering content (product/tech/structure/resources/corrections)
 3. Read each found artifact's Summary section to extract key metadata
 4. Rebuild the manifest:
-   - Set `version: "1.0.0"`, `feature`, `platform`
+   - Set `version: "1.0.0"`, `feature`, `platform` (use the **live platform** — where repair is running)
    - Add each found artifact to `artifacts` with `status: "approved"` and current timestamp
    - Populate `context-summary` from context.md Summary
    - Populate `decisions` from any found `decisions-*.md` files (read Decisions Summary sections)
@@ -23,7 +25,11 @@ When user says "repair", "fix manifest", or "rebuild manifest":
    - Set `state.status` to `"active"`
    - Determine `sharedPhases` from which shared artifacts exist
 5. Write the rebuilt manifest to `{WORKFLOW_DIR}/{feature}/aidlc-manifest.yaml`
-6. Present what was reconstructed:
+6. **Ensure the platform shim**:
+   - If blueprints exist but the current platform's shim (`{SHIM}`) is missing → generate it (load `{SKILL_DIR}/actions/adapt.md`).
+   - If blueprints are missing but legacy steering content exists at `{STEERING_DIR}/` → note that steering content should be migrated to `{BLUEPRINTS_DIR}/` (run `adapt`), then legacy files removed.
+   - If both are missing → the context phase has not run; recommend `start` or the `context` phase.
+7. Present what was reconstructed:
 
 ```
 📍 Manifest Repaired
@@ -32,6 +38,8 @@ Reconstructed from disk artifacts:
 - {list of phases detected with artifact counts}
 - Mode: {incremental / comprehensive}
 {If incremental: "Units: {list with detected status}"}
+- Blueprints: {found / missing} at `.aidlc/blueprints/`
+- Platform shim: {present / regenerated for {live platform} / needs `adapt`}
 
 ⚠️ Artifact statuses set to "approved" by default. Review and adjust if any are still drafts.
 

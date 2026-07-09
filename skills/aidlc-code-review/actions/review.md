@@ -6,7 +6,7 @@ Read available context:
 - **Design documents** (if available): architecture, components, data model, API contracts, conventions
 - **Foundation unit design** (if available): coding standards, naming, error handling, shared types
 - **Tasks** (if available): what was supposed to be implemented, completeness check
-- **Tech stack** from `{STEERING_DIR}/tech.md` (if available): expected frameworks, libraries, patterns
+- **Tech stack** from `{BLUEPRINTS_DIR}/tech.md` (if available): expected frameworks, libraries, patterns
 
 If no design docs available, review against general best practices only.
 

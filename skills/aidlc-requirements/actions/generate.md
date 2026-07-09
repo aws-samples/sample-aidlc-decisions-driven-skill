@@ -44,9 +44,9 @@ Template: `{ASSETS}/requirements.md` → write `{SPECS}/{feature}/requirements.m
 - All stories have EARS acceptance criteria
 - Organized by functional area, priorities assigned
 
-### Update Steering
+### Update Blueprints
 
-`product.md`: merge new user types + features alongside existing. Preserve prior content.
+`{BLUEPRINTS_DIR}/product.md`: merge new user types + features alongside existing. Preserve prior content.
 
 ### Update Manifest
 

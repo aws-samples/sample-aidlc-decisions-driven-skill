@@ -69,7 +69,7 @@ Ready to generate requirements from project context.
 | decisions-requirements.md | `{WORKFLOW_DIR}/{feature}/decisions-requirements.md` |
 | requirements.md | `{SPECS_DIR}/{feature}/requirements.md` |
 | personas.md | `{SPECS_DIR}/{feature}/personas.md` (conditional) |
-| product.md (update) | `{STEERING_DIR}/product.md` |
+| product.md (update) | `{BLUEPRINTS_DIR}/product.md` |
 
 ---
 

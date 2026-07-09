@@ -80,7 +80,7 @@ Ready to implement tasks from design specifications.
 2. Resolve feature name (per shared base)
 3. Read manifest at `{WORKFLOW_DIR}/{feature}/aidlc-manifest.yaml` if it exists
 4. Resolve tasks (manifest → conventional path → ask) and design documents
-5. Read `{STEERING_DIR}/resources.md` if exists. Read steering Summary sections.
+5. Read `{BLUEPRINTS_DIR}/resources.md` if exists. Read blueprint Summary sections.
 6. **Incremental mode**: read from unit-scoped paths
 
 ---

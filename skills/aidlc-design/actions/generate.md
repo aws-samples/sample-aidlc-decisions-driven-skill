@@ -103,11 +103,12 @@ Run BEFORE presenting:
 4. Reverse: each component must trace to ≥1 US-* (justify if not: infra/scaffold)
 5. **FAIL if** any US-* has zero coverage without justification — fix before presenting
 
-## Update Steering
+## Update Blueprints
 
-- `tech.md`: fill D3 placeholders. Preserve existing decisions.
-- `structure.md`: fill structure from implementation.md. Preserve existing.
+- `{BLUEPRINTS_DIR}/tech.md`: fill D3 placeholders. Preserve existing decisions.
+- `{BLUEPRINTS_DIR}/structure.md`: fill structure from implementation.md. Preserve existing.
 - Read current files first — never overwrite prior content.
+- These are canonical, platform-agnostic (no front-matter); the platform shim references them.
 
 ## Update Manifest
 

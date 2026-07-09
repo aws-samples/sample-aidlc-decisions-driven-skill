@@ -4,7 +4,7 @@
 
 Check for available design resources:
 
-1. Read `{STEERING_DIR}/resources.md` if it exists — check Design Resources section
+1. Read `{BLUEPRINTS_DIR}/resources.md` if it exists — check Design Resources section
 2. For each available source, extract visual direction:
    - **Design tool** (Figma, etc.): If design tool MCP is available, read screens, component inventory, design tokens (colors, typography, spacing). Use these to style the prototype.
    - **Design system docs**: Read referenced docs → extract color palette, font stack, component naming, spacing scale. Apply to prototype UI.

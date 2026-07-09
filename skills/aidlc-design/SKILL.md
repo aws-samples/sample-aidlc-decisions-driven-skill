@@ -49,7 +49,7 @@ Ready to generate technology decisions and architecture design.
 1. Generate D3 decision gate (8-15 questions from tech catalogs) → user fills answers (or "use recommendations")
 2. Validate D3 for conflicts → resolve if any
 3. Generate design documents (compact for ≤10 stories, modular for 11+)
-4. Update steering/tech.md and steering/structure.md
+4. Update blueprints/tech.md and blueprints/structure.md
 5. Present results → wait for approval → hand off to tasks
 
 **Reads**: context.md (Summary), requirements.md, units.md (if exists), foundation unit design (if exists), steering files, resources.md
@@ -95,8 +95,8 @@ Ready to generate technology decisions and architecture design.
 | design/correctness.md | `{SPECS_DIR}/{feature}/design/correctness.md` (conditional) |
 | design/testing-strategy.md | `{SPECS_DIR}/{feature}/design/testing-strategy.md` (conditional) |
 | design/nfr.md | `{SPECS_DIR}/{feature}/design/nfr.md` (conditional) |
-| tech.md (update) | `{STEERING_DIR}/tech.md` |
-| structure.md (update) | `{STEERING_DIR}/structure.md` |
+| tech.md (update) | `{BLUEPRINTS_DIR}/tech.md` |
+| structure.md (update) | `{BLUEPRINTS_DIR}/structure.md` |
 
 ---
 
@@ -110,7 +110,7 @@ Ready to generate technology decisions and architecture design.
    - Requirements — **read only `## Summary` section** during init; full content during generation
    - Units (if exists) — **read only `## Summary` section**
    - Foundation unit design (if exists) — read `{SPECS_DIR}/{feature}/units/foundation/design/` Summary sections for shared conventions
-5. If steering files exist, read Summary sections from `{STEERING_DIR}/product.md`, `tech.md`, `structure.md`. Read `resources.md` in full.
+5. If blueprints exist, read Summary sections from `{BLUEPRINTS_DIR}/product.md`, `tech.md`, `structure.md`. Read `resources.md` in full.
 6. **Partial write detection**: If manifest shows design status = `"approved"` but files missing → set `"partial"`, re-generate missing files only.
 7. **Incremental mode**: Scope to unit's stories. Create unit output folders. Write to `units/{unit}/` paths.
 

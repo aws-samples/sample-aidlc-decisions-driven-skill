@@ -52,7 +52,6 @@ For each installed skill's action files, scan for reference file paths (`{REFERE
 For each installed skill, verify SKILL.md has valid YAML front-matter with:
 - `name` field present
 - `description` field present
-- `metadata.version` field present
 
 ### Check 7: Workflow State (if exists)
 
@@ -61,11 +60,26 @@ If manifests exist at `{WORKFLOW_DIR}/*/aidlc-manifest.yaml`:
 - Check referenced artifact files exist on disk
 - Check for stale artifacts (status = "approved" but file missing)
 
-### Check 8: Steering Files (if exist)
+### Check 8: Blueprints and Platform Shim (if a manifest exists)
 
-If `{STEERING_DIR}/` exists, verify expected files:
-- `aidlc-workflow.md` — required if any manifest exists
+**Blueprints** — verify canonical content at `{BLUEPRINTS_DIR}/` (`.aidlc/blueprints/`):
 - `product.md`, `tech.md`, `structure.md` — expected after context phase
+- `resources.md` — expected after context phase
+- `corrections.md` — optional (created on-demand by the learning loop)
+
+**Platform shim** — verify the current platform's entry point exists and references blueprints:
+- Kiro: `.kiro/steering/aidlc.md` exists, has `inclusion: always` front-matter, and contains `#[[file:.aidlc/blueprints/*.md]]` references
+- Claude Code: `.claude/CLAUDE.md` exists and contains `@../.aidlc/blueprints/*.md` imports
+  - **Verify each import resolves** — Claude imports fail silently on wrong paths. For each `@../.aidlc/blueprints/{name}.md`, confirm the target file exists. Flag any that don't as ❌.
+- For every blueprint reference in the shim, confirm the referenced blueprint file exists on disk.
+
+**Platform mismatch** — compare the manifest `platform` against the live platform:
+- If they differ, or the current platform's shim is missing → ⚠️ warn and recommend `adapt` to generate the current platform's shim (blueprints are shared; no content is regenerated).
+
+### Check 9: Legacy Steering (migration hint)
+
+If legacy per-platform steering content still exists at `{STEERING_DIR}/` (e.g., `{STEERING_DIR}/tech.md`, `product.md`, or `aidlc-workflow.md`):
+- ⚠️ Inform that steering content has moved to `{BLUEPRINTS_DIR}/`. Recommend `adapt` (or `repair`) to consolidate, then remove the stale legacy files.
 
 ---
 
@@ -111,9 +125,12 @@ Skills directory: {PLATFORM_DIR}/skills/
     ⚠️ {feature}: {issue description}
   }
 
-## Steering Files
-  {If no steering dir: "— No steering files (expected before first workflow)"}
-  {If exists: ✅ / ⚠️ per file}
+## Blueprints & Shim
+  {If no manifest: "— No blueprints (expected before first workflow)"}
+  {If exists: ✅ / ⚠️ per blueprint file at .aidlc/blueprints/}
+  {Platform shim: ✅ present + references resolve | ⚠️ missing for {live platform} → run `adapt`}
+  {If platform mismatch (manifest vs live): ⚠️ set up for {manifest.platform}, running {live platform} → run `adapt`}
+  {If legacy steering content found at {STEERING_DIR}: ⚠️ migrate to blueprints}
 
 ─────────────────────────────────────────
 Summary: {errors} errors, {warnings} warnings
