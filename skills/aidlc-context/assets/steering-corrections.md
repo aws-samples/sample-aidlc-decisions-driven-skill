@@ -1,19 +1,14 @@
 # Steering: Corrections — Output Template
 
-Generate `{STEERING_DIR}/corrections.md` when the first correction is recorded.
+Generate `{BLUEPRINTS_DIR}/corrections.md` when the first correction is recorded (canonical, platform-agnostic — no front-matter).
 
-**Kiro only**: Add `inclusion: always` YAML front-matter.
-**All platforms**: This file is auto-loaded every session (it lives in the platform's auto-include directory).
+**All platforms**: This file is loaded every session because the platform shim references it (Kiro `#[[file:.aidlc/blueprints/corrections.md]]`, Claude `@../.aidlc/blueprints/corrections.md`).
 
 Do NOT create this file during context assessment. It is created on-demand when the user confirms a correction should be remembered (see Edit Action Pattern in shared/base.md).
 
 ## Format
 
 ```markdown
----
-inclusion: always
----
-
 # Project Corrections
 
 Rules learned from human feedback during AI-DLC workflows. These apply to ALL future workflows in this project.

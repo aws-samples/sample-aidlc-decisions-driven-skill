@@ -41,13 +41,13 @@ Then proceed to initialization.
 
 1. Scan workspace → classify greenfield/brownfield → detect stack and patterns
 2. Generate `context.md` with findings and recommendations
-3. Generate steering files (product.md, tech.md, structure.md, resources.md)
+3. Generate blueprints (product.md, tech.md, structure.md, resources.md) at `.aidlc/blueprints/` + the platform shim
 4. Create manifest and audit trail
 5. Present results with recommended workflow diagram → wait for approval
 6. On approval → hand off to requirements
 
 **Reads**: Workspace files (source, configs, README)
-**Writes**: context.md, steering/*, manifest, audit.md
+**Writes**: context.md, blueprints/* (canonical content), platform shim (`.kiro/steering/aidlc.md` or `.claude/CLAUDE.md`), manifest, audit.md
 
 ---
 
@@ -73,14 +73,16 @@ If `.aidlc/reverse-engineer/` exists, read `overview.md` and `conventions.md` Su
 | Artifact | Default Path |
 |---|---|
 | context.md | `{SPECS_DIR}/{feature}/context.md` |
-| product.md | `{STEERING_DIR}/product.md` |
-| tech.md | `{STEERING_DIR}/tech.md` |
-| structure.md | `{STEERING_DIR}/structure.md` |
-| aidlc-workflow.md | `{STEERING_DIR}/aidlc-workflow.md` |
-| resources.md | `{STEERING_DIR}/resources.md` |
-| CLAUDE.md | `{PROJECT_ROOT}/.claude/CLAUDE.md` (Claude Code only) |
+| product.md | `{BLUEPRINTS_DIR}/product.md` |
+| tech.md | `{BLUEPRINTS_DIR}/tech.md` |
+| structure.md | `{BLUEPRINTS_DIR}/structure.md` |
+| resources.md | `{BLUEPRINTS_DIR}/resources.md` |
+| Platform shim (Kiro) | `.kiro/steering/aidlc.md` (Kiro only) |
+| Platform shim (Claude) | `{PROJECT_ROOT}/.claude/CLAUDE.md` (Claude Code only) |
 | aidlc-manifest.yaml | `{WORKFLOW_DIR}/{feature}/aidlc-manifest.yaml` |
 | audit.md | `{WORKFLOW_DIR}/{feature}/audit.md` |
+
+> `product/tech/structure/resources` are canonical and platform-agnostic in `{BLUEPRINTS_DIR}` (`.aidlc/blueprints/`). The platform shim references them (Kiro `#[[file:...]]`, Claude `@../`). `corrections.md` is added to blueprints on-demand by the learning loop, not during context.
 
 ---
 

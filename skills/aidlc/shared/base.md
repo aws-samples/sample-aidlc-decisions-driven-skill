@@ -7,7 +7,8 @@
 ## Summary
 
 - **Platform**: `.kiro/`→Kiro, `.claude/`→Claude Code
-- **Paths**: SPECS=`.aidlc/specs`, WORKFLOW=`.aidlc/workflow`, STEERING=Kiro:`.kiro/steering`|Claude:`.claude/rules`, SKILL_DIR=`{PLATFORM}/skills/aidlc-{skill}`, ASSETS=`{SKILL_DIR}/assets`, REFS=`{SKILL_DIR}/references`
+- **Paths**: SPECS=`.aidlc/specs`, WORKFLOW=`.aidlc/workflow`, BLUEPRINTS=`.aidlc/blueprints` (canonical steering content — platform-agnostic), SHIM=Kiro:`.kiro/steering/aidlc.md`|Claude:`.claude/CLAUDE.md` (thin per-platform entry point → references blueprints), STEERING=Kiro:`.kiro/steering`|Claude:`.claude/rules` (legacy dir; content migrating to BLUEPRINTS), SKILL_DIR=`{PLATFORM}/skills/aidlc-{skill}`, ASSETS=`{SKILL_DIR}/assets`, REFS=`{SKILL_DIR}/references`
+- **Blueprints**: product/tech/structure/resources/corrections are canonical at `{BLUEPRINTS}/` (no platform front-matter). The platform SHIM carries behavioral anchors inline + references blueprints (Kiro `#[[file:.aidlc/blueprints/*.md]]`, Claude `@../.aidlc/blueprints/*.md`). Skills read blueprints by explicit path; the shim serves ambient sessions.
 - **Feature**: scan `{WORKFLOW}/*/aidlc-manifest.yaml` → one=use, many=ask, none=infer or ask
 - **Manifest**: silent read/write. On approval: `status:"approved"`, add to `sharedPhases`. Downstream outdated: mark all later phases. Order: context→requirements→decomposition→design→tasks→implement→build→deploy.
 - **Language**: ALL output in user's language (manifest `language`). English only: paths, code, YAML keys, tech terms, skill names. Translate templates. No mixing.
@@ -74,7 +75,7 @@ Standard for all phase edits:
 3. Re-validate (phase checks)
 4. Cascade to related artifacts
 5. Mark downstream `status:"outdated"`
-6. Learning loop: if correction is a general rule → ask to save to `{STEERING}/corrections.md`
+6. Learning loop: if correction is a general rule → ask to save to `{BLUEPRINTS}/corrections.md`
 7. Present with `🔲 Your turn` block
 8. **STOP**
 
@@ -82,10 +83,11 @@ Standard for all phase edits:
 
 ## Context Recovery
 
-1. Read `{STEERING}/aidlc-workflow.md` → manifest path
+1. Read the platform shim (`{SHIM}`) → behavioral anchors + manifest pointer
 2. Read manifest → phase, artifacts, decisions
-3. Read current skill's SKILL.md → reload instructions
-4. Resume from current action. Never generate from memory — always re-read templates from disk.
+3. Read `{BLUEPRINTS}/*` for project content (product, tech, structure, resources, corrections)
+4. Read current skill's SKILL.md → reload instructions
+5. Resume from current action. Never generate from memory — always re-read templates from disk.
 
 ---
 

@@ -1,8 +1,7 @@
 # Steering: Tech — Output Template
 
-Generate `{STEERING_DIR}/tech.md`.
+Generate `{BLUEPRINTS_DIR}/tech.md` (canonical, platform-agnostic — no front-matter; the platform shim references it).
 
-**Kiro only**: Add `inclusion: always` YAML front-matter.
 **Progressive enrichment**: Phase 1 creates (detected or placeholders), Phase 4 updates with D3 decisions.
 **If file already exists**: Preserve all existing content. Only update placeholders. Never remove settled decisions.
 

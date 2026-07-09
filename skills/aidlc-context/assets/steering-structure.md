@@ -1,8 +1,7 @@
 # Steering: Structure — Output Template
 
-Generate `{STEERING_DIR}/structure.md`.
+Generate `{BLUEPRINTS_DIR}/structure.md` (canonical, platform-agnostic — no front-matter; the platform shim references it).
 
-**Kiro only**: Add `inclusion: always` YAML front-matter.
 **Progressive enrichment**: Phase 1 creates (detected or placeholders), Phase 4 updates with design structure.
 **If file already exists**: Preserve all existing content. Only update placeholders or add newly detected entries. Never remove previously documented structure.
 

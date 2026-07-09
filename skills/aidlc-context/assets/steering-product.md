@@ -1,8 +1,7 @@
 # Steering: Product — Output Template
 
-Generate `{STEERING_DIR}/product.md`.
+Generate `{BLUEPRINTS_DIR}/product.md` (canonical, platform-agnostic — no front-matter; the platform shim references it).
 
-**Kiro only**: Add `inclusion: always` YAML front-matter.
 **Progressive enrichment**: Phase 1 creates, Phase 2 updates Target Users and Key Features.
 **If file already exists**: Preserve all existing content. Update Summary for current feature. Append new users/features alongside existing — never remove previous entries.
 

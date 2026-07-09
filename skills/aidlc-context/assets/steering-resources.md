@@ -1,8 +1,7 @@
 # Steering: Resources — Output Template
 
-Generate `{STEERING_DIR}/resources.md` with this structure.
+Generate `{BLUEPRINTS_DIR}/resources.md` with this structure (canonical, platform-agnostic — no front-matter; the platform shim references it).
 
-**Kiro only**: Add `inclusion: always` YAML front-matter.
 User fills in available resources. Phases 2, 4, and 6 check this file to enrich artifacts.
 **If file already exists**: Read fully. Preserve all existing resource entries. Add newly discovered resources alongside existing ones.
 
