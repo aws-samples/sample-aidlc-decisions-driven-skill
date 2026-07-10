@@ -32,8 +32,8 @@ Evaluate in order (blueprints-complete takes precedence, so `upgrade` calling ad
 ## 3. Generate the platform shim
 
 Read the shim template for the live platform from disk (never from memory):
-- **Kiro**: `{PLATFORM_DIR}/skills/aidlc-context/assets/steering-workflow.md` → generate `.kiro/steering/aidlc.md` (`inclusion: always` front-matter; `#[[file:.aidlc/blueprints/*.md]]` references)
-- **Claude Code**: `{PLATFORM_DIR}/skills/aidlc-context/assets/claude-md.md` → generate `.claude/CLAUDE.md` (`@../.aidlc/blueprints/*.md` imports)
+- **Kiro**: `{PLATFORM_DIR}/skills/aidlc-context/assets/shim-kiro.md` → generate `.kiro/steering/aidlc.md` (`inclusion: always` front-matter; `#[[file:.aidlc/blueprints/*.md]]` references)
+- **Claude Code**: `{PLATFORM_DIR}/skills/aidlc-context/assets/shim-claude.md` → generate `.claude/CLAUDE.md` (`@../.aidlc/blueprints/*.md` imports)
 
 Reference only blueprints that exist (include `corrections.md` only if present).
 

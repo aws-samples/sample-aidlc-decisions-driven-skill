@@ -1,4 +1,4 @@
-# Steering: Resources — Output Template
+# Blueprint: Resources — Output Template
 
 Generate `{BLUEPRINTS_DIR}/resources.md` with this structure (canonical, platform-agnostic — no front-matter; the platform shim references it).
 

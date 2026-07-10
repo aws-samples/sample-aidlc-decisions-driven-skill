@@ -1,4 +1,4 @@
-# Steering: Corrections — Output Template
+# Blueprint: Corrections — Output Template
 
 Generate `{BLUEPRINTS_DIR}/corrections.md` when the first correction is recorded (canonical, platform-agnostic — no front-matter).
 

@@ -1,4 +1,4 @@
-# Steering: Product — Output Template
+# Blueprint: Product — Output Template
 
 Generate `{BLUEPRINTS_DIR}/product.md` (canonical, platform-agnostic — no front-matter; the platform shim references it).
 

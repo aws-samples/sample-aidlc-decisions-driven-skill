@@ -77,12 +77,12 @@ Project content is canonical and platform-agnostic — write it once to `{BLUEPR
 
 Read each asset template and generate the corresponding blueprint:
 
-1. `{ASSETS_DIR}/steering-product.md` → `{BLUEPRINTS_DIR}/product.md`
-2. `{ASSETS_DIR}/steering-tech.md` → `{BLUEPRINTS_DIR}/tech.md`
-3. `{ASSETS_DIR}/steering-structure.md` → `{BLUEPRINTS_DIR}/structure.md`
-4. `{ASSETS_DIR}/steering-resources.md` → `{BLUEPRINTS_DIR}/resources.md`
+1. `{ASSETS_DIR}/blueprint-product.md` → `{BLUEPRINTS_DIR}/product.md`
+2. `{ASSETS_DIR}/blueprint-tech.md` → `{BLUEPRINTS_DIR}/tech.md`
+3. `{ASSETS_DIR}/blueprint-structure.md` → `{BLUEPRINTS_DIR}/structure.md`
+4. `{ASSETS_DIR}/blueprint-resources.md` → `{BLUEPRINTS_DIR}/resources.md`
 
-Do NOT create `corrections.md` here — it is created on-demand by the learning loop (see `steering-corrections.md`).
+Do NOT create `corrections.md` here — it is created on-demand by the learning loop (see `blueprint-corrections.md`).
 
 **Greenfield**: Populate `product.md` from the user's request. Use "Pending D3 decisions" placeholders in `tech.md` and `structure.md`.
 **Brownfield**: Populate all files with detected stack, structure, and conventions.
@@ -96,8 +96,8 @@ Do NOT create `corrections.md` here — it is created on-demand by the learning 
 
 Generate the thin entry point for the **detected platform**. The shim is static and project-level (it carries behavioral anchors + blueprint references, no feature state) — overwriting is safe since it holds no project content.
 
-- **Kiro**: `{ASSETS_DIR}/steering-workflow.md` → `.kiro/steering/aidlc.md` (`inclusion: always` front-matter; `#[[file:.aidlc/blueprints/*.md]]` references)
-- **Claude Code**: `{ASSETS_DIR}/claude-md.md` → `.claude/CLAUDE.md` (`@../.aidlc/blueprints/*.md` imports)
+- **Kiro**: `{ASSETS_DIR}/shim-kiro.md` → `.kiro/steering/aidlc.md` (`inclusion: always` front-matter; `#[[file:.aidlc/blueprints/*.md]]` references)
+- **Claude Code**: `{ASSETS_DIR}/shim-claude.md` → `.claude/CLAUDE.md` (`@../.aidlc/blueprints/*.md` imports)
 
 Generate only the detected platform's shim. (The `adapt` flow generates the other platform's shim when a project moves between platforms.)
 

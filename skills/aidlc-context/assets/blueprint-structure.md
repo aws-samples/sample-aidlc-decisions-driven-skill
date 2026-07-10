@@ -1,4 +1,4 @@
-# Steering: Structure — Output Template
+# Blueprint: Structure — Output Template
 
 Generate `{BLUEPRINTS_DIR}/structure.md` (canonical, platform-agnostic — no front-matter; the platform shim references it).
 

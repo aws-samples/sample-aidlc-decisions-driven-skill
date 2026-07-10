@@ -1,4 +1,4 @@
-# Steering: Tech — Output Template
+# Blueprint: Tech — Output Template
 
 Generate `{BLUEPRINTS_DIR}/tech.md` (canonical, platform-agnostic — no front-matter; the platform shim references it).
 
