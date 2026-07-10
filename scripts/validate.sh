@@ -87,7 +87,7 @@ for skill_dir in "$SKILLS_DIR"/aidlc*/; do
     # Look for {ASSETS_DIR}/ or {ASSETS}/ references in action files
     for action_file in "$skill_dir"/actions/*.md; do
         [ -f "$action_file" ] || continue
-        asset_refs=$(grep -oE '(ASSETS_DIR|ASSETS)/[a-z0-9-]+\.md' "$action_file" 2>/dev/null | sed 's|ASSETS_DIR/||;s|ASSETS/||' || true)
+        asset_refs=$(grep -oE '\{(ASSETS_DIR|ASSETS)\}/[a-z0-9-]+\.md' "$action_file" 2>/dev/null | sed 's|{ASSETS_DIR}/||;s|{ASSETS}/||' || true)
         for ref in $asset_refs; do
             if [ -f "$assets_dir/$ref" ]; then
                 echo "  ✅ $skill_name/assets/$ref"
@@ -103,7 +103,46 @@ for skill_dir in "$SKILLS_DIR"/aidlc*/; do
 done
 echo ""
 
-# 6. Check SKILL.md frontmatter has required fields
+# 6. Check reference file references in action files ({REFS}/ or {REFERENCES_DIR}/)
+echo "## Reference File References"
+for skill_dir in "$SKILLS_DIR"/aidlc*/; do
+    skill_name=$(basename "$skill_dir")
+    refs_dir="$skill_dir/references"
+    [ -d "$skill_dir/actions" ] || continue
+    for action_file in "$skill_dir"/actions/*.md; do
+        [ -f "$action_file" ] || continue
+        ref_refs=$(grep -oE '\{(REFERENCES_DIR|REFS)\}/[a-z0-9-]+\.md' "$action_file" 2>/dev/null | sed 's|{REFERENCES_DIR}/||;s|{REFS}/||' | sort -u || true)
+        for ref in $ref_refs; do
+            if [ -f "$refs_dir/$ref" ]; then
+                echo "  ✅ $skill_name/references/$ref"
+            elif [ -d "$refs_dir" ]; then
+                echo "  ❌ $skill_name/references/$ref — referenced but MISSING"
+                ERRORS=$((ERRORS + 1))
+            fi
+        done
+    done
+done
+echo ""
+
+# 7. Check cross-skill references (explicit skills/aidlc-*/{assets,references}/ paths)
+echo "## Cross-Skill References"
+xrefs=$(grep -rhoE 'skills/aidlc-[a-z-]+/(assets|references)/[a-z0-9-]+\.md' "$SKILLS_DIR" 2>/dev/null | sort -u || true)
+if [ -z "$xrefs" ]; then
+    echo "  — none found"
+else
+    while IFS= read -r ref; do
+        [ -n "$ref" ] || continue
+        if [ -f "$ref" ]; then
+            echo "  ✅ $ref"
+        else
+            echo "  ❌ $ref — cross-skill reference MISSING"
+            ERRORS=$((ERRORS + 1))
+        fi
+    done <<< "$xrefs"
+fi
+echo ""
+
+# 8. Check SKILL.md frontmatter has required fields
 echo "## Frontmatter Validation"
 for skill_dir in "$SKILLS_DIR"/aidlc*/; do
     skill_name=$(basename "$skill_dir")
@@ -125,7 +164,7 @@ for skill_dir in "$SKILLS_DIR"/aidlc*/; do
 done
 echo ""
 
-# 7. Check example todo-app manifest is valid YAML structure
+# 9. Check example todo-app manifest is valid YAML structure
 echo "## Example Validation"
 MANIFEST="examples/todo-app/workflow/aidlc-manifest.yaml"
 if [ -f "$MANIFEST" ]; then
@@ -139,6 +178,31 @@ else
     echo "  ❌ todo-app manifest not found"
     ERRORS=$((ERRORS + 1))
 fi
+echo ""
+
+# 10. Check example reflects the blueprints + shim layout
+echo "## Example Blueprints & Shim"
+EX_BP="examples/todo-app/blueprints"
+for bp in product tech structure resources; do
+    if [ -f "$EX_BP/$bp.md" ]; then
+        echo "  ✅ blueprints/$bp.md"
+    else
+        echo "  ⚠️  blueprints/$bp.md — missing (expected in blueprints layout)"
+        WARNINGS=$((WARNINGS + 1))
+    fi
+done
+if [ -f "examples/todo-app/steering/aidlc.md" ]; then
+    echo "  ✅ steering/aidlc.md (platform shim)"
+else
+    echo "  ⚠️  steering/aidlc.md — missing (platform shim)"
+    WARNINGS=$((WARNINGS + 1))
+fi
+for stale in product tech structure resources aidlc-workflow; do
+    if [ -f "examples/todo-app/steering/$stale.md" ]; then
+        echo "  ⚠️  steering/$stale.md — stale legacy file (content belongs in blueprints/)"
+        WARNINGS=$((WARNINGS + 1))
+    fi
+done
 echo ""
 
 # Summary

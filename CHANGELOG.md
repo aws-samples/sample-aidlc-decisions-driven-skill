@@ -24,6 +24,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Fixed
 
 - **skills/aidlc/actions/doctor.md**: Check 6 no longer requires the removed `metadata.version` front-matter field (would otherwise flag every skill).
+- **scripts/validate.sh**: fixed the asset-reference check — its regex omitted the `{...}` braces, so it had been silently matching nothing. Also added reference-file (`{REFS}/`), cross-skill-reference (`skills/aidlc-*/assets`), and example blueprints/shim checks.
 
 ### Migration
 
