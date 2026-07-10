@@ -42,7 +42,7 @@ Ready to implement tasks from design specifications.
 3. Run tests after each task/wave → mark complete in tasks.md
 4. On completion → present summary with test results and coverage
 
-**Reads**: tasks.md, design.md + design/*, steering files, resources.md
+**Reads**: tasks.md, design.md + design/*, blueprints, resources.md
 **Writes**: Source code, test files, tasks.md (checkbox updates)
 
 ---

@@ -79,7 +79,7 @@ If manifests exist at `{WORKFLOW_DIR}/*/aidlc-manifest.yaml`:
 ### Check 9: Legacy Steering (migration hint)
 
 If legacy per-platform steering content still exists at `{STEERING_DIR}/` (e.g., `{STEERING_DIR}/tech.md`, `product.md`, or `aidlc-workflow.md`):
-- ⚠️ Inform that steering content has moved to `{BLUEPRINTS_DIR}/`. Recommend `adapt` (or `repair`) to consolidate, then remove the stale legacy files.
+- ⚠️ Inform that steering content has moved to `{BLUEPRINTS_DIR}/`. Recommend `upgrade` to migrate the structure (moves content to blueprints, regenerates the shim, and removes the stale legacy files after confirmation).
 
 ---
 
@@ -130,7 +130,7 @@ Skills directory: {PLATFORM_DIR}/skills/
   {If exists: ✅ / ⚠️ per blueprint file at .aidlc/blueprints/}
   {Platform shim: ✅ present + references resolve | ⚠️ missing for {live platform} → run `adapt`}
   {If platform mismatch (manifest vs live): ⚠️ set up for {manifest.platform}, running {live platform} → run `adapt`}
-  {If legacy steering content found at {STEERING_DIR}: ⚠️ migrate to blueprints}
+  {If legacy steering content found at {STEERING_DIR}: ⚠️ pre-blueprints layout → run `upgrade`}
 
 ─────────────────────────────────────────
 Summary: {errors} errors, {warnings} warnings

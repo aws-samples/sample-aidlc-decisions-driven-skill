@@ -28,11 +28,11 @@ In the AIDLC workflow, context rot manifests as:
 
 ## Prevention Strategies
 
-### 1. Behavioral Anchors in Steering Files (Primary Mechanism)
+### 1. Behavioral Anchors in the Platform Shim (Primary Mechanism)
 
-Steering files persist across the entire session. On Kiro, files with `inclusion: always` are injected into every agent turn automatically. On Claude Code, `CLAUDE.md` serves the same role.
+The platform shim persists across the entire session. On Kiro, `.kiro/steering/aidlc.md` (with `inclusion: always`) is injected into every agent turn automatically. On Claude Code, `.claude/CLAUDE.md` serves the same role.
 
-The `aidlc-workflow.md` steering file contains a "Behavioral Anchors" section with non-negotiable rules:
+The shim carries a "Behavioral Anchors" section **inline** (not by reference — these rules must load reliably) with non-negotiable rules:
 
 1. Decision gates are mandatory — generate blank → present → STOP → wait
 2. Every `🔲 Your turn` block is a hard stop
@@ -117,7 +117,7 @@ The most reliable mitigation remains: **shorter sessions**. If you're running a 
 
 | Mechanism | Kiro | Claude Code |
 |---|---|---|
-| Steering file anchors (always loaded) | ✅ `aidlc-workflow.md` with `inclusion: always` | ✅ `CLAUDE.md` (auto-loaded) |
+| Shim anchors (always loaded, inline) | ✅ `.kiro/steering/aidlc.md` with `inclusion: always` | ✅ `.claude/CLAUDE.md` (auto-loaded) |
 | Skill handoff identity reset | ✅ | ✅ |
 | Session-based recovery | ✅ | ✅ |
 | Manifest-based resume | ✅ | ✅ |

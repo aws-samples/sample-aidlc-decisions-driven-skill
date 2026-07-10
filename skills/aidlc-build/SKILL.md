@@ -43,7 +43,7 @@ Ready to verify build and run integration tests.
 4. Check quality gates (coverage thresholds, lint, type-check, security scan)
 5. Produce build report → wait for approval → hand off to deploy
 
-**Reads**: package.json / Makefile / build configs, tasks.md (for context), design/testing-strategy.md, steering files
+**Reads**: package.json / Makefile / build configs, tasks.md (for context), design/testing-strategy.md, blueprints
 **Writes**: build-report.md
 
 ---
@@ -83,7 +83,7 @@ Ready to verify build and run integration tests.
    - Scan for: `package.json`, `Makefile`, `Cargo.toml`, `pom.xml`, `build.gradle`, `pyproject.toml`, `Dockerfile`, `docker-compose.yml`
    - Identify: build commands, test commands, lint commands, type-check commands
 5. Read `design/testing-strategy.md` if exists (for coverage expectations)
-6. Read steering files Summary sections
+6. Read blueprints Summary sections
 
 ---
 

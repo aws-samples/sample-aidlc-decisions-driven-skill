@@ -4,7 +4,7 @@
 
 **Phase**: context
 **Action**: assessment
-**Artifacts**: context.md, steering/product.md, steering/tech.md, steering/structure.md, steering/aidlc-workflow.md
+**Artifacts**: context.md, blueprints/product.md, blueprints/tech.md, blueprints/structure.md, blueprints/resources.md, steering/aidlc.md
 **Outcome**: Greenfield TypeScript/Express/PostgreSQL project assessed. Simple project — no decomposition needed.
 
 ### [2026-04-26T10:00:30Z] Context: Approved

@@ -88,13 +88,17 @@ If validation fails, report: "⚠️ Manifest has issues: {list}. Run `repair` t
 
 ### Platform Check
 
-Compare the live platform (step 1) against the manifest `platform` field, and check the current platform's shim exists at `{SHIM}`:
+Compare the live platform (step 1) against the manifest `platform` field, check for a legacy (pre-blueprints) layout, and check the current platform's shim exists at `{SHIM}`:
 
-- If `platform` differs from the live platform, OR the current platform's shim is missing (e.g., started in Kiro, now opened in Claude Code) → note it and suggest `adapt`:
+- **Legacy layout** — if legacy steering content exists (`{STEERING_DIR}/{product,tech,structure,resources}.md` or an old `.claude/CLAUDE.md` aggregator) and `.aidlc/blueprints/` is absent or incomplete → suggest `upgrade`:
+  ```
+  ℹ️ This project uses the pre-blueprints layout. Run `upgrade` to migrate steering into `.aidlc/blueprints/` and generate the platform entry point.
+  ```
+- **Platform switch / missing shim** — else if `platform` differs from the live platform, OR the current platform's shim is missing (blueprints already exist; e.g., started in Kiro, now opened in Claude Code) → suggest `adapt`:
   ```
   ℹ️ This project was set up for {manifest.platform}. You're on {live platform}. Run `adapt` to generate the {live platform} entry point — blueprints are shared, so no content is duplicated.
   ```
-- `adapt` is non-destructive and does not block the workflow. The user can proceed, but ambient context loading may be incomplete until the shim exists. Blueprints (read by explicit path) are unaffected either way.
+- Both are non-destructive and do not block the workflow. The user can proceed, but ambient context loading may be incomplete until the shim exists. Blueprints (read by explicit path) are unaffected either way.
 
 ---
 
@@ -114,7 +118,10 @@ The user can say any of these. Match loosely — "what's next", "show status", "
 | `quick` | Single-pass mode for simple features | `{SKILL_DIR}/actions/quick-path.md` |
 | `doctor` | Verify installation health | `{SKILL_DIR}/actions/doctor.md` |
 | `adapt` | Generate the current platform's shim from existing blueprints (platform switch) | `{SKILL_DIR}/actions/adapt.md` |
+| `upgrade` | Migrate an old-layout project to the current structure (legacy steering → blueprints) | `{SKILL_DIR}/actions/upgrade.md` |
 | `scope [name]` | Change workflow scope | — |
+
+> **repair vs adapt vs upgrade**: `repair` rebuilds the manifest (workflow state). `adapt` ensures the current platform's shim exists (blueprints already present). `upgrade` migrates an old pre-blueprints layout to the current structure. `repair` and `upgrade` both delegate shim generation to `adapt`.
 | Phase names | Dispatch named skill directly | — |
 
 Phase name commands: `context`, `requirements`, `units`/`decomposition`, `design`, `tasks`, `implement`, `build`, `deploy`, `prototype`, `review`, `reverse-engineer`.

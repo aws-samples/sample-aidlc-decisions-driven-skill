@@ -44,7 +44,7 @@ Ready to generate deployment configuration and CI/CD pipeline.
 5. Generate CI/CD pipeline configuration, environment definitions, and deployment scripts
 6. Present results → wait for approval → mark workflow complete
 
-**Reads**: build-report.md, design/implementation.md, context.md, steering files, existing CI configs
+**Reads**: build-report.md, design/implementation.md, context.md, blueprints, existing CI configs
 **Writes**: decisions-deploy.md, deployment.md (specs), pipeline config files, environment configs
 
 ---
@@ -89,7 +89,7 @@ Ready to generate deployment configuration and CI/CD pipeline.
 5. Check for existing CI/CD configs (see detection list in references)
 6. Read `design/implementation.md` for infrastructure requirements
 7. Read `design/operations.md` if it exists (for health probes, logging, metrics, shutdown config)
-8. Read steering files Summary sections
+8. Read blueprints Summary sections
 
 ---
 

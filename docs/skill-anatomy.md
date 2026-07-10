@@ -71,9 +71,11 @@ Loaded once per session. Provides common operations shared across all skills:
 
 ## Extending AI-DLC
 
-### Steering Files
+### Blueprints and the Platform Shim
 
-Steering files in `{STEERING_DIR}/` provide persistent context across all interactions. They're created by the context skill and updated by downstream phases. You can also edit them manually to inject team standards, coding conventions, or project-specific guidance.
+Project context lives in **blueprints** at `{BLUEPRINTS_DIR}/` (`.aidlc/blueprints/`) — `product.md`, `tech.md`, `structure.md`, `resources.md`, `corrections.md`. These are canonical and platform-agnostic (no front-matter), created by the context skill and updated by downstream phases. You can also edit them manually to inject team standards, coding conventions, or project-specific guidance.
+
+Each platform gets a thin **shim** that auto-loads and references the blueprints: `.kiro/steering/aidlc.md` (Kiro, via `#[[file:...]]`) or `.claude/CLAUDE.md` (Claude Code, via `@../`). The shim carries the behavioral anchors inline; the bulk content stays in blueprints. Because there is one copy of the content, a project moves between platforms — or supports a mixed-platform team — without duplicating or syncing steering files.
 
 ### Adding a New Skill
 

@@ -63,6 +63,8 @@ The orchestrator handles: dispatching phase skills, status display, resume detec
 | `repair` | Rebuild manifest from disk artifacts (recovery tool) |
 | `quick` | Single-pass mode — collapses context + requirements + design + tasks for simple features |
 | `doctor` | Verify installation health — checks skills, cross-references, shared resources |
+| `adapt` | Generate the current platform's shim from existing blueprints (platform switch) |
+| `upgrade` | Migrate a pre-blueprints project to the current blueprints structure |
 | `prototype` | Build a throwaway spike to validate requirements |
 | `review` | Run solutions review (cross-unit) or code review (post-implementation) |
 | `reverse-engineer` | Deep brownfield codebase analysis (13 reports) |
@@ -98,7 +100,7 @@ Skills find what they need via the input resolution algorithm:
 
 | Skill | Phase | Description |
 |---|---|---|
-| `aidlc-context` | 1 | Scans workspace, gathers project context, creates manifest and steering files |
+| `aidlc-context` | 1 | Scans workspace, gathers project context, creates manifest, blueprints, and the platform shim |
 | `aidlc-requirements` | 2 | Translates context into user stories with EARS acceptance criteria. Includes routing recommendation (decompose vs design vs prototype) |
 | `aidlc-decomposition` | 3 | Breaks complex projects into implementation units with boundaries and dependencies. Proposes a foundation unit for shared scaffolding when needed. Presents incremental vs comprehensive mode choice |
 | `aidlc-design` | 4 | Creates technical design — components, data model, API spec, integration patterns, implementation plan, operations design (logging, health, metrics). Supports compact (simple) and full (complex) formats |
@@ -118,13 +120,13 @@ Skills find what they need via the input resolution algorithm:
 | Skill | Reads |
 |---|---|
 | `aidlc-context` | Workspace files (source, configs, README) |
-| `aidlc-requirements` | context.md (Summary), steering files (Summaries), resources.md (full), design resources |
+| `aidlc-requirements` | context.md (Summary), blueprints (Summaries), resources.md (full), design resources |
 | `aidlc-decomposition` | context.md (Summary), requirements.md, personas.md |
-| `aidlc-design` | context.md (Summary), requirements.md, units.md (if exists), steering files (Summaries), resources.md, design resources |
-| `aidlc-tasks` | context.md (Summary), design.md + design/*, steering files (Summaries) |
-| `aidlc-implement` | tasks.md, design.md + design/*, steering files (Summaries), design resources |
-| `aidlc-build` | Source code, build configs (package.json, Makefile, etc.), design/testing-strategy.md, steering files |
-| `aidlc-deploy` | build-report.md, design/implementation.md, design/operations.md (if exists), context.md, existing CI configs, steering files |
+| `aidlc-design` | context.md (Summary), requirements.md, units.md (if exists), blueprints (Summaries), resources.md, design resources |
+| `aidlc-tasks` | context.md (Summary), design.md + design/*, blueprints (Summaries) |
+| `aidlc-implement` | tasks.md, design.md + design/*, blueprints (Summaries), design resources |
+| `aidlc-build` | Source code, build configs (package.json, Makefile, etc.), design/testing-strategy.md, blueprints |
+| `aidlc-deploy` | build-report.md, design/implementation.md, design/operations.md (if exists), context.md, existing CI configs, blueprints |
 | `aidlc-prototype` | requirements.md (or inline stories), design resources |
 | `aidlc-solutions-review` | 2+ unit design docs (design.md + design/*), units.md, context.md |
 | `aidlc-code-review` | Source code, optionally: design docs, tasks.md, git diff |
@@ -134,10 +136,10 @@ Skills find what they need via the input resolution algorithm:
 
 | Skill | Writes |
 |---|---|
-| `aidlc-context` | context.md, steering/*, manifest (creates), audit.md (creates), `.claude/CLAUDE.md` (Claude Code only) |
-| `aidlc-requirements` | decisions-requirements.md, requirements.md, personas.md, steering/product.md (update) |
+| `aidlc-context` | context.md, blueprints/*, platform shim, manifest (creates), audit.md (creates) |
+| `aidlc-requirements` | decisions-requirements.md, requirements.md, personas.md, blueprints/product.md (update) |
 | `aidlc-decomposition` | decisions-units.md, units.md |
-| `aidlc-design` | decisions-design.md, design.md, design/*, steering/tech.md + structure.md (update) |
+| `aidlc-design` | decisions-design.md, design.md, design/*, blueprints/tech.md + structure.md (update) |
 | `aidlc-tasks` | decisions-tasks.md, tasks.md |
 | `aidlc-implement` | Source code, test files, tasks.md (checkbox updates) |
 | `aidlc-build` | `{WORKFLOW_DIR}/{feature}/build-report.md` |
@@ -150,13 +152,14 @@ Skills find what they need via the input resolution algorithm:
 ### Path Conventions
 
 ```
-{SPECS_DIR}/{feature}/              # Spec artifacts (context, requirements, design, tasks)
+{SPECS_DIR}/{feature}/              # Spec artifacts (context, requirements, design, tasks, deployment)
 {WORKFLOW_DIR}/{feature}/           # Workflow state (manifest, decisions, audit)
-{STEERING_DIR}/                     # Cross-feature steering files
+{BLUEPRINTS_DIR}/                   # Cross-feature project content (product, tech, structure, resources, corrections)
+{SHIM}                              # Thin per-platform entry point → references blueprints
 .aidlc/prototype/{feature}/         # Throwaway prototype code
 ```
 
-Where `SPECS_DIR` is always `.aidlc/specs`, `STEERING_DIR` is platform-dependent (`.kiro/steering`, `.claude/rules`), and `WORKFLOW_DIR` is always `.aidlc/workflow`.
+Where `SPECS_DIR` is always `.aidlc/specs`, `WORKFLOW_DIR` is always `.aidlc/workflow`, `BLUEPRINTS_DIR` is always `.aidlc/blueprints`, and `SHIM` is platform-dependent (`.kiro/steering/aidlc.md`, `.claude/CLAUDE.md`).
 
 ## Manifest Overview
 
@@ -167,7 +170,7 @@ The manifest (`aidlc-manifest.yaml`) is the single source of truth for workflow 
 - `artifacts` — shared phase artifacts (context, requirements, decomposition) with `status`, `timestamp`, `files`
 - `context-summary` — key fields from context.md for downstream skills
 - `decisions` — shared decision summaries (requirements, decomposition, deploy). Unit-scoped decisions in `units[].decisions`
-- `steering` — `updatedBy` map tracking which phases updated each steering file
+- `steering` — `updatedBy` map tracking which phases updated each blueprint (key name retained; content lives in `.aidlc/blueprints/`)
 - `units[]` — per-unit state for incremental mode: `status`, `phase`, `completedPhases`, `implementationMode`, `implementation` (task counters), `artifacts`, `decisions`. Multiple units can be `in-progress` simultaneously.
 
 **v1.0.0 conventions:**

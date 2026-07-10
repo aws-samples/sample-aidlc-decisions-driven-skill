@@ -34,6 +34,8 @@ AI-DLC is implemented as a set of **skills** that get installed into your worksp
 | `repair` | Rebuild manifest from disk artifacts |
 | `quick` | Single-pass mode for simple features |
 | `doctor` | Verify installation health and cross-references |
+| `adapt` | Generate the current platform's entry point after switching platforms |
+| `upgrade` | Migrate an old-layout project to the current blueprints structure |
 | `prototype` | Build a throwaway spike to validate requirements |
 | `review` | Run solutions review or code review |
 | `reverse-engineer` | Deep codebase analysis (13 report documents) |
@@ -118,6 +120,7 @@ Say "reverse-engineer" to run deep codebase analysis. Produces 13 comprehensive 
 │   ├── design/
 │   ├── tasks.md
 │   └── deployment.md
+├── blueprints/                ← project content (product, tech, structure, resources, corrections)
 ├── workflow/{feature}/        ← workflow state
 │   ├── aidlc-manifest.yaml
 │   ├── audit.md
@@ -133,7 +136,7 @@ Say "reverse-engineer" to run deep codebase analysis. Produces 13 comprehensive 
 
 ## Platform
 
-This power is designed for **Kiro**. Skills in `.kiro/skills/`, steering files in `.kiro/steering/`.
+This power is designed for **Kiro**. Skills in `.kiro/skills/`, the platform shim in `.kiro/steering/aidlc.md`, and blueprints in `.aidlc/blueprints/`.
 
 > For Claude Code, see the [README](../../README.md) for installation instructions.
 

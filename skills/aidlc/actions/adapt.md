@@ -4,7 +4,7 @@ Make the current environment's platform entry point (the shim) present and corre
 
 **Trigger**: the user says "adapt"; or the orchestrator's Platform Check / `repair` detects a platform switch or a missing shim (e.g., a project started in Kiro is opened in Claude Code).
 
-adapt is non-destructive: it creates/updates the live platform's shim and, if needed, migrates legacy steering content into blueprints by copying. It never deletes project content.
+adapt assumes blueprints already exist — it only creates/updates the live platform's shim to reference them. It is non-destructive and never touches project content. If the project still uses the legacy (pre-blueprints) layout, adapt defers to `upgrade` (which migrates the structure first).
 
 ---
 
@@ -18,22 +18,18 @@ adapt is non-destructive: it creates/updates the live platform's shim and, if ne
 
 ## 2. Determine the case
 
+Evaluate in order (blueprints-complete takes precedence, so `upgrade` calling adapt after migrating does not loop back):
+
 | Case | Condition | Action |
 |---|---|---|
-| A. Shim missing | Blueprints exist, live-platform shim missing | Generate the shim (Step 4) |
-| B. Legacy only | No blueprints, legacy steering content exists | Migrate legacy → blueprints (Step 3), then generate shim (Step 4) |
-| C. Up to date | Blueprints exist, live-platform shim exists and references resolve | Nothing to do — report (Step 6) and stop |
+| A. Shim missing | Blueprints **complete**, live-platform shim missing | Generate the shim (Step 3) |
+| C. Up to date | Blueprints complete, live-platform shim exists and references resolve | Nothing to do — report (Step 5) and stop |
+| B. Legacy layout | Blueprints **absent or incomplete** AND legacy steering content exists | **Defer to `upgrade`** — load `{SKILL_DIR}/actions/upgrade.md` (it migrates structure, then calls back here for the shim). Stop. |
 | D. Nothing set up | No blueprints, no legacy | Context phase has not run — recommend `start` or the `context` phase, stop |
 
-## 3. Migrate legacy steering → blueprints (Case B only)
+> **No loop with `upgrade`**: `upgrade` migrates content to blueprints *before* calling adapt, so by the time adapt runs, blueprints are complete → Case A/C (generate shim), never Case B. Lingering legacy files (pending `upgrade`'s cleanup) do not re-trigger Case B once blueprints are complete.
 
-For each legacy content file at `{STEERING_DIR}/`:
-- `product.md`, `tech.md`, `structure.md`, `resources.md`, `corrections.md` → copy content to `{BLUEPRINTS_DIR}/{name}.md`, stripping any platform front-matter (e.g. `--- inclusion: always ---`).
-- **Preserve all content verbatim** — do NOT alter meaning.
-- Do NOT migrate `aidlc-workflow.md` — it is the old shim, superseded by the new shim generated in Step 4.
-- **If a blueprint already exists** for a given name (partial prior migration): keep the existing blueprint. Do NOT overwrite. If the legacy file differs, report the divergence and let the user reconcile — never silently discard either version.
-
-## 4. Generate the platform shim
+## 3. Generate the platform shim
 
 Read the shim template for the live platform from disk (never from memory):
 - **Kiro**: `{PLATFORM_DIR}/skills/aidlc-context/assets/steering-workflow.md` → generate `.kiro/steering/aidlc.md` (`inclusion: always` front-matter; `#[[file:.aidlc/blueprints/*.md]]` references)
@@ -43,29 +39,28 @@ Reference only blueprints that exist (include `corrections.md` only if present).
 
 **Coexistence**: do NOT delete or modify the other platform's shim if present. Both shims reference the same blueprints — a mixed-platform team keeps both. adapt only creates/updates the live platform's shim.
 
-## 5. Update manifest and verify
+## 4. Update manifest and verify
 
 - Set manifest `platform` to the live platform. (Behavior-neutral record of the current environment; other platforms' shims may coexist.)
 - Verify the shim file exists and each blueprint reference points to an existing file.
 - **Claude**: verify each `@../.aidlc/blueprints/{name}.md` resolves — Claude imports fail silently on wrong paths.
 
-## 6. Present
+## 5. Present
 
 ```
 📍 Platform Adapted — {live platform}
 
 - Blueprints: {N} files at `.aidlc/blueprints/` (shared, unchanged)
 - Shim: {created / updated / already current} `{SHIM}`
-{If migrated: "- Migrated {N} legacy steering files → blueprints. Legacy files at `{STEERING_DIR}/` can be removed once verified."}
 {If other-platform shim present: "- {other platform} shim left intact (coexistence)."}
 
-👉 Next: say "resume" to continue the workflow{, or remove legacy files if migrated}.
+👉 Next: say "resume" to continue the workflow.
 ```
 
 For Case C (up to date): report "Already adapted — {live platform} shim present and references resolve." and stop.
 For Case D (nothing set up): report "No blueprints or steering found — run `start` or the `context` phase first." and stop.
 
-## 7. Audit entry
+## 6. Audit entry
 
 Append to the active feature's `{WORKFLOW_DIR}/{feature}/audit.md` (if a feature is active; adapt itself is project-level):
 
@@ -73,6 +68,6 @@ Append to the active feature's `{WORKFLOW_DIR}/{feature}/audit.md` (if a feature
 ### [{ISO timestamp}] Orchestrator: Adapt
 
 **Action**: adapt
-**Artifacts**: {shim path}{, migrated blueprint files if any}
-**Outcome**: Generated {live platform} shim referencing {N} blueprints. {Migrated {M} legacy files / Coexistence with {other platform} shim / No migration needed}.
+**Artifacts**: {shim path}
+**Outcome**: Generated {live platform} shim referencing {N} blueprints. {Coexistence with {other platform} shim / No changes needed}.
 ```

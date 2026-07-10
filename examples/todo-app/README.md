@@ -12,6 +12,11 @@ examples/todo-app/
 │   ├── design.md                       # Compact design (architecture, components, API)
 │   ├── tasks.md                        # Implementation tasks with execution waves
 │   └── deployment.md                   # Deployment specification (pipeline, infra, rollback)
+├── blueprints/                         ← .aidlc/blueprints/ (canonical, platform-agnostic)
+│   ├── product.md                      # Product overview and target users
+│   ├── tech.md                         # Technology stack and conventions
+│   ├── structure.md                    # Project directory structure
+│   └── resources.md                    # External resources (none for this example)
 ├── workflow/                            ← .aidlc/workflow/todo-app/
 │   ├── aidlc-manifest.yaml             # Workflow state (single source of truth)
 │   ├── audit.md                        # Chronological log of all actions
@@ -22,11 +27,7 @@ examples/todo-app/
 │   ├── build-report.md                 # Build & test verification results
 │   └── deploy-summary.md              # Deployment configuration summary
 ├── steering/                           ← .kiro/steering/
-│   ├── product.md                      # Product overview and target users
-│   ├── tech.md                         # Technology stack and conventions
-│   ├── structure.md                    # Project directory structure
-│   ├── aidlc-workflow.md               # Workflow state for context recovery
-│   └── resources.md                    # External resources (none for this example)
+│   └── aidlc.md                        # Thin shim: anchors inline + references blueprints
 └── README.md                           # This file
 ```
 
@@ -50,7 +51,7 @@ This example follows the simple project path — no decomposition, no units.
 
 | # | Phase | Skill | Key Output |
 |---|---|---|---|
-| 1 | Context | aidlc-context | `specs/context.md`, steering files |
+| 1 | Context | aidlc-context | `specs/context.md`, `blueprints/*`, `steering/aidlc.md` (shim) |
 | 2 | Requirements | aidlc-requirements | `specs/requirements.md`, `workflow/decisions-requirements.md` |
 | 3 | Design | aidlc-design | `specs/design.md`, `workflow/decisions-design.md` |
 | 4 | Tasks | aidlc-tasks | `specs/tasks.md`, `workflow/decisions-tasks.md` |
@@ -71,5 +72,5 @@ Browse the files to understand what AI-DLC generates at each phase. Or use it as
 - Decision gates (D1, D3, D4, D5) show the questions asked and answers given at each phase
 - The audit trail in `workflow/audit.md` shows the full chronological history
 - The manifest in `workflow/aidlc-manifest.yaml` is the single source of truth for workflow state
-- Steering files persist across sessions and inform all subsequent interactions
+- Blueprints persist across sessions (referenced by the platform shim) and inform all subsequent interactions
 - This example does not include D2 (decomposition) since it's a simple project that skips decomposition. D5 is included as the deploy phase runs for all projects.

@@ -58,7 +58,7 @@ decisions:
   decomposition: { strategy: "domain-driven", units: 3 }
   # Comprehensive mode also has: design, tasks, deploy (same structure)
 
-steering:
+steering:                        # tracks updates to blueprint content (key name retained)
   updatedBy:
     product: [context, requirements]
     tech: [context, design]
@@ -104,7 +104,7 @@ units:
 - **Comprehensive mode**: `units[]` stays empty. Design/tasks/implement tracked in `state.sharedPhases`. Implementation mode stored in `state.implementationMode`. Task progress tracked in top-level `implementation`.
 - File paths in `files` are relative to `{SPECS_DIR}/{feature}/` (shared) or `{SPECS_DIR}/{feature}/units/{unit}/` (per-unit).
 - Decision gate files (`decisions-{phase}.md`) are implicit — not tracked in artifacts.
-- Steering paths are implicit (`{STEERING_DIR}/{name}.md`) — only `updatedBy` is tracked.
+- Blueprint content lives at `{BLUEPRINTS_DIR}/{name}.md` (`.aidlc/blueprints/`) — paths are implicit, only `updatedBy` is tracked. The `steering.updatedBy` key name is retained for compatibility but tracks blueprint content (product/tech/structure). The platform shim (`.kiro/steering/aidlc.md` or `.claude/CLAUDE.md`) references these blueprints and is not tracked in the manifest.
 - `context-summary` stores key fields from context.md for downstream skills. `teamSize` is captured in D1 and used by D2/D3 validation rules.
 - `decisions` stores compact summaries — shared decisions at top level, unit-scoped in `units[].decisions`.
 

@@ -49,7 +49,7 @@ Per shared base — use unit-scoped paths in incremental mode.
 4. Validate: all components covered, no circular deps, no file ownership overlaps
 5. Present results → wait for approval → hand off to implement
 
-**Reads**: context.md (Summary), design.md + design/*, testing-strategy.md (if exists), steering files
+**Reads**: context.md (Summary), design.md + design/*, testing-strategy.md (if exists), blueprints
 **Writes**: decisions-tasks.md, tasks.md
 
 ---
@@ -84,7 +84,7 @@ Per shared base — use unit-scoped paths in incremental mode.
 2. Resolve feature name (per shared base)
 3. Read manifest at `{WORKFLOW_DIR}/{feature}/aidlc-manifest.yaml` if it exists
 4. Resolve design documents (manifest → conventional path → ask)
-5. If steering files exist, read Summary sections. Read `resources.md` in full.
+5. If blueprints exist, read Summary sections. Read `resources.md` in full.
 6. **Incremental mode**: Scope to unit's design at `{SPECS_DIR}/{feature}/units/{unit}/design/*`
 
 ---

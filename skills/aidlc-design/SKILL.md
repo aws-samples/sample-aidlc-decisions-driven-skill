@@ -52,8 +52,8 @@ Ready to generate technology decisions and architecture design.
 4. Update blueprints/tech.md and blueprints/structure.md
 5. Present results → wait for approval → hand off to tasks
 
-**Reads**: context.md (Summary), requirements.md, units.md (if exists), foundation unit design (if exists), steering files, resources.md
-**Writes**: decisions-design.md, design.md, design/*, steering/tech.md, steering/structure.md
+**Reads**: context.md (Summary), requirements.md, units.md (if exists), foundation unit design (if exists), blueprints, resources.md
+**Writes**: decisions-design.md, design.md, design/*, blueprints/tech.md, blueprints/structure.md
 
 ---
 

@@ -1,6 +1,6 @@
 # AI-DLC — AI Development Lifecycle Skills
 
-[![version](https://img.shields.io/badge/version-1.1.0-blue)](CHANGELOG.md)
+[![version](https://img.shields.io/badge/version-1.2.0-blue)](CHANGELOG.md)
 [![license](https://img.shields.io/badge/license-MIT--0-green)](LICENSE.md)
 
 An opinionated implementation of the [AI-DLC (AI-Driven Development Life Cycle)](https://prod.d13rzhkk8cj2z0.amplifyapp.com/) methodology as a portable skill harness for AI coding assistants.
@@ -82,6 +82,8 @@ Try one of the [example requirements](examples/requirements/) included in this r
 | `repair` | Rebuild manifest from disk artifacts |
 | `quick` | Single-pass spec for simple brownfield features |
 | `doctor` | Verify installation health |
+| `adapt` | Generate the current platform's entry point after switching platforms |
+| `upgrade` | Migrate an old-layout project to the current blueprints structure |
 | `scope [name]` | Change workflow scope (new/feature/bugfix/refactor) |
 | `prototype` | Build a throwaway spike to validate requirements |
 | `review` | Run solutions review or code review |
@@ -158,7 +160,7 @@ flowchart TD
 
 **Language**: All artifacts and responses are generated in the user's detected language. Only code, file paths, YAML keys, and technical terms stay in English.
 
-**Context rot prevention**: Long sessions can cause instruction drift where the agent skips checkpoints. AI-DLC mitigates this primarily with behavioral anchors in steering files that persist across the session, plus skill handoff identity resets at phase transitions. PreToolUse hooks are available as optional stricter enforcement on both Kiro and Claude Code. See [Context Rot](docs/context-rot.md) for details.
+**Context rot prevention**: Long sessions can cause instruction drift where the agent skips checkpoints. AI-DLC mitigates this primarily with behavioral anchors in the platform shim (`.kiro/steering/aidlc.md` or `.claude/CLAUDE.md`) that persist across the session, plus skill handoff identity resets at phase transitions. PreToolUse hooks are available as optional stricter enforcement on both Kiro and Claude Code. See [Context Rot](docs/context-rot.md) for details.
 
 ## Documentation
 

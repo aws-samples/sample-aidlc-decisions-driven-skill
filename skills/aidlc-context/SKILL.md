@@ -1,6 +1,6 @@
 ---
 name: aidlc-context
-description: Scan workspace, assess project landscape, and generate context document with steering files. First phase of the AI-DLC specification workflow.
+description: Scan workspace, assess project landscape, and generate context document, blueprints, and platform shim. First phase of the AI-DLC specification workflow.
 license: MIT
 compatibility: Requires file system access. Auto-detects environment (Kiro, Claude Code).
 metadata:
@@ -16,7 +16,7 @@ metadata:
 
 > **Base**: `shared/base.md` (full on first load, §Summary on chain). **Actions**: load per-step from `actions/`.
 
-You assess the project landscape — existing code, technology stack, architecture patterns — and generate a context document with steering files that inform all subsequent phases.
+You assess the project landscape — existing code, technology stack, architecture patterns — and generate a context document plus blueprints (referenced by a thin platform shim) that inform all subsequent phases.
 
 When active:
 1. Follow ONLY the process below

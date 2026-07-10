@@ -27,7 +27,7 @@ When user says "repair", "fix manifest", or "rebuild manifest":
 5. Write the rebuilt manifest to `{WORKFLOW_DIR}/{feature}/aidlc-manifest.yaml`
 6. **Ensure the platform shim**:
    - If blueprints exist but the current platform's shim (`{SHIM}`) is missing → generate it (load `{SKILL_DIR}/actions/adapt.md`).
-   - If blueprints are missing but legacy steering content exists at `{STEERING_DIR}/` → note that steering content should be migrated to `{BLUEPRINTS_DIR}/` (run `adapt`), then legacy files removed.
+   - If a legacy (pre-blueprints) layout is detected (steering content at `{STEERING_DIR}/`, no/incomplete blueprints) → recommend `upgrade` to migrate the structure (content → blueprints, regenerate shim, remove stale files).
    - If both are missing → the context phase has not run; recommend `start` or the `context` phase.
 7. Present what was reconstructed:
 
@@ -39,7 +39,7 @@ Reconstructed from disk artifacts:
 - Mode: {incremental / comprehensive}
 {If incremental: "Units: {list with detected status}"}
 - Blueprints: {found / missing} at `.aidlc/blueprints/`
-- Platform shim: {present / regenerated for {live platform} / needs `adapt`}
+- Platform shim: {present / regenerated for {live platform} / needs `adapt` / legacy layout → run `upgrade`}
 
 ⚠️ Artifact statuses set to "approved" by default. Review and adjust if any are still drafts.
 

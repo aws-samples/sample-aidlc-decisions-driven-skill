@@ -4,6 +4,31 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.2.0] — 2026-07-10
+
+### Added
+
+- **Portable blueprints**: canonical, platform-agnostic project content now lives once at `.aidlc/blueprints/` (`product.md`, `tech.md`, `structure.md`, `resources.md`, `corrections.md`). Travels with `.aidlc/` — no per-platform duplication.
+- **Platform shim**: a thin per-platform entry point that carries the behavioral anchors inline and references the blueprints — Kiro `.kiro/steering/aidlc.md` (`#[[file:.aidlc/blueprints/*.md]]`), Claude Code `.claude/CLAUDE.md` (`@../.aidlc/blueprints/*.md`). Both shims can coexist for mixed-platform teams.
+- **`adapt` command**: generates the current platform's shim from existing blueprints — for moving a project between Kiro and Claude Code, or a mixed-platform team.
+- **`upgrade` command**: migrates a pre-blueprints project to the new structure — moves legacy steering into blueprints, regenerates the shim, and removes the superseded files after confirmation.
+- **Live-platform detection + Platform Check**: the orchestrator detects the running platform (authoritative over the manifest `platform` field) and, on resume, routes a legacy layout to `upgrade` and a platform switch to `adapt`.
+
+### Changed
+
+- **Steering content location**: moved from per-platform `.kiro/steering/*` and `.claude/rules/*` into `.aidlc/blueprints/`. The context phase now generates blueprints + a platform shim; all downstream skills (requirements, design, tasks, implement, build, deploy, code-review, prototype) read/write blueprints.
+- **Context recovery**: reads the platform shim + blueprints (behavioral anchors stay inline in the shim so they load reliably).
+- **Orchestrator**: `doctor` verifies blueprints + shim (including Claude `@../` import resolution) and flags legacy layouts; `repair` scans blueprints and ensures the shim.
+- **Docs + example**: `artifacts.md`, `manifest-schema.md`, `context-recovery.md`, `context-rot.md`, `skill-anatomy.md`, `skills/aidlc/README.md`, the presentation, and the todo-app example restructured to the blueprints + shim model. Manifest `steering.updatedBy` key name retained (now tracks blueprint content).
+
+### Fixed
+
+- **skills/aidlc/actions/doctor.md**: Check 6 no longer requires the removed `metadata.version` front-matter field (would otherwise flag every skill).
+
+### Migration
+
+- **Existing (pre-1.2.0) projects**: run `upgrade`. It moves legacy steering (`.kiro/steering/*` or `.claude/rules/*`) into `.aidlc/blueprints/`, generates the platform shim, and removes the stale files after you confirm. `doctor` detects the legacy layout and points you to `upgrade`.
+
 ## [1.1.0] — 2026-07-07
 
 ### Added

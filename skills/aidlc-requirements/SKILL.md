@@ -43,8 +43,8 @@ Ready to generate requirements from project context.
 4. Present results → wait for approval
 5. On approval → analyze complexity → recommend next phase
 
-**Reads**: context.md (Summary), steering files (Summaries), resources.md
-**Writes**: decisions-requirements.md, requirements.md, personas.md, steering/product.md
+**Reads**: context.md (Summary), blueprints (Summaries), resources.md
+**Writes**: decisions-requirements.md, requirements.md, personas.md, blueprints/product.md
 
 ---
 
@@ -58,7 +58,7 @@ Ready to generate requirements from project context.
 ### Optional Inputs
 | Information | Description | Accepted Formats |
 |---|---|---|
-| Steering files | Product, tech, structure context | Markdown |
+| Blueprints | Product, tech, structure context | Markdown |
 | External design resources | Figma screens, wireframes, API specs | Via MCP, URLs, file paths |
 | Existing requirements | Pre-existing user stories or backlog | Markdown, YAML, JSON, CSV, plain text |
 | Reverse-engineer analysis | Existing business rules and features | `.aidlc/reverse-engineer/business-rules.md`, `features.md` |
@@ -79,7 +79,7 @@ Ready to generate requirements from project context.
 2. Resolve feature name (per shared base)
 3. Read manifest at `{WORKFLOW_DIR}/{feature}/aidlc-manifest.yaml` if it exists
 4. Resolve project context — **read only `## Summary` section** during init
-5. If steering files exist, read Summary sections. Read `resources.md` in full.
+5. If blueprints exist, read Summary sections. Read `resources.md` in full.
 
 ---
 
