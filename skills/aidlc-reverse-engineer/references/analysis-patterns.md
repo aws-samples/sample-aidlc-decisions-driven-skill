@@ -12,7 +12,8 @@ Load ONLY the file matching the detected primary language. Do NOT load multiple 
 | C#, .NET, F# | `analysis-patterns-csharp.md` |
 | Ruby | `analysis-patterns-ruby.md` |
 | PHP | `analysis-patterns-php.md` |
-| All others (Swift, Scala, Elixir, C/C++, Haskell, Perl, Clojure, COBOL, etc.) | `analysis-patterns-other.md` |
+| RPG, RPG ILE, COBOL/400, CL, DDS (IBM i / AS400) | `analysis-patterns-rpg-as400.md` |
+| All others (Swift, Scala, Elixir, C/C++, Haskell, Perl, Clojure, z/OS COBOL, etc.) | `analysis-patterns-other.md` |
 
 All files are at `{REFERENCES_DIR}/`.
 
