@@ -57,6 +57,15 @@ If `{STEERING}/resources.md` lists resources (not "none"):
 
 **⛔ ONLY D3 choices.** Read from manifest `decisions.design` (fallback: Decisions Summary section). Use `[TBD - not decided in D3]` for missing. Never assume unchosen tech.
 
+## Parity Rule (rewrite scope only)
+
+**⛔ The baseline is the spec.** D3 chooses the technology; the parity inventories choose the content.
+
+- **Data model is a derivation, not a design**: read `.aidlc/reverse-engineer/parity/entities.md`. data-model.md opens with an explicit **type-mapping table** (legacy type → modern type, e.g., DDS `PACKED(7,2)` → `DECIMAL(7,2)`, `CHAR(1)` flag → `BOOLEAN` with a recorded mapping). Every legacy field maps to a modern field (same table) or cites an approved `DEV-*` from deviations.md. Renames/merges/normalization are fine — but each is a mapping row, never an omission. Per-entity modern field count must reconcile: legacy count − DROPPED + NEW = modern count.
+- **Screens**: every `SCR-*` in `parity/screens.md` maps to a component/page/route in components.md (per the D1 UX-parity answer), or cites a `DEV-*`. Function keys map to actions.
+- **Operations**: every `OP-*` maps to an endpoint in api-spec.md or a `DEV-*`.
+- **No invention**: entities, fields, or endpoints with no baseline origin and no `DEV-*` entry are a FAIL — additions require a `[NEW]` deviation first.
+
 ## Load Guides
 
 | Guide | Load When |
@@ -93,6 +102,10 @@ Complex: `design.md` + `design-components.md` + `design-data-model.md` + `design
 **Operations** (if generated): logging table covers all components; readiness covers all deps; health paths no conflict with API; config vars include all secrets from implementation.md
 **Versions**: all pinned (no "latest"), no EOL/deprecated
 **Traceability**: run gap detection (below)
+**Parity (rewrite scope) — FAIL conditions, fix before presenting**:
+- FAIL if any entity's field reconciliation doesn't balance (legacy − DROPPED + NEW ≠ modern) — recount mechanically (script over the generated schema), don't eyeball
+- FAIL if any SCR-* or OP-* is unmapped and has no DEV-* entry
+- FAIL if data-model.md lacks the type-mapping table or any field row lacks a legacy origin / DEV-* citation
 
 ## Traceability Gap Detection
 
@@ -134,6 +147,9 @@ Steering: `updatedBy.tech` += `design`, `updatedBy.structure` += `design`
 - **PBT Properties**: [N] (or "Skipped")
 - **Testing Strategy**: [Included / Skipped]
 - **NFR**: [Included / Skipped]
+{Rewrite scope — add:}
+- **Parity**: [X]/[N] entities mapped (fields reconcile: [yes/no]), [Y]/[P] screens, [Z]/[S] operations
+- **New deviations this phase**: [D] (appended to deviations.md — approval covers them)
 
 Artifacts at `{SPECS}/{feature}/design.md` (+ `design/` folder if complex).
 

@@ -107,6 +107,38 @@ After tests pass (or user accepts failures), verify that all tasks were actually
 | US-03 | 4.1 | 0/1 | ❌ Not implemented |
 ```
 
+### Legacy parity check (rewrite scope only)
+
+After the requirements trace, verify the rebuild against the extracted baseline:
+
+1. Read `.aidlc/reverse-engineer/parity/*` Totals, `{SPECS_DIR}/{feature}/deviations.md`, and requirements.md `## Parity Coverage`
+2. **Schema**: extract the implemented schema mechanically (parse migrations / ORM models / DDL in the NEW code — script, not eyeball) and reconcile per entity: legacy fields − DROPPED + NEW = implemented fields
+3. **Screens**: every SCR-* → an implemented route/page/component (via the design mapping), or an approved DEV-*
+4. **Rules**: every BR-* → its covering stories' tasks are `[x]` complete (reuses the US-* trace: BR-* → US-* via Legacy-Ref → tasks)
+5. Produce the parity matrix:
+
+```
+📍 Legacy Parity — {feature}
+
+| Baseline | Total | Implemented | Deviations (approved) | Unaccounted |
+|---|---|---|---|---|
+| Entities (fields) | {N} ({M}) | {n} ({m}) | {d} | {u} |
+| Screens | {P} | {p} | {d} | {u} |
+| Business rules | {R} | {r} | {d} | {u} |
+| Operations | {S} | {s} | {d} | {u} |
+
+{If unaccounted > 0: list each item with its ID and what's missing}
+```
+
+**Any Unaccounted > 0**:
+```
+🔲 **Your turn**:
+- ↩️ "back to implement" — complete the missing parity items
+- 📋 "deviate [ID]" — record an approved deviation instead (appends to deviations.md)
+- ⏭️ "proceed" — accept the gap (recorded as ⚠️ in the build report)
+```
+**STOP and wait.** All accounted → proceed silently. Include the matrix in the build report either way.
+
 ### Present traceability results
 
 ```

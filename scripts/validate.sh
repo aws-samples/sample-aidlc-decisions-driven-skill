@@ -232,6 +232,21 @@ for gate in aidlc-requirements aidlc-decomposition aidlc-design aidlc-tasks aidl
         ERRORS=$((ERRORS + 1))
     fi
 done
+
+# 11c. Rewrite-scope parity binding — requirements and design must trace to the
+# extracted baseline (Legacy-Ref / Parity Rule), or parity rebuilds regress to invention.
+if grep -q "Legacy-Ref" "$SKILLS_DIR/aidlc-requirements/actions/generate.md" 2>/dev/null; then
+    echo "  ✅ aidlc-requirements — Legacy-Ref parity binding present"
+else
+    echo "  ❌ aidlc-requirements/actions/generate.md — Legacy-Ref parity binding missing (rewrite scope would invent requirements)"
+    ERRORS=$((ERRORS + 1))
+fi
+if grep -q "Parity Rule" "$SKILLS_DIR/aidlc-design/actions/generate.md" 2>/dev/null; then
+    echo "  ✅ aidlc-design — Parity Rule present"
+else
+    echo "  ❌ aidlc-design/actions/generate.md — Parity Rule missing (rewrite scope would invent the schema)"
+    ERRORS=$((ERRORS + 1))
+fi
 echo ""
 
 # Summary

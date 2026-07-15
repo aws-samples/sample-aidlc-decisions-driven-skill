@@ -79,7 +79,7 @@ Ready to generate technology decisions and architecture design.
 - **OpenAPI spec** → use as basis for `design/api-spec.md`
 - **GraphQL schema** → use as basis for `design/api-spec.md`
 - **Prisma/SQL DDL** → use as basis for `design/data-model.md`
-- **Reverse-engineer** → read `conventions.md` Summary, `data-model.md`, `api-surface.md`
+- **Reverse-engineer** → read `conventions.md` Summary, `data-model.md`, `api-surface.md`. **Rewrite scope**: `parity/entities.md`, `parity/screens.md`, `parity/endpoints.md` + `deviations.md` are REQUIRED inputs — the design derives from them (see Parity Rule in `actions/generate.md`); ❌ Fatal if missing
 
 ### Outputs
 | Artifact | Default Path |
