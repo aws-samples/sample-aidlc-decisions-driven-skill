@@ -1,5 +1,7 @@
 # Action: Finalize Deployment
 
+> **Precondition**: Run only after the user approved the generated files ("approve" at generate.md step 8). This action marks the whole workflow complete with no further stops. If you arrive here without that approval (e.g., after context recovery), go back to `actions/generate.md` step 8 and re-present instead.
+
 ## 1. Generate deploy-summary.md
 
 Write to `{WORKFLOW_DIR}/{feature}/deploy-summary.md`:

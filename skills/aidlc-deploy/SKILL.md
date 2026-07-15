@@ -154,4 +154,5 @@ If context is lost mid-phase, follow `aidlc/shared/base.md` Context Recovery, th
   - Not present → load `actions/decision-gate.md` (start from D5)
   - Exists but no `deployment.md` at `{SPECS_DIR}/{feature}/` → load `actions/plan.md`
   - `deployment.md` exists but no pipeline config generated → load `actions/generate.md`
-  - Pipeline config exists → load `actions/finalize.md` (present for approval)
+  - Pipeline config exists but manifest `artifacts.deploy.status` is NOT `"approved"` → load `actions/generate.md`, re-present the generated files for approval (step 8). Never route to `finalize.md` here — finalize runs only after the user approves.
+  - Manifest `artifacts.deploy.status: "approved"` → finalize already ran (it sets this together with `state.status: "completed"`); present workflow-complete status

@@ -196,6 +196,7 @@ decisions.deploy:
   target: "{value}"
   strategy: "{value}"
   environments: "{value}"
+  promotion: "{value}"
   iac: "{value}"
   secrets: "{value}"
   rollback: "{value}"
