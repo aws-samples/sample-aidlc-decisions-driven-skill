@@ -106,7 +106,10 @@ Code location: .aidlc/prototype/{feature}/
 
 ## Step 5: Handle Response
 
-- **"update requirements"**: Auto-apply the suggested changes to `{SPECS_DIR}/{feature}/requirements.md` as draft edits. Read the current file, apply changes (add/modify/remove stories based on discoveries), write the updated file. Then present the changes for user review:
+- **"update requirements"**: Auto-apply the suggested changes to `{SPECS_DIR}/{feature}/requirements.md` as draft edits.
+  1. **Backup first** (per the Edit Action Pattern in `shared/base.md`): copy the current file to `{WORKFLOW_DIR}/{feature}/history/requirements-{ISO}.md`. This backup is the restore source for "revert".
+  2. If `requirements.md` does not exist (stories were provided inline): offer to create it from the inline stories + discoveries instead — present that option and **STOP**; no backup needed for a newly created file.
+  3. Read the current file, apply changes (add/modify/remove stories based on discoveries), write the updated file. Then present the changes for user review:
 
 ```
 📍 Requirements Updated (Draft)
@@ -121,7 +124,7 @@ Changes applied:
 - ↩️ "revert" — undo changes, keep original requirements
 ```
 
-  **STOP and wait.** On "approve": update manifest (`artifacts.requirements.timestamp`), mark downstream artifacts as `outdated` if they exist. Then auto-continue to the next phase. On "revert": restore the original requirements.md.
+  **STOP and wait.** On "approve": update manifest (`artifacts.requirements.timestamp`), mark downstream artifacts as `outdated` if they exist. Then auto-continue using the same routing as "proceed" below (manifest routing recommendation → `aidlc-decomposition` or `aidlc-design`). On "revert": restore requirements.md from the history backup created in step 1 (never regenerate it from memory), then re-present the 🔲 options from Step 4.
 
 - **"proceed"**: The prototype stays for reference. Auto-continue: read the manifest to determine the routing recommendation (from the requirements phase), then read the appropriate next skill (`aidlc-decomposition` or `aidlc-design`) and follow its instructions.
 - **"discard"**: Delete the `.aidlc/prototype/{feature}/` directory and all its contents. Confirm deletion. Then auto-continue same as "proceed".
