@@ -30,6 +30,10 @@ Create each output file with its header and empty summary table:
 - `infrastructure.md` — generate now (from Dockerfiles, CI configs, IaC files — project-level)
 - `configuration.md` — generate env vars section now (from .env files, config files); per-module findings appended later
 
+**Parity mode** (manifest `state.scope` is `rewrite`, or user requested parity inventories):
+- Read `{ASSETS_DIR}/parity-inventory.md` → create `{OUTPUT_DIR}/parity/{entities,screens,rules,endpoints}.md` (headers + empty Totals)
+- Identify **schema-bearing and screen-bearing sources** during the scan: SQL DDL / migrations, ORM models, DDS physical/logical files, copybooks, DDS display files, form/template definitions. List them in `{WORK_DIR}/parity-sources.json` (path + kind) — Phase 2 parses these mechanically.
+
 ## Step 5: Create Progress File
 **Write** `{WORK_DIR}/progress.json` with all modules set to `"pending"`.
 

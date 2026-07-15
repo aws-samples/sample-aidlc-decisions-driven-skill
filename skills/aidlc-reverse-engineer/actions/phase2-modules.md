@@ -22,6 +22,15 @@ For the current module, extract ALL of:
 - **Configuration**: Environment variables consumed, feature flags checked, config file reads
 - **Technical Debt**: Complexity hotspots, dead code, test coverage gaps, inconsistencies with other modules, missing abstractions, deprecated API usage
 
+**Parity mode additions** (manifest `state.scope` is `rewrite`, or user requested parity inventories) — read `{ASSETS_DIR}/parity-inventory.md` for formats:
+
+- **Entity inventory**: every persistent structure with its FULL field list and field count
+- **Screen inventory**: every screen/display/form with its FULL field list, function keys, navigation edges
+- **Rule register**: every business rule as a testable statement with a stable `BR-{module}-{NNN}` ID (assign IDs here; business-rules.md prose references them)
+- **Operation register**: every externally invocable operation with `OP-{module}-{NNN}` ID
+
+**⛔ Mechanical extraction rule**: for the schema/screen definition sources listed in `{WORK_DIR}/parity-sources.json` (SQL DDL, migrations, ORM models, DDS physical/logical/display files, copybooks), do NOT transcribe field lists by eye — LLM transcription of long field lists silently drops fields. Write a small parser script (store in `{WORK_DIR}/scripts/`, any language available on the machine) that extracts field names/types/lengths and emits counts; use its output as the inventory content. Keep the scripts — Phase 3 re-runs them for count verification. Hand-extract only sources that are genuinely unparseable, and mark those sections `[hand-extracted — verify]`.
+
 ## Step 3: Write Findings — One File at a Time
 
 **CRITICAL**: Write ONE output file per turn. For each that has findings:
@@ -35,6 +44,9 @@ For the current module, extract ALL of:
 7. `security.md` → append
 8. `configuration.md` → append
 9. `debt.md` → append
+
+**Parity mode**: also append (one file per turn, same rule):
+10. `parity/entities.md` 11. `parity/screens.md` 12. `parity/rules.md` 13. `parity/endpoints.md` — update each file's Totals row for this module.
 
 **Skip files where this module has no findings.**
 

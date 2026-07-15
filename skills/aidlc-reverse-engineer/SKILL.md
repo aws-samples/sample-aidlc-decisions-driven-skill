@@ -45,7 +45,7 @@ Ready to analyze your codebase. Provide a scope or say "full project".
 5. User can deep-dive or update after completion
 
 **Reads**: Source code, configs, tests, migrations, README, Dockerfiles, CI/CD, IaC
-**Writes**: `.aidlc/reverse-engineer/` (13 analysis documents)
+**Writes**: `.aidlc/reverse-engineer/` (13 analysis documents; + `parity/` inventories in rewrite scope)
 
 ---
 
@@ -72,6 +72,9 @@ Output structure:
 ├── data-model.md, api-surface.md, business-rules.md, features.md
 ├── integrations.md, conventions.md, infrastructure.md
 ├── security.md, configuration.md, debt.md
+└── parity/                   ← parity mode only (scope `rewrite`)
+    ├── entities.md, screens.md   ← full field inventories with counts
+    └── rules.md, endpoints.md    ← BR-* / OP-* registers
 ```
 
 ---
@@ -106,6 +109,7 @@ Output structure:
 | security.md | `{OUTPUT_DIR}/security.md` | Phase 2 + Phase 3 |
 | configuration.md | `{OUTPUT_DIR}/configuration.md` | Phase 1 + Phase 2 + Phase 3 |
 | debt.md | `{OUTPUT_DIR}/debt.md` | Phase 2 + Phase 3 |
+| parity/entities.md, screens.md, rules.md, endpoints.md | `{OUTPUT_DIR}/parity/` | Phase 1 (init) + Phase 2 + Phase 3 (verify) — **parity mode only** (scope `rewrite` or on request). Machine-checkable baselines: full field lists with counts, BR-*/OP-* registers. Counts verified by re-running extraction scripts. |
 
 ---
 

@@ -11,6 +11,13 @@ Verify:
 
 Report gaps but continue with cross-cutting analysis.
 
+**Parity count verification** (parity mode — FAIL conditions, do not skip):
+1. Re-run the extraction scripts from `{WORK_DIR}/scripts/` across ALL sources in `{WORK_DIR}/parity-sources.json`
+2. Diff script-derived counts against each inventory's Totals: entities, fields per entity, screens, fields per screen
+3. **Any mismatch → fix the inventory before presenting.** Never adjust a Totals number to match without fixing the underlying rows.
+4. Check `BR-*` / `OP-*` IDs are unique; every register row cites a source
+5. Record the verified grand totals — they go in the presentation and the parity sign-off
+
 ## Cross-Cutting Analysis
 
 Read ONLY the generated output files (not source code). Append `## Cross-Cutting Analysis` section to each:
@@ -47,15 +54,22 @@ Delete the entire `{WORK_DIR}/` directory (removes progress.json and intermediat
 🔌 Operations & Integration: integrations.md, infrastructure.md, configuration.md
 🛡️ Quality & Risk: conventions.md, security.md, debt.md
 
+{Parity mode — add:}
+🎯 Parity baseline at `.aidlc/reverse-engineer/parity/` (counts mechanically verified):
+- **Entities**: {N} ({M} fields) | **Screens**: {P} ({Q} fields)
+- **Business rules**: {R} (BR register) | **Operations**: {S}
+
 ---
 🔲 **Your turn**:
 - 🔍 "deep-dive [area]" — drill deeper into any area
 - 🔄 "update [module]" — refresh a specific module's analysis
-- ✅ "done" — analysis complete
-- 👉 "start context" — proceed to aidlc-context
+{Standalone: '- ✅ "done" — analysis complete' + '- 👉 "start context" — proceed to aidlc-context'}
+{Parity mode: '- ✅ "approve baseline" — sign off the parity inventories as the rebuild baseline'}
 ```
 
 **STOP and wait.**
+
+**Parity mode — baseline sign-off**: this approval is the parity contract. Encourage the user (and their SMEs) to spot-check the inventories — especially `parity/rules.md`, since rules living only in production data or operator knowledge cannot be extracted from source and must be added manually ("update rules: ..."). On "approve baseline": follow the rewrite-scope Skill Handoff in SKILL.md (manifest update → `aidlc-requirements`). Do NOT proceed to requirements without this approval.
 
 ---
 
