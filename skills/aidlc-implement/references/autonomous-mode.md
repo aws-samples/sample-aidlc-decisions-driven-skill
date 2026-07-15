@@ -46,7 +46,7 @@ For each wave, dispatch one sub-agent per phase (same as parallel mode — see `
 After each wave completes:
 1. Run full test suite
 2. If conflicts → load `{SKILL_DIR}/actions/resolve-conflict.md` and follow its instructions
-3. Mark tasks complete, update manifest, append audit entry
+3. Mark completed tasks complete (never failed `[!]` or skipped tasks — see Failure Handling), update manifest (`completedTasks` + set `currentWave` to the next wave number so recovery can resume at the correct wave; unit-scoped in incremental mode), append audit entry
 4. **Do NOT wait for user approval** — proceed immediately to next wave
 
 ## Failure Handling
@@ -63,7 +63,7 @@ Always use non-interactive flags (`-y`, `--yes`, `--no-input`, `--non-interactiv
 
 ## Step 3 — Final autonomous summary
 
-After all waves complete, present the full summary (see Finalize in SKILL.md) plus:
+After all waves complete, present the autonomous summary:
 
 ```
 📍 Implementation: Autonomous Mode Complete
@@ -86,4 +86,4 @@ After all waves complete, present the full summary (see Finalize in SKILL.md) pl
 - 🔍 "review" — inspect implementation details
 ```
 
-Then load `{SKILL_DIR}/actions/finalize.md` and follow its instructions.
+Then load `{SKILL_DIR}/actions/finalize.md` and follow its instructions, **skipping its final-summary presentation** — the summary above replaces it, and the user's "done" here counts as the approval its manifest-update step waits for. Do not present two consecutive summaries or two "done" gates.

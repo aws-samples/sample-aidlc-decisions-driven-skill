@@ -84,10 +84,23 @@ Do NOT modify files outside your ownership.
 ### Step 3 — Post-execution
 
 After ALL sub-agents complete:
-1. Run the full test suite to verify no conflicts between parallel phases
-2. If tests fail → load `{SKILL_DIR}/actions/resolve-conflict.md` and follow its instructions
-3. Mark all wave tasks complete (environment-aware, same as standard mode)
-4. Update manifest: **Comprehensive mode**: update `implementation.completedTasks` with all tasks from this wave. **Incremental mode**: update `units[{unit}].implementation.completedTasks`.
+1. **Check each sub-agent's report**: if any tasks are reported failed or incomplete, do NOT mark them complete. Present the failures:
+
+   ```
+   ⚠️ Wave {N}: [X] task(s) failed in {phase}
+   - Task {ID}: {error summary}
+
+   🔲 **Your turn**:
+   - 🔁 "retry [phase]" — re-dispatch a sub-agent for the failed tasks
+   - 🔧 "fix" — I'll resolve the failures directly
+   - ⏭️ "skip [task ID]" — leave incomplete and continue (tasks in later waves that depend on it will be skipped)
+   ```
+
+   **STOP and wait.** Proceed only when every task in the wave is complete or explicitly skipped.
+2. Run the full test suite to verify no conflicts between parallel phases
+3. If tests fail → load `{SKILL_DIR}/actions/resolve-conflict.md` and follow its instructions
+4. Mark completed wave tasks complete (environment-aware, same as standard mode) — never mark failed or skipped tasks
+5. Update manifest: update `implementation.completedTasks` with the completed tasks from this wave AND set `implementation.currentWave` to `{N+1}` so recovery can resume at the correct wave. **Incremental mode**: same fields under `units[{unit}].implementation`.
 
 ### Step 4 — Present wave results
 
