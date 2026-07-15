@@ -205,6 +205,35 @@ for stale in product tech structure resources aidlc-workflow; do
 done
 echo ""
 
+# 11. Guard rails for known-fixed defect patterns
+echo "## Defect Pattern Guards"
+
+# 11a. No git-stash checkpoints in skill instructions — the implementation
+# under review is typically uncommitted, so stash push/pop as a "backup"
+# loses work (fixed in aidlc-code-review; keep it out everywhere).
+stash_hits=$(grep -rn "git stash push\|git stash pop" "$SKILLS_DIR" 2>/dev/null || true)
+if [ -z "$stash_hits" ]; then
+    echo "  ✅ no git-stash checkpoint instructions in skills/"
+else
+    echo "  ❌ git-stash checkpoint instruction found (loses uncommitted work):"
+    echo "$stash_hits" | sed 's/^/     /'
+    ERRORS=$((ERRORS + 1))
+fi
+
+# 11b. Every decision gate must populate the Decisions Summary on both
+# response paths — validation and downstream phases read ONLY that section.
+for gate in aidlc-requirements aidlc-decomposition aidlc-design aidlc-tasks aidlc-deploy; do
+    gate_file="$SKILLS_DIR/$gate/actions/decision-gate.md"
+    [ -f "$gate_file" ] || continue
+    if grep -q "populate the Decisions Summary" "$gate_file"; then
+        echo "  ✅ $gate — gate populates Decisions Summary"
+    else
+        echo "  ❌ $gate/actions/decision-gate.md — no Decisions Summary population instruction (manual 'done' answers would be lost)"
+        ERRORS=$((ERRORS + 1))
+    fi
+done
+echo ""
+
 # Summary
 echo "======================="
 echo "Summary: $ERRORS errors, $WARNINGS warnings"
