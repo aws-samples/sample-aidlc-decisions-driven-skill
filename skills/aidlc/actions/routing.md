@@ -29,12 +29,25 @@ Based on manifest state, determine the next skill to dispatch:
 
 Read `state.scope` from manifest. Apply skip rules from `scopes.md` before routing. Key shortcuts: `bugfix` skips decomposition + deploy; `refactor` skips requirements + decomposition + deploy. When a phase is skipped, treat it as already completed for routing. Do NOT add skipped phases to `state.sharedPhases`.
 
+### Rewrite Scope — Mandatory Extraction Guard
+
+When `state.scope` is `rewrite`, the `reverse-engineer` phase is REQUIRED between context and requirements:
+
+- After context: if `reverse-engineer` is NOT in `sharedPhases` → dispatch `aidlc-reverse-engineer`. Do NOT dispatch `aidlc-requirements`.
+- If the user explicitly asks for `requirements` (or any later phase) while extraction is incomplete, refuse and explain:
+  ```
+  ⛔ Scope is "rewrite" — requirements need the extracted parity baseline first.
+  Legacy extraction is {not started / in progress: {X}/{Y} modules}.
+  👉 Say "continue" to run reverse-engineer, or "scope new" to abandon parity tracking (not recommended).
+  ```
+- Extraction is complete when `sharedPhases` contains `reverse-engineer` (set by the skill when the analysis + parity inventories are approved).
+
 ### Standard Routing Table
 
 | Current State | Next Skill |
 |---|---|
 | No manifest, no artifacts | `aidlc-context` |
-| `context` in `sharedPhases`, no requirements | **Scope check**: if `refactor` → skip to `aidlc-design`. Otherwise → `aidlc-requirements` |
+| `context` in `sharedPhases`, no requirements | **Scope check**: if `refactor` → skip to `aidlc-design`. If `rewrite` AND `reverse-engineer` not in `sharedPhases` → `aidlc-reverse-engineer` (see guard above). Otherwise → `aidlc-requirements` |
 | `requirements` in `sharedPhases`, needs routing | **Scope check**: if `bugfix` → skip decomposition analysis, go straight to `aidlc-design`. Otherwise → Analyze complexity (see below) |
 | `decomposition` in `sharedPhases`, mode=`comprehensive` | `aidlc-design` |
 | `decomposition` in `sharedPhases`, mode=`incremental` | Unit dashboard (see Incremental Mode Unit Routing) |

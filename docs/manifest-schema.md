@@ -14,7 +14,7 @@ updated: "2026-04-15T11:30:00Z"
 
 state:
   sharedPhases: [context, requirements, decomposition]
-  scope: feature                 # feature | bugfix | refactor | new — detected in context phase
+  scope: feature                 # feature | bugfix | refactor | new | rewrite — detected in context phase
   mode: incremental              # null | incremental | comprehensive
   status: active                 # active | completed
   implementationMode: null       # null | standard | parallel | autonomous (comprehensive mode only)
@@ -41,10 +41,11 @@ artifacts:
     timestamp: "2026-04-15T11:00:00Z"
     files: [units.md]
   # Comprehensive mode also has: design, tasks, build, deploy (same structure)
+  # Rewrite scope also has: reverse-engineer (same structure; see path convention below)
 
 context-summary:
   type: Greenfield
-  scope: feature                 # feature | bugfix | refactor | new
+  scope: feature                 # feature | bugfix | refactor | new | rewrite
   stack: "TypeScript / NestJS / PostgreSQL"
   architecture: "Modular Monolith"
   feature: "E-commerce platform"
@@ -102,7 +103,7 @@ units:
 - **Shared vs. per-unit**: `state.sharedPhases` tracks project-wide phases. Per-unit phases live in `units[].phase` and `units[].completedPhases`.
 - **Parallel units**: Multiple units can be `in-progress` simultaneously — different sessions work on different units.
 - **Comprehensive mode**: `units[]` stays empty. Design/tasks/implement tracked in `state.sharedPhases`. Implementation mode stored in `state.implementationMode`. Task progress tracked in top-level `implementation`.
-- File paths in `files` are relative to `{SPECS_DIR}/{feature}/` (shared) or `{SPECS_DIR}/{feature}/units/{unit}/` (per-unit).
+- File paths in `files` are relative to `{SPECS_DIR}/{feature}/` (shared) or `{SPECS_DIR}/{feature}/units/{unit}/` (per-unit). Exception: `artifacts.reverse-engineer.files` uses project-root-relative paths (`.aidlc/reverse-engineer/...`) because extraction output is project-level, not feature-scoped.
 - Decision gate files (`decisions-{phase}.md`) are implicit — not tracked in artifacts.
 - Blueprint content lives at `{BLUEPRINTS_DIR}/{name}.md` (`.aidlc/blueprints/`) — paths are implicit, only `updatedBy` is tracked. The `steering.updatedBy` key name is retained for compatibility but tracks blueprint content (product/tech/structure). The platform shim (`.kiro/steering/aidlc.md` or `.claude/CLAUDE.md`) references these blueprints and is not tracked in the manifest.
 - `context-summary` stores key fields from context.md for downstream skills. `teamSize` is captured in D1 and used by D2/D3 validation rules.

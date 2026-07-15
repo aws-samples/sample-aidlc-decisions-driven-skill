@@ -134,7 +134,8 @@ Execute phases sequentially. **Load the action file when you reach that phase �
 
 ## Skill Handoff
 
-**Next skill**: `aidlc-context` (when user says "start context" or "done, start context").
+- **Standalone run (no manifest)**: `aidlc-context` (when user says "start context" or "done, start context").
+- **Rewrite scope (manifest exists, `state.scope: rewrite`)**: on analysis approval, update manifest — add `"reverse-engineer"` to `state.sharedPhases`, set `artifacts.reverse-engineer` (`status: "approved"`, timestamp, `files: [.aidlc/reverse-engineer/README.md]`), append audit entry — then hand off to `aidlc-requirements`. Routing blocks requirements until this update happens.
 
 ---
 

@@ -47,17 +47,25 @@ Analyze the user's feature description and workspace context. Refer to scopes.md
 
 | Scope | Detect When |
 |---|---|
-| `new` | No existing source code, OR building from scratch, OR rewriting |
+| `new` | No existing source code, OR building from scratch |
+| `rewrite` | Rebuilding/replacing an existing system while keeping its behavior (legacy code in workspace) |
 | `bugfix` | Fixing a specific bug or error |
 | `refactor` | Restructuring without changing behavior |
 | `feature` | Everything else — adding new capability to existing code |
 
 **Ambiguity rule**: If detection is ambiguous, default to `feature` and let the user override.
 
-**Rewrite detection**: If the user says "rewrite" or "rebuild" and an existing codebase exists (brownfield workspace), set scope to `new` and recommend running `reverse-engineer` first to capture existing behavior before requirements. Present:
+**Rewrite detection**: If the user describes rebuilding an existing system on a new stack (keywords: "rewrite", "rebuild", "replatform", "modernize", "migrate off", or a legacy stack named — mainframe, AS400, COBOL, VB6, ...) and the legacy codebase exists in the workspace, set scope to `rewrite`. Present:
 ```
-📍 Detected: application rewrite (scope: new)
-💡 Recommend running "reverse-engineer" first to capture existing business rules, integrations, and patterns before starting requirements.
+📍 Detected: legacy rewrite (scope: rewrite)
+ℹ️ Goal: functional parity on a modern stack. The reverse-engineer phase is REQUIRED next —
+it extracts the parity baseline (business rules, screens, schema, integrations) that
+requirements and design must trace to. The workflow routes there automatically after context.
+```
+If the legacy source is NOT in the workspace: ask for its location. If it can't be provided, fall back to scope `new` with:
+```
+⚠️ No legacy source available — parity cannot be extracted or verified. Proceeding as scope "new";
+generated requirements will NOT be checked against the existing system.
 ```
 
 ### Scope Confirmation
@@ -168,7 +176,7 @@ Artifact at `{SPECS_DIR}/{feature}/context.md`.
 🔲 **Your turn**:
 - ✅ "proceed" — move to requirements
 - ✏️ "change [what]" — request edits
-- 🔀 "change scope to [bugfix/refactor/feature/new]" — override detected scope
+- 🔀 "change scope to [bugfix/refactor/feature/new/rewrite]" — override detected scope
 ```
 
 **Generate workflow diagram** based on scope and recommendations. Use top-down ASCII art. Show ONLY the recommended path for this project.
@@ -177,4 +185,4 @@ Diagram templates by scope — see `{PLATFORM_DIR}/skills/aidlc/shared/scopes.md
 
 **STOP and wait for user approval.**
 
-On approval: update manifest (`artifacts.context.status` → `"approved"`, add `"context"` to `state.sharedPhases`). Append audit entry. Then auto-continue to requirements.
+On approval: update manifest (`artifacts.context.status` → `"approved"`, add `"context"` to `state.sharedPhases`). Append audit entry. Then auto-continue: scope `rewrite` → `aidlc-reverse-engineer` (mandatory parity baseline); all other scopes → requirements (per scope routing).

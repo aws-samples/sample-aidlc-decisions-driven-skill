@@ -229,7 +229,7 @@ Dispatch the named skill directly. No confirmation needed — the user explicitl
 
 ### `scope [name]`
 
-Change the workflow scope mid-workflow. Valid scopes: `new`, `feature`, `bugfix`, `refactor`. See `{PLATFORM_DIR}/skills/aidlc/shared/scopes.md` for full scope definitions.
+Change the workflow scope mid-workflow. Valid scopes: `new`, `feature`, `bugfix`, `refactor`, `rewrite`. See `{PLATFORM_DIR}/skills/aidlc/shared/scopes.md` for full scope definitions. Changing to `rewrite` makes `reverse-engineer` a required phase (routing dispatches it before requirements if extraction hasn't run).
 
 1. Validate the requested scope name
 2. Update manifest: `state.scope` and `context-summary.scope`
