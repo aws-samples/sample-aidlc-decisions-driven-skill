@@ -16,10 +16,11 @@ Each phase has a decision gate that generates targeted questions, validates answ
 
 1. The skill generates a decisions file with questions tailored to your project context
 2. Each question offers 3-5 options with one marked as recommended
-3. You fill in answers (or say "use recommendations" to auto-fill)
-4. The skill validates for conflicts — e.g., "Enterprise scope with solo developer" or "Microservices with shared database"
-5. Conflicts are classified by severity (🔴 Critical, 🟡 Major, 🟢 Minor) with resolution options
-6. After resolution, the skill proceeds to generation
+3. You fill in answers and say "done" (or say "use recommendations" to auto-fill). If any answers are left blank, the skill lists the unanswered questions and waits — it never proceeds with blanks or fills them for you
+4. The skill populates the machine-readable Decisions Summary section from your answers — on both paths. Validation and all downstream phases read only that section
+5. The skill validates for conflicts — e.g., "Enterprise scope with solo developer" or "Microservices with shared database"
+6. Conflicts are classified by severity (🔴 Critical, 🟡 Major, 🟢 Minor) with resolution options
+7. After resolution, the skill proceeds to generation
 
 ## Decision File Format
 

@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.2.1] — 2026-07-15
+
+### Fixed
+
+- **Decision gates (D1–D5)**: the Decisions Summary section is now populated on the manual "done" path, not only on "use recommendations" — manually filled answers were validated against an empty summary and silently lost. Gates also stop and list unanswered questions instead of proceeding with blanks. D5 gained the response-handling block it was missing entirely.
+- **aidlc-code-review**: `apply-fixes` no longer uses `git stash` as a safety checkpoint — stashing removed the (typically uncommitted) implementation under review and `stash drop` deleted it permanently. Fixes are now backed up to `{WORKFLOW_DIR}/{feature}/history/` and restored from there on test failure.
+- **aidlc-implement**: context recovery now resumes parallel/autonomous runs from `implementation.currentWave` (previously a dead end — recovery only understood `currentTask`); both wave modes advance `currentWave` after each wave; parallel mode checks sub-agent reports and presents failed tasks for retry/fix/skip instead of marking every wave task complete. Also fixed autonomous mode's broken "Finalize in SKILL.md" pointer and its double final-summary.
+- **aidlc-build**: the manifest is no longer marked `approved` before the user approves the build report — the report is tracked as `draft` and flips to `approved`/`approved-with-warnings` only on approval. Context recovery uses the manifest instead of report-header states that were never produced.
+- **aidlc-deploy**: D5-5 (Environment Promotion) is now stored in `decisions.deploy` (was dropped — generation required it from the manifest where it never existed). Context recovery can no longer route into `finalize` — which marks the whole workflow complete without stopping — before the generated files were approved.
+- **aidlc-prototype**: "update requirements" backs up `requirements.md` to `history/` before editing (per the shared Edit Action Pattern), giving "revert" a real restore source; inline-story runs without a requirements file get a create-or-ask path; post-approval routing is now explicit.
+
+### Added
+
+- **scripts/validate.sh — Defect Pattern Guards (Check 11)**: fails if any skill instruction uses `git stash` as a checkpoint, or if a decision gate lacks the Decisions Summary population instruction. Negative-tested against the pre-fix file versions.
+
 ## [1.2.0] — 2026-07-10
 
 ### Added

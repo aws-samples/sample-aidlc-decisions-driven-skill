@@ -12,6 +12,8 @@ Tasks executed one at a time. You review and approve after each task. Best for l
 
 Tasks grouped into dependency waves. Each wave dispatches one sub-agent per phase. Phases within a wave run simultaneously with isolated file ownership. You review after each wave.
 
+If a sub-agent reports failed or incomplete tasks, the wave is not marked complete — you choose retry, fix, or skip per task first. Wave position is tracked in the manifest (`currentWave`), so an interrupted session resumes at the correct wave.
+
 - Requires Kiro Autopilot mode or Claude Code
 
 ### Autonomous Mode

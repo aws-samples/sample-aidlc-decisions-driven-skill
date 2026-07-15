@@ -27,7 +27,7 @@ The manifest and audit trail provide enough state to pick up where you left off.
 | Current unit | Manifest `units[].phase` | Yes |
 | Decision answers | `decisions-{phase}.md` files | Yes |
 | Generated artifacts | Spec files on disk | Yes |
-| Implementation progress | Manifest `implementation.currentTask` | Yes |
+| Implementation progress | Manifest `implementation.currentTask` (standard mode) / `implementation.currentWave` (parallel & autonomous modes) | Yes |
 | Conversation context | In-memory only | No (rebuilt from manifest) |
 
 ## Manual Recovery
