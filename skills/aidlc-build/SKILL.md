@@ -129,8 +129,7 @@ Execute actions sequentially. **Load the action file when you reach that step �
 
 ## Context Recovery
 
-If context is lost mid-phase, follow `aidlc/shared/base.md` Context Recovery, then:
-- Check if `build-report.md` exists at `{WORKFLOW_DIR}/{feature}/`:
-  - Not present → load `actions/detect.md` (start from detection)
-  - Exists with `status: failed` → load `actions/verify.md` (re-run)
-  - Exists with `status: passed` → present report for approval, hand off to deploy
+If context is lost mid-phase, follow `aidlc/shared/base.md` Context Recovery, then (the manifest is the state authority, not the report header):
+- No `build-report.md` at `{WORKFLOW_DIR}/{feature}/` → load `actions/detect.md` (start from detection)
+- Report exists + manifest `artifacts.build.status` is `"draft"` or missing → load `actions/report.md`, re-present for approval (step 3)
+- Manifest `artifacts.build.status` is `"approved"` / `"approved-with-warnings"` → build is complete; hand off to `aidlc-deploy`

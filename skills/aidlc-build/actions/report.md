@@ -66,20 +66,18 @@ Write to `{WORKFLOW_DIR}/{feature}/build-report.md`:
 
 ---
 
-## 2. Update manifest
+## 2. Track the report in the manifest (draft)
 
 ```yaml
 artifacts.build:
-  status: "approved"  # or "approved-with-warnings" if failures were accepted
+  status: "draft"        # approval happens in step 4 — never pre-approve
   timestamp: "{ISO timestamp}"
   files: [build-report.md]
-
-state.sharedPhases: [...existing, "build"]
 ```
 
 ---
 
-## 3. Present completion
+## 3. Present for approval
 
 ```
 📍 Build Verification Complete
@@ -90,7 +88,7 @@ state.sharedPhases: [...existing, "build"]
 - **Report**: {WORKFLOW_DIR}/{feature}/build-report.md
 
 🔲 **Your turn**:
-- ✅ "deploy" — proceed to deployment configuration
+- ✅ "deploy" — approve and proceed to deployment configuration
 - 🔍 "details" — show full report
 - 🔧 "fix [issue]" — address remaining issues
 - ↩️ "back to implement" — return to implementation
@@ -98,17 +96,30 @@ state.sharedPhases: [...existing, "build"]
 
 **STOP and wait.**
 
-On "deploy" / "proceed" / "next" → hand off to `aidlc-deploy`.
-
 ---
 
-## 4. Audit entry
+## 4. Handle response
+
+**On "deploy" / "proceed" / "next" (approval)** — only now update the manifest:
+
+```yaml
+artifacts.build.status: "approved"   # or "approved-with-warnings" if failures/gates were accepted
+state.sharedPhases: [...existing, "build"]
+```
+
+Append the audit entry:
 
 ```
-### [{ISO timestamp}] Build: Report Generated
+### [{ISO timestamp}] Build: Report Approved
 
 **Phase**: build
 **Action**: build-approved
 **Artifacts**: build-report.md
 **Outcome**: Build verified. {X} tests passing, {Y} quality gates met. Proceeding to deploy.
 ```
+
+Then hand off to `aidlc-deploy`.
+
+**On "fix [issue]"**: apply the fix, re-run the affected verification, regenerate the report (step 1), re-present. Status stays `"draft"`.
+
+**On "back to implement"**: leave `artifacts.build.status: "draft"` — do NOT add `"build"` to `sharedPhases`. Append an audit note, then dispatch `aidlc-implement`.
