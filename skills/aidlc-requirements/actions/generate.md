@@ -37,12 +37,31 @@ Derive from D1 decisions + context + personas.
 Read D1 from manifest `decisions.requirements` (fallback: Decisions Summary section).
 Template: `{ASSETS}/requirements.md` → write `{SPECS}/{feature}/requirements.md`
 
+### Parity Mode (rewrite scope only)
+
+Derivation is inverted: stories come FROM the extracted baseline, not from invention. D1 answers set the parity level; the baseline sets the content.
+
+1. Read `.aidlc/reverse-engineer/parity/rules.md` in full, `features.md`, and the Totals + section headings of `parity/screens.md` and `parity/endpoints.md`. Large systems: process one module at a time, write stories per module, release context (same discipline as reverse-engineer Phase 2).
+2. **Every story cites its origin**: `**Legacy-Ref**: BR-*, SCR-*, OP-*` (one or more IDs, or `file:line` for facts outside the registers).
+3. **Every BR-*** appears in at least one story's acceptance criteria — the EARS restatement of the rule, behavior-identical.
+4. A story with no legacy origin → mark `[NEW — not in legacy]` in the story title.
+5. Legacy behavior NOT carried forward → entry in the deviation register, never a silent omission.
+6. Generate `{SPECS}/{feature}/deviations.md` — the deviation register:
+   `| ID (DEV-NNN) | Type (NEW / DROPPED / CHANGED) | What | Legacy-Ref | Reason | Approved |`
+7. requirements.md gains a `## Parity Coverage` section: BR-* → story IDs, SCR-* → story IDs, OP-* → story IDs, plus a counts row (covered / baseline total / deviations).
+
 ### Validate
 
 - All D1 scope features have stories
 - All user types represented
 - All stories have EARS acceptance criteria
 - Organized by functional area, priorities assigned
+
+**Parity mode (rewrite) — FAIL conditions, fix before presenting**:
+- FAIL if any BR-* has zero story coverage and no deviation entry
+- FAIL if any SCR-* or OP-* is unaccounted for (no story, no deviation entry)
+- FAIL if any story lacks a `Legacy-Ref` and is not marked `[NEW — not in legacy]`
+- FAIL if Parity Coverage counts ≠ baseline Totals − DROPPED deviations
 
 ### Update Blueprints
 
@@ -64,6 +83,9 @@ Template: `{ASSETS}/requirements.md` → write `{SPECS}/{feature}/requirements.m
 - **Priority**: [X] High, [Y] Medium, [Z] Low
 - **User Types**: [list]
 - **Personas**: [Generated / Skipped]
+{Rewrite scope — add:}
+- **Parity coverage**: [X]/[N] rules, [Y]/[P] screens, [Z]/[S] operations
+- **Deviations**: [D] total — [a] NEW, [b] DROPPED, [c] CHANGED (`deviations.md`)
 
 Artifact at `{SPECS}/{feature}/requirements.md`.
 
@@ -71,11 +93,12 @@ Artifact at `{SPECS}/{feature}/requirements.md`.
 🔲 **Your turn**:
 - ✅ "proceed" — move to routing decision
 - ✏️ "change [what]" — request edits
+{Rewrite scope: '- 📋 "show deviations" — review the deviation register before approving'}
 ```
 
 **STOP and wait.**
 
-On approval: `status:"approved"`, add `"requirements"` to `sharedPhases`, store `teamSize`. Audit. Auto-continue to routing-decision.
+On approval: `status:"approved"`, add `"requirements"` to `sharedPhases`, store `teamSize` in `context-summary.teamSize`. **Rewrite scope**: approval covers the deviation register too — set every register row's Approved column, audit "requirements + {D} deviations approved". Audit. Auto-continue to routing-decision.
 
 ---
 

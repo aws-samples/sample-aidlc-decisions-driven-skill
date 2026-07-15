@@ -12,6 +12,14 @@ Read `{PLATFORM_DIR}/skills/aidlc/shared/decision-gate.md` for the output struct
 - **MANDATORY**: Include explicit personas question
 - **MANDATORY**: Include team size question — "How many developers will work on this project?" with options: 1) Solo (1 developer), 2) Small team (2–3), 3) Medium team (4–8), 4) Large team (9+). This is used by downstream validation rules in D2, D3, and D5 gates.
 
+**Rewrite scope — D1 runs in parity mode**. Read the approved parity baseline first: `.aidlc/reverse-engineer/parity/*` Totals + `features.md` and `business-rules.md` Summaries. Questions cover parity boundaries, NOT product invention:
+- **Parity level per feature area** (one question per major area from features.md): 1) Exact — same behavior, fields, flows 2) Modernized equivalent — same rules/data, updated UX **(Recommended)** 3) Dropped (goes to the deviation register)
+- **UX parity**: keep screen-for-screen flow vs redesign UX — either way every screen in `parity/screens.md` must be accounted for downstream
+- **Data parity**: preserve schema field-for-field vs normalize/rename — either way every field in `parity/entities.md` must map or be a recorded deviation
+- **Integrations**: preserve vs replace, per integration
+- **Explicit drops**: anything the user wants to leave behind (each becomes a deviation entry)
+- The Context Summary MUST state the baseline counts: {N} entities / {M} fields / {P} screens / {R} rules / {S} operations — these are the numbers generation is checked against.
+
 Present:
 
 ```

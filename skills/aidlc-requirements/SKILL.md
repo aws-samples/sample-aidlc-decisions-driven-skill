@@ -69,6 +69,7 @@ Ready to generate requirements from project context.
 | decisions-requirements.md | `{WORKFLOW_DIR}/{feature}/decisions-requirements.md` |
 | requirements.md | `{SPECS_DIR}/{feature}/requirements.md` |
 | personas.md | `{SPECS_DIR}/{feature}/personas.md` (conditional) |
+| deviations.md | `{SPECS_DIR}/{feature}/deviations.md` (rewrite scope — parity deviation register) |
 | product.md (update) | `{BLUEPRINTS_DIR}/product.md` |
 
 ---
@@ -94,6 +95,7 @@ Read `state.scope` from manifest. Adjust process based on scope:
 | Scope | Requirements Behavior |
 |---|---|
 | `new` / `feature` | Full process — D1 gate, personas, full requirements |
+| `rewrite` | **Parity mode** — D1 asks parity boundaries against the extracted baseline; stories derived FROM `.aidlc/reverse-engineer/parity/*` with `Legacy-Ref` citations; deviation register (`deviations.md`) + coverage FAIL gates. The parity baseline is a REQUIRED input: if `.aidlc/reverse-engineer/parity/` is missing → ❌ Fatal, direct the user to run `reverse-engineer` (routing normally guarantees it ran) |
 | `bugfix` | Lightweight — skip D1 gate, produce focused bug-fix requirements (1–3 stories max, focused on the fix and verification) |
 | `refactor` | **Should not reach this skill** — routing skips requirements for refactor scope |
 
