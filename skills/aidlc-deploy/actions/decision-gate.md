@@ -166,6 +166,12 @@ Use detected context to pre-select recommendations.
 
 **STOP — do NOT continue until user responds.**
 
+When user says "done" or "use recommendations":
+- If "use recommendations": fill every `**Answer**:` field with the recommended option
+- If "done": read the user's answers from the `**Answer**:` fields. If any are blank → list the unanswered questions and **STOP** — ask the user to fill them or say "use recommendations" for the rest. Do not proceed with blanks.
+- **Both paths**: populate the Decisions Summary section from the answers (one line per decision). Validation and manifest storage (step 4) read ONLY that section.
+- Proceed to validation
+
 ## 3. Validate for conflicts
 
 | Conflict | Severity | Condition |

@@ -55,3 +55,5 @@ All decision files (D1, D2, D3, D4, D5) follow the same format.
 
 **Instructions**: Fill in your answers above and respond with "done"
 ```
+
+**Summary population (skill responsibility)**: After the user responds — on BOTH the "done" and "use recommendations" paths — the skill populates the Decisions Summary section from the `**Answer**:` fields before running validation. Validation and downstream phases read ONLY the Decisions Summary, so skipping this step silently loses the user's decisions.

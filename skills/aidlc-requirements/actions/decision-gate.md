@@ -31,7 +31,9 @@ Present:
 **STOP — do NOT continue. Do NOT fill answers yourself, even if choices seem obvious. Wait for user to say "done" or "use recommendations".**
 
 When user says "done" or "use recommendations":
-- If "use recommendations": fill all answers with the recommended option, update the Decisions Summary section
+- If "use recommendations": fill every `**Answer**:` field with the recommended option
+- If "done": read the user's answers from the `**Answer**:` fields. If any are blank → list the unanswered questions and **STOP** — ask the user to fill them or say "use recommendations" for the rest. Do not proceed with blanks.
+- **Both paths**: populate the Decisions Summary section from the answers (one line per decision). Validation and downstream phases read ONLY that section.
 - Proceed to validation
 
 ---
