@@ -6,7 +6,7 @@ Each phase has a decision gate that generates targeted questions, validates answ
 
 | Gate | Phase | Covers |
 |---|---|---|
-| D1 | Requirements | Feature scope, user types, core functionality, data entities, integrations, business rules, constraints |
+| D1 | Requirements | Feature scope, user types, core functionality, data entities, integrations, business rules, constraints. In `rewrite` scope D1 runs in **parity mode**: questions cover what to preserve / modernize / drop against the extracted legacy baseline |
 | D2 | Decomposition | Architecture pattern, decomposition strategy, unit proposals, dependencies, development sequence |
 | D3 | Design | Technology stack, frameworks, data layer, testing strategy, observability & operations, infrastructure, code organization |
 | D4 | Tasks | Breakdown strategy, implementation approach (TDD/test-after), component priority, integration strategy, task granularity |

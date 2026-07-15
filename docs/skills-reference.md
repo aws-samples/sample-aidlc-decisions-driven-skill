@@ -17,7 +17,7 @@
 
 | Skill | What It Does |
 |---|---|
-| `aidlc-reverse-engineer` | Deep brownfield codebase analysis. Extracts architecture, modules, data models, API surface, business rules, features, integrations, conventions, and technical debt. Output is project-scoped (`.aidlc/reverse-engineer/`) and shared across all features. |
+| `aidlc-reverse-engineer` | Deep brownfield codebase analysis. Extracts architecture, modules, data models, API surface, business rules, features, integrations, conventions, and technical debt. Output is project-scoped (`.aidlc/reverse-engineer/`) and shared across all features. In `rewrite` scope it is a mandatory phase and additionally produces the parity baseline (`parity/` inventories with mechanically verified counts) — see [rewrite-parity.md](rewrite-parity.md). |
 | `aidlc-prototype` | Builds a throwaway spike to validate requirements. No architecture, no tests, hardcoded data. Code goes to `.aidlc/prototype/`. |
 | `aidlc-solutions-review` | Cross-unit design review. Compares 2+ unit designs for architectural conflicts, technology mismatches, integration gaps, and duplication. |
 | `aidlc-code-review` | Reviews implemented code against design specs, security best practices, performance, test coverage, and coding standards. Produces severity-classified findings with suggested fixes. |

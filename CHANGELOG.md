@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.3.0] — 2026-07-15
+
+### Added
+
+- **`rewrite` scope — functional-parity rebuilds** (e.g., mainframe/AS400 → modern web stack). Addresses hallucinated requirements/designs in legacy rewrites: previously routed as scope `new` (greenfield framing), with reverse-engineer merely recommended and its output an optional input nothing traced to. See `docs/rewrite-parity.md`.
+  - **Mandatory extraction**: reverse-engineer is a required, blocking phase between context and requirements. Routing refuses later phases until the baseline is approved; no-legacy-source falls back to scope `new` with an explicit parity-not-verifiable warning.
+  - **Parity inventories** (`.aidlc/reverse-engineer/parity/`): machine-checkable baselines — full entity/screen field lists with counts, `BR-*` business-rule register, `OP-*` operation register. Schema/screen sources are parsed by generated scripts (never transcribed by eye); Phase 3 re-runs them and FAILs on count mismatches. Baseline requires explicit sign-off ("approve baseline").
+  - **Requirements parity mode**: D1 asks parity boundaries (preserve/modernize/drop); stories derived FROM the baseline with `Legacy-Ref` citations; every BR-* restated as EARS criteria; FAIL on uncovered baseline items.
+  - **Deviation register** (`deviations.md`): NEW/DROPPED/CHANGED entries with reasons and approvals — deviations are decisions, never silent omissions.
+  - **Design parity rule**: data model derived via a legacy→modern type-mapping table; per-entity field reconciliation (legacy − DROPPED + NEW = modern) recounted mechanically; screens→components, operations→endpoints, no unregistered invention.
+  - **Build parity matrix**: implemented schema parsed and reconciled against the baseline; screens and rules traced to completed tasks; matrix (total/implemented/deviations/unaccounted) in the build report.
+- **IBM i / AS400 analysis patterns** (`analysis-patterns-rpg-as400.md`): RPG III/IV/ILE, COBOL/400, CL, DDS — maps parity-critical sources (PF/LF schema, DSPF screens, schema-embedded validation keywords, indicator logic, triggers, level breaks) to the inventories, with mechanical-parsing cautions (positional formats, packed/zoned decimals).
+- **scripts/validate.sh Check 11c**: fails if requirements loses its `Legacy-Ref` binding or design loses its Parity Rule.
+
 ## [1.2.1] — 2026-07-15
 
 ### Fixed

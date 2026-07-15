@@ -39,7 +39,7 @@ AI-DLC is implemented as a set of **skills** that get installed into your worksp
 | `prototype` | Build a throwaway spike to validate requirements |
 | `review` | Run solutions review or code review |
 | `reverse-engineer` | Deep codebase analysis (13 report documents) |
-| `scope [name]` | Change workflow scope (new/feature/bugfix/refactor) |
+| `scope [name]` | Change workflow scope (new/feature/bugfix/refactor/rewrite) |
 | Phase names | Jump to any phase: `context`, `requirements`, `design`, `tasks`, `implement`, `build`, `deploy`, etc. |
 
 ### Phases
@@ -107,7 +107,7 @@ Say "resume" or "status" — the orchestrator reads the manifest at `.aidlc/work
 
 ### Reverse Engineering an Existing Codebase
 
-Say "reverse-engineer" to run deep codebase analysis. Produces 13 comprehensive documents covering architecture, data model, API surface, business rules, features, integrations, conventions, infrastructure, security, configuration, and technical debt.
+Say "reverse-engineer" to run deep codebase analysis. Produces 13 comprehensive documents covering architecture, data model, API surface, business rules, features, integrations, conventions, infrastructure, security, configuration, and technical debt. In `rewrite` scope it additionally produces machine-checkable parity inventories (entities, screens, business rules, operations) that requirements and design are required to trace to.
 
 ## Output Structure
 

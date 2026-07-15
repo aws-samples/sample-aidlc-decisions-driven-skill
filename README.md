@@ -1,6 +1,6 @@
 # AI-DLC — AI Development Lifecycle Skills
 
-[![version](https://img.shields.io/badge/version-1.2.1-blue)](CHANGELOG.md)
+[![version](https://img.shields.io/badge/version-1.3.0-blue)](CHANGELOG.md)
 [![license](https://img.shields.io/badge/license-MIT--0-green)](LICENSE.md)
 
 An opinionated implementation of the [AI-DLC (AI-Driven Development Life Cycle)](https://prod.d13rzhkk8cj2z0.amplifyapp.com/) methodology as a portable skill harness for AI coding assistants.
@@ -16,7 +16,7 @@ AI coding assistants are powerful but undirected. Without structure, they produc
 - **Decision gates** at each phase surface the right questions and validate answers before moving forward
 - **Traceability** enforced across the full chain — requirements → design → tasks → build verification
 - **Manifest-based state tracking** lets you pause, resume, and roll back across sessions
-- **Scope-adaptive workflow** — auto-detects if you're building a new project, adding a feature, fixing a bug, or refactoring
+- **Scope-adaptive workflow** — auto-detects if you're building a new project, adding a feature, fixing a bug, refactoring, or rewriting a legacy system (with enforced functional parity)
 - **Incremental delivery** for complex projects — decompose into units, design and implement one at a time
 - **Parallel implementation** via sub-agents with file ownership isolation
 - **Learning loop** — human corrections persist as project rules for future workflows
@@ -84,10 +84,10 @@ Try one of the [example requirements](examples/requirements/) included in this r
 | `doctor` | Verify installation health |
 | `adapt` | Generate the current platform's entry point after switching platforms |
 | `upgrade` | Migrate an old-layout project to the current blueprints structure |
-| `scope [name]` | Change workflow scope (new/feature/bugfix/refactor) |
+| `scope [name]` | Change workflow scope (new/feature/bugfix/refactor/rewrite) |
 | `prototype` | Build a throwaway spike to validate requirements |
 | `review` | Run solutions review or code review |
-| `reverse-engineer` | Deep codebase analysis (13 reports) |
+| `reverse-engineer` | Deep codebase analysis (13 reports; + parity baseline in rewrite scope) |
 | Phase names | Jump directly: `context`, `requirements`, `design`, `tasks`, `implement`, `build`, `deploy` |
 
 > **Note**: `units` and `decomposition` refer to the same phase — both work interchangeably.
@@ -108,10 +108,11 @@ The workflow adapts to your task. Scope is auto-detected from your request and w
 
 | Scope | Phases | Best For |
 |---|---|---|
-| `new` | All phases | New projects, rewrites |
+| `new` | All phases | New projects, building from scratch |
 | `feature` | All phases | Adding capability to existing code |
 | `bugfix` | Context → Requirements → Design → Tasks → Implement → Build | Fixing specific bugs (skips decomposition, deploy) |
 | `refactor` | Context → Design → Tasks → Implement → Build | Restructuring code (skips requirements, decomposition, deploy) |
+| `rewrite` | All phases + mandatory Reverse-Engineer after context | Rebuilding a legacy system on a modern stack with functional parity — see [docs/rewrite-parity.md](docs/rewrite-parity.md) |
 
 ```mermaid
 flowchart TD
